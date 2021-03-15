@@ -1,0 +1,117 @@
+\documentclass{report}
+
+\usepackage{preamble}
+\usepackage{premath}
+\usepackage{precomb}
+
+\usepackage{biblatex}
+\addbibresource{report.bib}
+
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\chiNs}{\chi_{N^*}}
+\newcommand{\chiMs}{\chi_{M^*}}
+\newcommand{\diagz}{\diag\(\chi_0\)}
+\newcommand{\diagNs}{\diag\(\chiNs\)}
+\newcommand{\diagMs}{\diag\(\chiMs\)}
+\newcommand{\diagnu}{\diag\(\nu\)}
+\newcommand{\diagmu}{\diag\(\mu\)}
+\newcommand{\vone}{\mathbf{1}}
+
+\title{Cliques in Association Schemes}
+\author{
+  Andrew Nagarajah \\
+  Supervised by: Prof. Mike Newman
+}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\chapter{Association Schemes}
+  \section{Distance-Regular Graphs}
+
+  \section{Association Schemes}
+    \subsection{The Bose-Mesner Algebra?}
+      I'm not convinced this necessitates its own (sub)section, but I figured I'd
+      throw it in for now and remove it later if need be.
+
+  \section{$P$-Polynomial Schemes}
+
+  \section{Automorphisms of Association Schemes}
+
+  \section{Translation Schemes}
+
+\chapter{Delsarte's Linear Programming Bound}
+  \section{Linear Programming}
+    \begin{itemize}
+      \item Basics of Linear Programming
+      \item Duality
+      \item Algorithms?
+    \end{itemize}
+
+  \section{The LP Bound}
+
+  \section{The Hoffman Ratio Bound}
+
+  \section{The Clique-Coclique Bound}
+
+\chapter{The Hamming Scheme}
+  \section{Eigenvalues}
+    I'm not sure that I should include a section on the eigenvalues of the Hamming
+    graph, but I think it's a neat application of a number of the ideas discussed
+    in the paper, so I thought we might include it?
+
+  \section{Schrijver's SDP Bound}
+
+  \section{Coding Theory}
+    I'm also not sure if I should include a section like this, but seeing as
+    coding theory was the original motivation behind Delsarte's LP bound,
+    and it remains (presumably?) a strong motivator for this theory,
+    I figured it might be interesting to mention this as an application.
+
+    \begin{itemize}
+      \item Basics of Coding Theory
+      \item Linear Graphs
+      \item Finite Vector Spaces
+    \end{itemize}
+
+\chapter{Computation}
+  I wasn't sure if I ought to mention anything about the code I've written for
+  this project (or even if there's anything worth saying that won't be covered
+  elsewhere in the report).
+
+  Also, if there are some specific results that would be interesting to show,
+  but do not fit naturally into other sections of the report, then perhaps they
+  could go here as well.
+
+\appendix
+
+\chapter{Linear Algebra}
+  \section{The Spectral Theorem}
+
+\chapter{Group Theory}
+  \section{Group Actions}
+
+  \section{Character Theory}
+
+\chapter{Notation}
+  I've included these sections mostly as an excuse to add the citations to the
+  bibliography, though it may be somewhat useful to have a sort of guide to the
+  similarities and differences in notation in this report, as well as in the
+  references.
+
+  \section{Godsil}
+    See \cite{godsil} Ch. 10.
+
+  \section{Delsarte}
+    See \cite{delsarte} Ch. 3.
+
+  \section{Schrijver}
+    See \cite{schrijver}.
+
+\printbibliography[heading=bibintoc]
+
+\end{document}

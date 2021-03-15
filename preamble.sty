@@ -1,0 +1,45 @@
+
+\ProvidesPackage{preamble}
+
+%\usepackage[margin=1in,letterpaper]{geometry} % this shaves off default margins which are too big
+
+% Use `dd month yyyy` date format
+\usepackage[UKenglish]{isodate}
+\cleanlookdateon
+
+\usepackage{graphicx}
+\usepackage{float, placeins}
+\usepackage{tikz}
+\usetikzlibrary{fit, automata, positioning, arrows}
+\usetikzlibrary{cd}
+
+\usepackage{caption} % so that \caption*{blah} does not show figure number
+\usepackage{multicol} % for multiple columns
+% Usage:
+%\begin{multicols}{2}
+%  first coln
+%  \columnbreak
+%  second coln
+%\end{multicols}
+
+\usepackage{pgfplots}
+\usepackage{pst-solides3d}
+\usetikzlibrary{fit,shapes}
+\usepackage{color}
+\usepackage[shortlabels]{enumitem} % !!! INCOMPATIBLE WITH BEAMER !!!
+\usepackage{marvosym}
+%\usepackage{cite}
+\usepackage[final]{hyperref} % adds hyper links inside the generated pdf file
+\hypersetup{
+	colorlinks=true,       % false: boxed links; true: colored links
+	linkcolor=red,          % color of internal links
+	citecolor=red,        % color of links to bibliography
+	filecolor=magenta,      % color of file links
+	urlcolor=blue         
+}
+\pgfplotsset{soldot/.style={color=blue,only marks,mark=*}} 
+\pgfplotsset{holdot/.style={color=blue,fill=white,only marks,mark=*}}
+
+%formatting
+\newcommand{\n}{ &&\\&}
+\newcommand{\qqquad}{\qquad\quad}
