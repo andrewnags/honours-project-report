@@ -97,7 +97,309 @@
       \item Algorithms?
     \end{itemize}
 
+    A \textsc{linear programming problem} (or \textsc{linear program})
+    is an optimization problem in which one seeks to maximise or minimize
+    a linear function of one or more variables, subject to linear constraints.
+    That is, fixing a vector $c$, one tries to maximize or minimize
+    the linear combinations of the components of $c$:
+    $$
+      c_1 x_1 + \cdots + c_n x_n = c^T x
+    $$
+    for some $x$.
+    Note that maximizing $c^T x$ is equivalent to minimizing $(-c)^T x$,
+    so that for the theory of linear programming,
+    it suffices to consider maximization problems without loss of generality.
+    As in other optimization problems,
+    the function to be maximized ($c^T x$ in this case)
+    is called the \textsc{objective (function)}.
+
+    In most cases, there will be contraints on the inputs to the objective
+    function, and for the purposes of linear programming these will also have
+    to be linear.
+    That is, there will be a matrix $A$ and vector $b$
+    such that only inputs $x$ satisfying $Ax \leq b$ will be allowed.
+    (Note that for \textit{vectors} $a$ and $b$,
+    $a \leq b$ will mean that each component $a_i$
+    is less than or equal to the corresponding component $b_i$.)
+    These are called the \textsc{(principal) constraints},
+    and vectors $x$ which satisfy the constraints will be called
+    \textsc{feasible (solutions)}.
+    (Note that in \cite{delsarte}, the term \textit{program}
+    is used to refer to a feasible solution.)
+
+    If there are no constraints on the problem
+    (and even in some cases where there are)
+    through appropriate choices of feasible solution $x$,
+    the objective $c^Tx$ may be made arbitrarily large,
+    and such problems are called \textsc{unbounded}.
+    Conversely, if no feasible solutions exist,
+    then the problem is called \textsc{infeasible}.
+
+    Finally, in most applications of linear programming --
+    in particular to the cliques of association schemes --
+    the feasible solutions will be further constrained
+    to those with all non-negative components (i.e. $x \geq 0$).
+    These are called the \textsc{non-negativity constraints},
+    in constrast with the \textit{principal constraints}.
+    The non-negativity constraints will be required throughout the remainder of
+    this report.
+
+    Therefore, for an objective $c^T x$ and constraints $Ax \leq b$,
+    the associated linear program will be written in \textsc{standard form}:
+    $$
+      \max\buildset{
+        c^T x
+      }{
+        A x \leq b,\
+        x \geq 0
+      }
+      \ .
+    $$
+
+    \subsection{Duality}
+
+      The most important observation about linear programs
+      (for the purposes of this report, at least)
+      is that they come in dual pairs.
+
+      Given a linear program $\mathcal{P}$ written in standard form
+      $$
+        \max\buildset{
+          c^T x
+        }{
+          A x \leq b,\
+          x \geq 0
+        }
+      $$
+      its \textsc{dual} program is $\mathcal{P}^*$:
+      $$
+        \min\buildset{
+          b^T y
+        }{
+          A^T y \geq c,\
+          y \geq 0
+        }
+        \ .
+      $$
+      Re-writing it in standard form,
+      $$
+        \max\buildset{
+          (-b)^T y
+        }{
+          -A^T y \leq -c,\
+          y \geq 0
+        }
+      $$
+      taking the dual
+      $$
+        \min\buildset{
+          -c^T x
+        }{
+          -A x \geq -b,\
+          x \geq 0
+        }
+      $$
+      and re-writing in standard form
+      $$
+        \max\buildset{
+          c^T x
+        }{
+          A x \leq b,\
+          x \geq 0
+        }
+      $$
+      the original (called \textsc{primal}) linear program is recovered.
+
+      This demonstrates that $\(\mathcal{P}^*\)^* = \mathcal{P}$,
+      so that linear programs come in dual pairs.
+
+      \begin{thm}[Weak Duality]\label{weak-duality}
+        If $x$ is a feasible solution to a linear program
+        $$
+          \max\buildset{
+            c^T x
+          }{
+            A x \leq b,\
+            x \geq 0
+          },
+        $$
+        and $y$ is a feasible solution to its dual program,
+        $$
+          \min\buildset{
+            b^T y
+          }{
+            A^T y \geq c,\
+            y \geq 0
+          },
+        $$
+        then $c^T x \leq b^T y$.
+      \end{thm}
+
+      \begin{proof}
+        Let $u, v, w$ be vectors with $u \geq 0$, and $v \leq w$.
+        Then for all components $i$,
+        $u_i \geq 0$ and $v_i \leq w_i$ implies that $u_i v_i \leq u_i w_i$
+        so that
+        $$
+          u^T v = \sum_i u_i v_i
+          \leq \sum_i u_i w_i = u^T w
+          \ .
+        $$
+
+        In particular, since $y$ is a feasible solution to the dual program,
+        and $x \geq 0$,
+        $$
+          c \leq A^T y 
+          \implies x^T c \leq x^T A^T y = y^T A x
+          \ .
+        $$
+        (Here one may take the transpose of the whole expression,
+        since the result is a scalar.)
+        Similarly, since $x$ is a feasible solution to the primal program,
+        and $y \geq 0$,
+        $$
+          b \geq A x 
+          \implies y^T b \geq y^T A x
+          \ .
+        $$
+        By combining the two inequalities,
+        $$
+          b^T y = y^T b \geq y^T A x \geq x^T c = c^T x
+        $$
+        which is the desired result.
+      \end{proof}
+
+      As a result of the weak duality of linear programs,
+      every feasible solution to the dual program
+      provides an upper bound on the maximum of the primal,
+      and every feasible solution to the primal program
+      provides a lower bound on the minimum of the dual.
+
+      In fact the extremal values of dual programs
+      (the maximum of the primal, and the minimum of the dual)
+      coincide, although this will not be needed for the purposes of this
+      report.
+      This is referred to as \textit{Strong Duality} of linear programs.
+
   \section{The LP Bound}
+
+    \begin{defn}
+      The \textsc{inner distribution} is TODO.
+      I might also put this in the section on association schemes;
+      I'm not sure if it belongs better there or here.
+    \end{defn}
+
+    \begin{thm}[Delsarte Thm 3.3 \cite{delsarte}]\label{lp-ineq}
+      For any inner distribution $y$,
+      $$
+        Q^T y \geq 0
+      $$
+      where $Q$ is the matrix of dual eigenvalues.
+      (Here, $x \geq 0$ means that each component of
+      the vector $x$ is not less than $0$.)
+    \end{thm}
+
+    \begin{proof}
+      TODO.
+      Note that this will require a number of lemmas which I've omitted here for
+      brevity, but will include in the final product.
+    \end{proof}
+
+    This theorem provides the key inequality that will allow the application of
+    linear programming to cliques in association schemes.
+    However, because the constraint vector in a primal linear program
+    becomes the objective in the dual program,
+    this inequality will require some transformation to make it suitable for use
+    in linear programming.
+
+    Let $Y$ be an $M$-clique with inner distribution $y$.
+    Then $y_i = 0$ for all $i \not\in M$,
+    so $Q^T y \geq 0 \iff Q^T \diagM y \geq 0$
+    since the action of $\diagM$ acting on the left
+    is to zero out the \textit{rows} of $y$
+    with index not in $M$.
+    Similarly,
+    $$
+      Q^T \diagM y
+      = Q(0)^T y_0 + Q^T \diagMs y
+      = \mu + Q^T \diagMs y
+    $$
+    since the action of $\diagMs$ on the right
+    is to zero out the \textit{columns} of $Q^T$
+    with index not in $M^*$,
+    $y_0 = 1$, and
+    $$
+      Q^T =
+      \begin{bmatrix}
+        1 & 1 & \cdots & 1 \\
+        \mu_1 & & & \\
+        \vdots & & * & \\
+        \mu_d & & & \\
+      \end{bmatrix}
+      \ .
+    $$
+    Finally, since $y \geq 0$, $Q_0^T y \geq 0$ adds no new constraint,
+    so that under the non-negativity constraint
+    $Q^T y \geq 0 \iff \diagNs Q^T y \geq 0$.
+
+    Putting all this together,
+    $Q^T y \geq 0 \iff \diagNs Q^T \diagMs y \geq -\mu$
+    so that Delsarte's LP can be written in standard form:
+    \begin{alignat}{2}
+      & \max\buildset{
+        \vone^T \diagM y
+      }{
+        Q^T \diagM y \geq 0,\
+        y \geq 0,\
+        y_0 = 1
+      } \label{dlp-primal} \\
+      =& \max\buildset{
+        \chiMs^T y
+      }{
+        - \diagNs Q^T \diagMs y \leq \diagNs \mu,\
+        y \geq 0
+      } + 1 \label{dlp-primal-std}
+      \ .
+    \end{alignat}
+
+    Taking the dual yields
+    \begin{alignat}{2}
+      & \min\buildset{
+        \mu^T \diagNs z
+      }{
+        - \diagMs Q \diagNs z \geq \chiMs,\
+        z \geq 0
+      } + 1 \label{dlp-dual-std} \\
+      =& \min\buildset{
+        \mu^T z
+      }{
+        - \diagMs Q \diagNs z \geq \chiMs,\
+        z \geq 0,\
+        z_0 = 1
+      }
+      \ .
+    \end{alignat}
+    Therefore, if $z_0 = 1$ is required,
+    recalling that $Q_0 = \vone$ and $\diagMs \vone = \chiMs$, then
+    \begin{alignat*}{2}
+      & \diagMs Q \diagN z \\
+      =& \diagMs \( Q_0 z_0 + Q \diagNs z \) \\
+      =& \chiMs + \diagMs Q \diagNs z \\
+      \leq& 0
+      \ .
+    \end{alignat*}
+    This equivalence recover's Delsarte's formulation of
+    the dual linear program:
+    \begin{equation}\label{dlp-dual}
+      \min\buildset{
+        \mu^T z
+      }{
+        \diagMs Q z \leq 0,\
+        z \geq 0,\
+        z_0 = 1
+      }
+      \ .
+    \end{equation}
 
   \section{The Hoffman Ratio Bound}
 
