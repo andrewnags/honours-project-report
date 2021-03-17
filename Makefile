@@ -9,15 +9,14 @@ bibsrc := $(name).bib
 bibdst := $(name).bibdst
 
 
-report : $(toc) $(bibdst) $(dst)
-
-$(dst) : $(src)
+$(dst) : $(src) $(toc) $(bibdst)
 	pdflatex $(src)
 
 $(toc) : $(src)
 	pdflatex $(src)
 
 $(bibdst) : $(bibsrc)
+	pdflatex $(src)
 	biber $(name)
 	pdflatex $(src)
 	pdflatex $(src)
