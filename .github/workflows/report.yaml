@@ -13,7 +13,8 @@ jobs:
       - uses: actions/checkout@v2
 
       # Do the installation thing
-      # - name: Install dependencies
+      - name: Install dependencies
+        run: ./tex-install.sh
 
       - name: Create report
         run: make
@@ -47,3 +48,6 @@ jobs:
         with:
           add: 'report.pdf'
           message: 'Auto-updated report'
+
+      - name: Make archival report
+        run: cp report.pdf "archive/report $(date).pdf"
