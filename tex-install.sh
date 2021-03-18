@@ -1,2 +1,2 @@
 #!/bin/bash
-apt-install update;
+apt-get update;
