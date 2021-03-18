@@ -1,7 +1,5 @@
 #!/bin/bash
 sudo apt-get update;
-sudo apt-get install texlive-latex-base;
-sudo apt-get install texlive-fonts-recommended;
-sudo apt-get install texlive-fonts-extra;
-sudo apt-get install texlive-latex-extra;
-sudo apt-get install texlive-pictures;
+sudo apt-get install |
+    texlive-latex-base texlive-fonts-recommended texlive-fonts-extra |
+    texlive-latex-extra texlive-pictures texlive-pstricks;
