@@ -36,9 +36,36 @@
 
 \maketitle
 
+\begin{abstract}
+
+  This report is an exploration of some of the topics within \emph{Delsarte
+  theory}, which uses ideas from graph theory, algebra, and optimization to
+  address questions in coding theory in particular, and combinatorics more
+  broadly.  The centre of study is the \emph{association scheme}, which provides
+  a setting in which to view various objects, especially \emph{distance-regular
+  graphs}.  This perspective enables the computation of various parameters of
+  interest, including the eigenvalues of graphs and upper bounds on codes,
+  cliques, and independent sets.
+
+\end{abstract}
+
 \tableofcontents
 
-\chapter{Association Schemes}
+\chapter{Introduction}
+  \section{Coding Theory}
+    I'm also not sure if I should include a section like this, but seeing as
+    coding theory was the original motivation behind Delsarte's LP bound,
+    and it remains (presumably?) a strong motivator for this theory,
+    I figured it might be interesting to mention this as an application.
+
+    \begin{itemize}
+      \item Basics of Coding Theory
+      \item Linear Graphs
+      \item Finite Vector Spaces
+    \end{itemize}
+
+  \section{Hamming Graphs}
+
   \section{Distance-Regular Graphs}
     I'm not sure if I should maybe merge this section with $P$-polynomial
     section?
@@ -49,6 +76,7 @@
       \item Examples?
     \end{itemize}
 
+\chapter{Association Schemes}
   \section{Association Schemes}
     \begin{itemize}
       \item Definition(s)
@@ -56,12 +84,9 @@
       \item Basic parameters
     \end{itemize}
 
-    \subsection{The Bose-Mesner Algebra?}
-      I'm not convinced this necessitates its own (sub)section, but I figured I'd
-      throw it in for now and remove it later if need be.
-      If I'm going to discuss Schrijver's SDP bound in any detail,
-      it might be worth having two subsections, one for the Bose-Mesner algebra,
-      and the other for the Terwilliger algebra.
+    \subsection{The Bose-Mesner Algebra}
+
+    \subsection{Duality}
 
   \section{$P$-Polynomial Schemes}
     \begin{itemize}
@@ -73,7 +98,9 @@
     that this section is necessary, but it is very interesting and provides an
     important class of examples.
 
-  \section{Automorphisms of Association Schemes}
+    \subsection{$Q$-Polynomial Schemes}
+
+  \section{Automorphisms}
     This section may be merged with the following section.
     \begin{itemize}
       \item Action of a regular group of automorphisms
@@ -88,6 +115,8 @@
       \item Dual schemes? (Interesting, but not particularly necessary for the
         rest of this report)
     \end{itemize}
+
+  \section{The Eigenvalues of the Hamming Scheme}
 
 \chapter{Delsarte's Linear Programming Bound}
   \section{Linear Programming}
@@ -401,29 +430,15 @@
       \ .
     \end{equation}
 
-  \section{The Hoffman Ratio Bound}
+  \section{The Ratio Bound}
+    We will use (\ref{dlp-dual}) frequently.
 
   \section{The Clique-Coclique Bound}
 
-\chapter{The Hamming Scheme}
-  \section{Eigenvalues}
-    I'm not sure that I should include a section on the eigenvalues of the Hamming
-    graph, but I think it's a neat application of a number of the ideas discussed
-    in the paper, so I thought we might include it?
+\chapter{Schrijver's SDP Bound}
+  \section{The Terwilliger Algebra of the Hamming Scheme}
 
-  \section{Schrijver's SDP Bound}
-
-  \section{Coding Theory}
-    I'm also not sure if I should include a section like this, but seeing as
-    coding theory was the original motivation behind Delsarte's LP bound,
-    and it remains (presumably?) a strong motivator for this theory,
-    I figured it might be interesting to mention this as an application.
-
-    \begin{itemize}
-      \item Basics of Coding Theory
-      \item Linear Graphs
-      \item Finite Vector Spaces
-    \end{itemize}
+  \section{Semi-Definite Programming}
 
 \chapter{Computation}
   I wasn't sure if I ought to mention anything about the code I've written for
@@ -444,7 +459,7 @@
     elsewhere in the report.  E.g. the sum of eigenvalues with multiplicity, and
     consequences.
 
-  \section{Positive-Semi Definite Matrices}
+  \section{Positive Semi-Definite Matrices}
     Depending on which proof of the clique-coclique bound I use, and how much
     detail I go into Schrijver's SDP bound, I could make some comments about PSD
     matrices.
