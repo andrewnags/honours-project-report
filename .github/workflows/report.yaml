@@ -1,0 +1,49 @@
+name: release
+
+on:
+  push:
+    branches:
+      - master
+
+
+jobs:
+  render-report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      # Do the installation thing
+      # - name: Install dependencies
+
+      - name: Create report
+        run: make
+
+      - name: Upload report to artifact registry
+        uses: actions/upload-artifact@v2
+        with:
+          name: report
+          path: report.pdf
+
+  update-pages:
+    needs: render-report
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: gh-pages
+
+      - run: rm report.pdf
+        continue-on-error: true
+
+      - name: Download report artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: report
+
+      - name: Update and commit new report
+        uses: EndBug/add-and-commit@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          add: 'report.pdf'
+          message: 'Auto-updated report'
