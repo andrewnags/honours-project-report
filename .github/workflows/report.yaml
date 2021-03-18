@@ -42,7 +42,7 @@ jobs:
           name: report
 
       - name: Update and commit new report
-        uses: EndBug/add-and-commit@v4
+        uses: EndBug/add-and-commit@v7.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
