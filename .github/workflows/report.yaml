@@ -48,6 +48,7 @@ jobs:
         with:
           add: 'report.pdf'
           message: 'Auto-updated report'
+          branch: gh-pages
 
       - name: Make archival report
         run: cp report.pdf "archive/report $(date).pdf"
