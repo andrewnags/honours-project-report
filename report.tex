@@ -12,6 +12,9 @@
 \usepackage{titlesec}
 \titleformat{\chapter}{\normalfont\huge\bf}{\thechapter.}{20pt}{\huge\bf}
 
+\newcommand*{\vertbar}{\rule[-1ex]{0.5pt}{2.5ex}}
+\newcommand*{\horzbar}{\rule[.5ex]{2.5ex}{0.5pt}}
+
 \newcommand{\diag}[1]{\operatorname{diag}\( #1 \)}
 \newcommand{\chiN}{\chi_{N}}
 \newcommand{\chiM}{\chi_{M}}
@@ -564,7 +567,183 @@
     \end{proof}
 
   \section{Character Theory}
-    Definition, and basic results used.
+    \begin{defn}[Characters]\label{character}
+      Given a group $G$, a \textsc{character} of the group $G$
+      is a homomorphism $G \to \C^\times$,
+      the group of non-zero complex numbers under multiplication.
+      Then $G^*$ will denote the set of characters of $G$.
+      \cite[Chapter 8]{godsil}
+
+      (For abelian groups, this corresponds to irreducible degree $1$ characters
+      over $\C$ in \cite[Section 18.3]{dummit-foote}.)
+    \end{defn}
+
+    On $G^*$ a product of characters can be defined by setting
+    $$
+      \phi \psi: g \mapsto \phi(g) \psi(g)
+    $$
+    under which the character taking each $g \in G$ identically to $1$
+    acts as identity.
+
+    Furthermore, for any character $\psi \in G^*$, the map $g \mapsto
+    \psi\(g^{-1}\)$ is a homomorphism since
+    $$
+      gh \longmapsto \psi\((gh)^{-1}\)
+      = \psi\( h^{-1} g^{-1} \)
+      = \psi\(h^{-1}\) \psi\(g^{-1}\)
+      = \psi\(g^{-1}\) \psi\(h^{-1}\)
+    $$
+    and for any $g \in G$,
+    $$
+      \psi(g) \psi\(g^{-1}\)
+      = \psi\(g^{-1}\) \psi(g)
+      = \psi(1) = 1
+    $$
+    so that this homomorphism is an inverse for $\psi$.
+
+    Therefore, $G^*$ forms a group under the above product of characters.
+    \\
+
+    For the remainder of this section (and the rest of this report),
+    discussion of characters will be restricted
+    to the case of finite abelian groups.
+    Throughout this section, $G$ will denote
+    a finite abelian group of order $n$.
+
+    In this case, by Lagrange's theorem, $g^n = 1_G$ for every $g \in G$,
+    and so for any character $\psi \in G^*$
+    $$
+      1 = \psi(1) = \psi\(g^n\) = \psi(g)^n
+    $$
+    -- that is, the image of each character is contained in
+    the set of $n^\text{th}$ roots of unity.
+
+    Since the inverse of a complex number with modulus $1$ is also its complex
+    conjugate, looking at the inversion in $G^*$,
+    $$
+      \psi\(g^{-1}\) = \psi(g)^{-1} = \bar{\psi(g)}
+    $$
+    so that the inverse of $\psi \in G^*$ is $\bar{\psi}: g \mapsto
+    \bar{\psi(g)}$.
+
+    \begin{thm}\label{character-duality}
+      For all finite abelian groups $G$,
+      $$
+        G \cong G^*
+        \ .
+      $$
+    \end{thm}
+
+    \begin{proof}
+      TODO
+    \end{proof}
+
+    While by transitivity this shows that $G^{**} \cong G$,
+    this can be seen more directly via the isomorphism
+    $$
+      g \mapsto \( \psi \mapsto \psi(g) \) \ .
+    $$
+    \\
+
+    Given an ordering $G = \set{g_1, \ldots, g_n}$,
+    the character $\psi \in G^*$ can be identified with the row vector
+    $$
+      \psi \rightsquigarrow
+      \begin{bmatrix}
+        \psi(g_1) & \cdots & \psi(g_n) \\
+      \end{bmatrix}
+      \ .
+    $$
+    With this identification, the product of characters becomes the entrywise
+    product of vectors (the \textit{Schur product} of $n \times 1$ matrices),
+    and the inverse of a character in $G^*$ is the entrywise inversion of the
+    vector.
+
+    Furthermore, given an ordering $G^* = \set{\psi_1, \ldots, \psi_n}$,
+    the matrix whose rows consist of the characters of $G^*$ is called the
+    \textsc{character table} of $G$:
+    \begin{equation}\label{character-table}
+      H =
+      \begin{bmatrix}
+        \horzbar & \psi_1 & \horzbar \\
+                 & \vdots &          \\
+        \horzbar & \psi_n & \horzbar \\
+      \end{bmatrix}
+      \ .
+    \end{equation}
+    Remarkably, this matrix turns out to be (almost) unitary.
+    \\
+
+    For any subset $C \subseteq G$, define
+    $$
+      \psi(C) := \sum_{g \in C} \psi(g)
+      = \psi \chi_C
+    $$
+    where $\chi_C$ is the characteristic vector of $C$ in $G$
+    (with the same ordering).
+    So, given characters $\psi, \phi$, their inner product can be written
+    $$
+      \psi \phi^* = \sum_{g \in G} \psi(g) \bar{\phi}(g)
+      = \sum_{g \in G} \(\psi \bar{\phi}\) (g)
+      = (\psi \bar{\phi}) \chi_G
+      = (\psi \bar{\phi}) (G)
+      \ .
+    $$
+    (Note here that $\phi^*$ denotes the conjugate transpose of $\phi$,
+    and $\chi_G$ is also the all-ones column vector $\vone$.)
+
+    \begin{lem}\label{characters-orthogonal}
+      For any $\psi \in G^*$
+      $$
+        \psi(G) =
+        \begin{cases}
+          \abs{G} & \text{ if $\psi$ is the identity of $G^*$} \\
+          0 & \text{ else.} \\
+        \end{cases}
+      $$
+    \end{lem}
+
+    \begin{proof}
+      For any $h \in G$, since $g \mapsto hg$ is an automorphism of $G$,
+      $hG = G$, so that
+      $$
+        \psi(G) = \sum_{g \in G} \psi(g)
+        = \sum_{g \in G} \psi(hg)
+        = \sum_{g \in G} \psi(h) \psi(g)
+        = \psi(h) \sum_{g \in G} \psi(g)
+        = \psi(h) \psi(G)
+      $$
+      which implies that either $\psi(h) = 1$ or $\psi(G) = 0$.
+
+      But this holds for arbitrary $h \in G$, so that either
+      $$
+        \forall h \in G\ \psi(h) = 1
+        \implies \psi = 1_{G^*}
+        \quad\text{and}\quad
+        \psi(G) = \sum_{g \in G} 1 = \abs{G}
+      $$
+      or else
+      $$
+        \exists h \in G\ \psi(h) \neq 1
+        \implies \psi(G) = 0
+        \ .
+      $$
+    \end{proof}
+
+    \begin{cor}\label{character-table-unitary}
+      If $H$ is the character table of a finite abelian group $G$ of order $n$,
+      then $H H^* = nI$, where $H^*$ is the conjugate transpose of $H$.
+    \end{cor}
+
+    \begin{proof}
+      If $\psi, \phi$ are characters of $G$, and $\psi \neq \phi$,
+      then letting $\theta = \psi \bar{\phi}$, the $(\psi, \phi)$-entry of $HH^*$
+      is given by $\psi \phi^* = \theta(G) = 0$, since $\theta$ is not the
+      identity of $G^*$.
+
+      However, for the diagonal, $(\psi, \psi)$-entries of $HH^*$,
+      $\psi \psi^* = 1_{G^*}(G) = n$, which proves the claim.
+    \end{proof}
 
 \chapter{Notation}
   I've included these sections mostly as an excuse to add the citations to the

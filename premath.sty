@@ -67,6 +67,10 @@
 \let\tilde\widetilde
 \let\widetilde\temp
 
+\let\temp\bar
+\let\bar\overline
+\let\overline\temp
+
 % ENVRIONMENTS
 \usepackage{amsthm}
 
@@ -85,4 +89,5 @@
 \theoremstyle{break}
 \newtheorem{thm}{Theorem}
 \newtheorem{lem}{Lemma}
+\newtheorem{cor}{Corollary}
 \newtheorem{defn}{Definition}
