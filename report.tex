@@ -470,6 +470,58 @@
     matrices.
 
 \chapter{Group Theory}
+  A \textsc{group} is a set $G$ equipped with an associative binary operation
+  $G \times G \to G$ satisfying certain axioms.
+  Typically this product is written \textit{multiplicatively},
+  so that $(g, h) \mapsto gh$.
+  To be a group, there must exist an \textsc{identity} element $1 \in G$
+  satisfying $1g = g1 = g$ for every $g \in G$.
+  When the group is not clear from context,
+  the identity element of $G$ will be written $1_G$.
+
+  Furthermore, for every $g \in G$, there must exist $h \in G$
+  such that $gh = hg = 1$.
+  In this case, $h$ is unique (for $g$) and is denoted $g^{-1}$
+  and called the \textsc{inverse} of $g$.
+
+  In the event that the product is commutative,
+  then the group is called commutative, or \textsc{abelian}.
+
+  A map $\phi: G \to H$ between groups is a \textsc{homomorphism}
+  if $\phi(g g') = \phi(g) \phi(g')$,
+  and an \textsc{isomorphism} if it is invertible,
+  and its inverse is also a homomorphism.
+  Happily, every invertible homomorphism is also an isomorphism.
+  Since an isomorphism preserves exactly a group's structure,
+  if there exists an isomorphism $G \to H$,
+  then the two groups are called \textsc{isomorphic},
+  and may be considered ``the same'' for many (but not all) purposes.
+  An isomorphism from a group to itself is called an \textsc{automorphism}.
+
+  The preimage of $1_H$ is called the \textsc{kernel} of $\phi$
+  and denoted $\ker \phi$.
+  An important fact is that a homomorphism is injective if and only if its
+  kernel is trivial (contains only the identity of its domain).
+  On the other hand, the identity is always contained in the kernel.
+  \\
+
+  Given a set $X$, the set of bijections $X \to X$ (denoted $\Sym X$)
+  forms a group where the product $fg$ of two bijections
+  is their composition $f \circ g$.
+  The identity of this group is the identity map $\id_X$,
+  and inversion in the group is the same as inversion of the maps.
+  This is called the \textsc{symmetric group} on $X$,
+  and its elements are called \textsc{permutations}.
+  If a subset of a group is also a group with the same product and same
+  identity, then the subset is called a \textsc{subgroup}.
+  Subgroups of a symmetric group are called \textsc{permutation groups}.
+
+  Historically, group theory began in the study of permutation groups,
+  and conversely, by \textit{Cayley's theorem},
+  every group is isomorphic to a permutation group.
+  The following section formalizes some of the important aspects of this
+  correspondence between group elements and permutations.
+
   \section{Group Actions}
     The material of this section comes primarily from \cite[Section~1.7;
     Chapter~4]{dummit-foote}.
