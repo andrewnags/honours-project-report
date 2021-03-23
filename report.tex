@@ -15,6 +15,9 @@
 \newcommand*{\vertbar}{\rule[-1ex]{0.5pt}{2.5ex}}
 \newcommand*{\horzbar}{\rule[.5ex]{2.5ex}{0.5pt}}
 
+\newcommand{\Zq}{\Z_q}
+\newcommand{\Zqz}{\Z_q \setminus \set{0}}
+\newcommand{\Zqd}{\Z_q^d}
 \newcommand{\diag}[1]{\operatorname{diag}\( #1 \)}
 \newcommand{\chiN}{\chi_{N}}
 \newcommand{\chiM}{\chi_{M}}
@@ -125,6 +128,24 @@
     \end{itemize}
 
   \section{The Eigenvalues of the Hamming Scheme}
+    Let $\Zq$ denote the cyclic group of order $q$ (written additively),
+    and consider the direct product $\Zqd$ with subsets
+    $$
+      C_i := \buildset{x \in \Zqd}{\text{there are exactly $i$ $0$'s in $x$}}
+      \ .
+    $$
+    In particular, $C_0 = \set{0}$ and
+    $$
+      C_1 = \Zqz \times \set{0}^{d - 1}
+      \sqcup \set{0} \times \Zqz \times \set{0}^{d - 2}
+      \sqcup \cdots \sqcup
+      \set{0}^{d - 1} \times \Zqz 
+      \ .
+    $$
+
+    Then $x, y$ are $i^\text{th}$ associates if and only if $x - y \in C_i$;
+    that is, the Hamming distance between $x$ and $y$ is $i$,
+    so that this partition yields the Hamming scheme.
 
 \chapter{Delsarte's Linear Programming Bound}
   \section{Linear Programming}
