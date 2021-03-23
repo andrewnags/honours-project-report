@@ -1,6 +1,7 @@
 \documentclass{report}
 
 \usepackage{preamble}
+\usepackage{prealgebra}
 \usepackage{premath}
 \usepackage{precomb}
 
@@ -470,8 +471,97 @@
 
 \chapter{Group Theory}
   \section{Group Actions}
-    Definitions, terms used in the report (regular, transitive, etc.) and basic
-    results used.
+    The material of this section comes primarily from \cite[Section~1.7;
+    Chapter~4]{dummit-foote}.
+
+    \begin{defn}[Group Action]\label{group-action}
+      Given a group $G$ and a set $X$,
+      \textsc{group action} is a homomorphism $G \to \Sym X$,
+      where $\Sym X$ is the symmetric group on $X$.
+    \end{defn}
+
+    A group action $\phi: G \to \Sym X$ induces a product
+    $X \times G \to X$ by mapping $(x, g) \mapsto \phi(g)(x)$.
+    When the action is clear from context,
+    this will be denoted $x \cdot g$, or simply $xg$.
+    This is called a \textsc{right action},
+    as $g$ \textit{acts on the right of} $x$
+    (the corresponding notion of a \textsc{left action}
+    can also be defined.)
+
+    Conversely, given a product $X \times G \to X$,
+    the same expression defines a map $G \to \Sym X$.
+    If such a product satisfies
+    \begin{alignat*}{2}
+      &\forall x \in X\ x 1_G = x \\
+      \text{and } &\forall x \in X\ \forall g, h \in G\
+        (x g) h = x(hg)
+    \end{alignat*}
+    then the induced map $G \to \Sym X$ will be a homomorphism,
+    so that these definitions are equivalent.
+
+    (In \cite{dummit-foote}
+    this is taken as the definition of a group action,
+    and the homomorphism $G \to \Sym X$ is called its \textsc{permutation
+    representation}.  It will be occasionally convenient to adopt each
+    perspective.)
+
+    \begin{defn}[Types of Group Actions]\label{group-action-types}
+      If if a homomorphism $G \to \Sym X$ is injective,
+      then the action is called \textsc{faithful}.
+      Note that a group homomorphism is injective
+      if and only if it has a trivial kernel.
+
+      Given a group action $G \to \Sym X$,
+      $g \in G$ is called \textsc{fixed point-free}
+      if $\forall x \in X\ xg \neq x$.
+      The group action itself is called \textsc{fixed point-free}
+      (or just \textsc{free}) if all its nontrivial elements
+      are fixed point-free.
+
+      A group action $G \to \Sym X$ is called \textsc{transitive}
+      if $\forall x, y \in X$ there exists some $g \in G$
+      such that $xg = y$.
+
+      A group action is called \textsc{regular} if it is simultaneously
+      transitive and free.  (This terminology follows \cite{godsil}.)
+    \end{defn}
+
+    Note that if $X$ is a structure with automorphisms
+    (such as a graph or group), $G$ is a subgroup of $\Aut X$,
+    and $G$ acts in the natural way on $X$ (i.e. $xg = g(x)$),
+    then this action is faithful.
+    That is, $\Aut X \leq \Sym X$,
+    so that this action is induced by the identity $G \into \Sym X$,
+    which is clearly injective.
+
+    \begin{lem}\label{faithful-transitive-abelian}
+      If an abelian group $G$ acts faithfully and transitively on a set $X$,
+      then the action is free, and thus also regular. \cite[Section 4.1,
+      Exercise 3]{dummit-foote}
+    \end{lem}
+
+    \begin{proof}
+      Let $g \in G$ be nontrivial, and $x \in X$.
+      The goal is to prove that $xg \neq x$.
+
+      Since $g$ is not the identity,
+      there exists some $y \in X$ such that $z := yg \neq y$.
+      Furthermore, since $G$ acts transitively on $X$,
+      there exists some $h \in G$ such that $yh = x \iff y = xh^{-1}$.
+      Then,
+      \begin{alignat*}{3}
+        xg &= (yh) g &\\
+        &= y (gh) &\\
+        &= y (hg) \quad&\text{ since $G$ is abelian}\\
+        &= (yg) h &\\
+        &= zh \ .&\\
+      \end{alignat*}
+
+      If $zh = x$ then, $z = xh^{-1} = y$,
+      but by definition, $z = yg \neq y$,
+      so $xg = zh \neq x$.
+    \end{proof}
 
   \section{Character Theory}
     Definition, and basic results used.
