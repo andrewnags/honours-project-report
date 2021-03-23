@@ -15,6 +15,7 @@
 \newcommand*{\vertbar}{\rule[-1ex]{0.5pt}{2.5ex}}
 \newcommand*{\horzbar}{\rule[.5ex]{2.5ex}{0.5pt}}
 
+\newcommand{\AS}{\mathcal{A}}
 \newcommand{\Zq}{\Z_q}
 \newcommand{\Zqz}{\Z_q \setminus \set{0}}
 \newcommand{\Zqd}{\Z_q^d}
@@ -111,13 +112,173 @@
 
     \subsection{$Q$-Polynomial Schemes}
 
-  \section{Automorphisms}
+  \section{Automorphisms and Cayley Graphs}
     This section may be merged with the following section.
     \begin{itemize}
       \item Action of a regular group of automorphisms
       \item Cayley graphs
       \item Eigenspaces from characters
     \end{itemize}
+    
+    The material in this section follows mostly from \cite[Chapter~9]{godsil}.
+    \\
+
+    This section and the next describes a special class of symmetric graphs
+    (respectively, association schemes).  As with many other mathematical
+    structures, the \textit{symmetry} of graphs (or schemes) is made precise by
+    examining its automorphisms -- those transformations of the object in
+    question which leave its structure unchanged.  Graphs (or schemes) with
+    certain automorphisms may be classified in this way.
+
+    More importantly for the purposes of this report, the structure revealed by
+    the automorphisms of graphs (or schemes) allows to compute their eigenvalues
+    significantly more efficiently than otherwise would be the case, as outlined
+    in the previous sections.
+
+    \begin{defn}[Automorphism]\label{auts}
+      For graphs $\Gamma, \Gamma'$,
+      a map $\phi: V\(\Gamma\) \to V\(\Gamma'\)$ is a \textsc{homomorphism}
+      if
+      $$
+        \forall u, v \in V\(\Gamma\) \
+        u \sim_\Gamma v \implies \phi(u) \sim_{\Gamma'} \phi(v)
+        \ .
+      $$
+      An \textsc{isomorphism} is an invertible homomorphism
+      whose inverse is also a homomorphism;
+      an \textsc{automorphism} is an isomorphism from a graph to itself.
+      $\Aut \Gamma$ denotes the set of all automorphisms on $\Gamma$;
+      it is the subgroup of $\Sym V\(\Gamma\)$,
+      consisting of those permutations which preserve the
+      (edge) structure of $\Gamma$.
+
+      An automorphism of an association scheme $\AS$ on vertex set $X$
+      is a map $X \to X$ which is simultaneously an automorphism of
+      every class in the scheme.
+      In other words, $\Aut \AS$ is the intersection of the automorphism groups
+      of each class.
+    \end{defn}
+
+    \begin{defn}[Cayley Graphs]\label{cayley-graph}
+      Given any group $G$ and a subset $C \subseteq G$,
+      then $C$ is \textsc{inverse-closed} if for each $g \in C$,
+      $g^{-1} \in C$ as well.
+
+      If $C \subseteq G$ is an inverse-closed subset of a group $G$,
+      then the \textsc{Cayley graph} of $G$ with respect to $C$ is denoted
+      $\Cay(G, C)$, and defined as follows:
+      \begin{itemize}
+        \item Its vertex set is $G$
+        \item $g \sim h$ in $\Cay(G, C)$ if and only if $gh^{-1} \in C$
+      \end{itemize}
+
+      Since $C$ is inverse closed, $gh^{-1} \in C \iff hg^{-1} \in C$
+      so that $\Cay(G, C)$ is undirected.
+
+      Furthermore, if $1_G \not\in C$, then $g \not\sim g$ so that the graph is
+      loopless.  (By definition it already lacks parallel edges.)
+    \end{defn}
+
+    Because Cayley graphs are defined from groups using only the group
+    structure, it is intuitive that these graphs should be highly symmetric.
+    For example, every Cayley graph is \textsc{vertex transitive}: for every
+    pair $u, v$ in the vertex set, there is a automorphism taking $u \mapsto v$.
+    To see this, note that $G$ acts (\ref{group-action}) on $\Cay(G, C)$ through
+    the group operation, since the vertex set is also equal to the group.
+    To verify that this is a homomorphism, if $u \sim v$ in $\Cay(G, C)$, then 
+    $$
+      uv^{-1} \in C
+      \implies (ug)(vg)^{-1} = ugg^{-1}v^{-1} = u 1 v^{-1} = u v^{-1} \in C
+    $$
+    so that $ug \sim vg$.
+    Then, $\Cay(G, C)$ is clearly vertex transitive if $G$ acts transitively,
+    and for any vertices $u, v$, the group element $u^{-1} v$ maps $u$ to $v$.
+    Moreover, this action is free, since if $ug = u$, then the group
+    cancellation law implies that $g$ is trivial.
+    Together, this implies that the action of $G$ is regular,
+    which suggests the following lemma which provides a characterization of
+    Cayley graphs.
+
+    (This action is also faithful since for $g \neq h \in G$, the vertex $1$
+    gets mapped to $g$ and $h$ respectively, which are unequal.  However this
+    observation irrelevant for this lemma, since it restricts to the action of
+    an automorphism group, which is automatically faithful.)
+
+    \begin{lem}\label{regular-aut-cayley}
+      For a graph $\Gamma$, there exists a subgroup $G \leq \Aut \Gamma$
+      which acts regularly on $\Gamma$
+      if and only if $\Gamma \cong \Cay(G, C)$
+      for some inverse-closed $C \subseteq G$.
+    \end{lem}
+
+    Before beginning the proof, it will be worthwhile to examine the neighbours
+    of $1_G$ in $\Cay(G, C)$: $g \sim 1_G$ precisely when $g1^{-1} = g \in C$.
+
+    \begin{proof}
+      Since the above argument demonstrates the reverse implication,
+      only the forward direction will be shown here.
+
+      Choose a vertex $v \in V(\Gamma)$ to identify with $1_G$.  (This choice
+      will not matter in the end, as Cayley graphs are vertex transitive.)
+      Since the action is regular, for each $u \in V(\Gamma)$ there exists a
+      unique $g_u \in G$ such that $vg_u = u$.
+
+      Then define
+      $$
+        C := \buildset{g \in G}{vg \sim v}
+      $$
+      and observe that for $u, w \in V(\Gamma)$,
+      $u g_u^{-1} = v$, and $w = v g_w \implies w g_u^{-1} = v g_w g_u^{-1}$.
+      So, since $g_u^{-1}$ is an automorphism of $\Gamma$,
+      $$
+        u \sim w
+        \iff u g_u^{-1} \sim w g_u^{-1}
+        \iff v \sim v g_w g_u^{-1}
+        \iff g_w g_u^{-1} \in C
+        \ .
+      $$
+
+      Therefore, the map $u \mapsto g_u$ is the desired isomorphism $\Gamma \to
+      \Cay(G, C)$.
+    \end{proof}
+
+    As promised at the beginning of the section, the next lemma demonstrates
+    (for graphs) how automorphisms may be used to derive eigenvalues, and
+    moreover, their eigenvectors.
+
+    \begin{lem}\label{cayley-eigen}
+      Let $G$ be a finite abelian group,
+      let $C \subseteq G \setminus \set{1}$ be inverse-closed,
+      and define $\Gamma := \Cay(G, C)$.
+      Then the rows of the character table of $G$ provide a complete set of
+      eigenvectors for the adjacency matrix $A$ of $\Gamma$.
+      Specifically, if $\psi$ is a character of $G$ (equivalently, a row of
+      its character table), then $\psi(C)$ is the eigenvalue of $\psi$.
+    \end{lem}
+
+    \begin{proof}
+      Note first that the neighbours $h \sim g$ of a vertex $g \in G$ consist of
+      precisely the set $\buildset{cg}{c \in C} = Cg$ since $h \sim g \iff
+      hg^{-1} \in C$, and multiplication by $g$ is invertible.
+
+      As in (\ref{character-table}), characters are identified with row vectors
+      such that $\psi(g) \rightsquigarrow \psi_g$.
+
+      Then
+      $$
+        (A\psi)_g = \sum_{h \in G} A_{g, h} \psi(h)
+        = \sum_{h \sim g} \psi(h) = \sum_{c \in C} \psi(cg)
+        = \psi(g) \sum_{c \in C} \psi(c) = \psi_g \psi(C)
+        \ .
+      $$
+
+      Furthermore, since the rows of the character table are orthogonal,
+      the eigenvectors $\psi$ are linearly independent,
+      and since $G \cong G^*$ (\ref{character-duality}) implies that the character table is square,
+      the rows form a basis of eigenvectors for $A$.
+    \end{proof}
+
+    TODO How to get real eigenvectors out of this?
 
   \section{Translation Schemes}
     \begin{itemize}
@@ -126,6 +287,110 @@
       \item Dual schemes? (Interesting, but not particularly necessary for the
         rest of this report)
     \end{itemize}
+
+    In a sense, this section generalizes the latter result of the previous
+    section to the setting of association schemes, using the former result.
+    Throughout this section, a transitive, abelian group of automorphisms will
+    replace the regular automorphism group which corresponds to a Cayley graph.
+    As per (\ref{faithful-transitive-abelian}) the transitive, abelian group
+    will act regularly, so that (\ref{regular-aut-cayley}) still applies.
+    This motivates the following definition.
+
+    \begin{defn}[Translation Schemes]\label{translation-scheme}
+      A \textsc{translation scheme} is an association scheme whose
+      automorphism group contains a transitive, abelian subgroup.
+    \end{defn}
+
+    \begin{lem}\label{translation-partition}
+      If $\AS$ is a translation scheme,
+      and $G$ is a transitive, abelian automorphism group,
+      then there is a partition into inverse-closed sets
+      $C_0, C_1, \ldots, C_d$ of $G$ where $C_0 = \set{1}$,
+      and each graph $\Gamma_i$ in $\AS$ is isomorphic to $\Cay(G, C_i)$.
+    \end{lem}
+
+    \begin{proof}
+      Since $G$ is abelian and is a transitive subgroup of $\Aut \Gamma_i$ for
+      each $i = 0, 1, \ldots, d$, $G$ acts regularly on $\Gamma_i$.
+      Therefore, by (\ref{regular-aut-cayley}), there exists an inverse-closed
+      set $C_i \subseteq G$ such that $\Gamma_i \cong \Cay(G, C_i)$.
+
+      In particular, since the edges of $\Gamma_0$ are the diagonal relation,
+      $C_0 = \set{1}$ generates the graph.
+
+      Otherwise, it suffices to show that $C_0, C_1, \ldots, C_d$ partition $G$.
+      Recall from the proof of (\ref{regular-aut-cayley}) that any vertex may be
+      chosen to identify with $1_G$, so that the same vertex (say, $v$)
+      may be chosen for each graph $\Gamma_i$ without loss of generality,
+      in which case $C_i$ consists of the neighbours of $v$.  By the definition
+      of an association scheme, for each vertex $u$ there is exactly one
+      graph $\Gamma_i$ in which $u \sim v$, so that for each vertex, there is
+      exactly one $C_i$ containing it.
+    \end{proof}
+
+    In order to characterize the translation schemes in a similar manner to the
+    Cayley graphs, an examination of partitions of matrices and groups will be
+    required.  This will lead to a simple criterion that distinguishes those
+    partitions into inverse-closed subsets of an abelian group which generate a
+    translation scheme from those which do not. \cite[Section~12.10]{godsil}
+
+    \begin{defn}[Partition Matrix]\label{partition-matrix}
+      If $\sigma$ is a partition of a set $X$,
+      then the \textsc{partition matrix} of $\sigma$
+      is the $01$ matrix
+      whose rows are indexed by the elements of $X$,
+      and whose columns are indexed by the parts of $\sigma$,
+      in which each row -- corresponding to $x \in X$ -- has exactly one $1$,
+      in the column corresponding to the part that contains $x$.
+    \end{defn}
+
+    Any partition matrix may be obtained from an $X \times X$ identity matrix by
+    merging the columns which correspond to elements in the same part.
+    Note that this implies that the columns are linearly independent.
+    (The rows will \textbf{not} be linearly independent unless the partition
+    is induced by the diagonal relation.)
+
+    Given any matrix $H$, if $\sigma$ is a partition of the columns with
+    partition matrix $S$ then the \textsc{induced row partition} $\sigma^*$
+    is the partition of the rows of $H$ such that two rows are in the same part
+    if and only if the corresponding rows in $HS$ are equal.  In other words, if
+    $f$ is the function which maps each row index $i$ of $H$ to the row vector
+    $(HS)_i$, then $\sigma^*$ is the partition given by the fibres of $f$.
+
+    \begin{lem}\label{larger-row-partition}
+      If $\sigma$ is a column partition of a matrix $H$ with full column-rank,
+      and $\sigma^*$ is the induced row partition,
+      then $\abs{\sigma^*} \geq \abs{\sigma}$.
+    \end{lem}
+
+    \begin{proof}
+      Let $S$ be the partition matrix of $\sigma$.
+      If $HSx = 0$ then since the columns of $H$ are linearly independent,
+      $Sx = 0$, and since the columns of $S$ are linearly independent,
+      $x = 0$.  Therefore the columns of $HS$ are linearly independent.
+      Since there are $\abs{\sigma}$ columns of $HS$,
+      $\rank HS = \abs{\sigma}$.
+
+      Similarly, if $R$ is the partition matrix of $\sigma*$,
+      then $\rank R = \abs{\sigma^*}$.  Therefore, to prove $\abs{\sigma} \leq
+      \abs{\sigma^*}$ it suffices to show that $\col HS \subseteq \col R$.
+
+      However, $\sigma^*$ is defined so that whever two rows of $HS$ are equal,
+      the rows will belong to the same part of $\sigma^*$,
+      and thus the rows will be equal in $R$
+      (this should be clear upon contemplating the definition of $R$).  
+      Therefore, for any vector in the column space of $HS$,
+      where $R$ has equal rows the vector is guaranteed to have equal
+      components (since those rows of $HS$ will be equal)
+      so that the vector will also belong to the column space of $R$.
+    \end{proof}
+
+    Note in fact that the same argument will apply to any refinement of
+    $\sigma*$, and will show that $\col HS \not\subseteq \col R$ for any
+    partition which is not a refinement of $\sigma^*$.
+    \cite[Section 12.7]{godsil}
+
+    TODO
 
   \section{The Eigenvalues of the Hamming Scheme}
     Let $\Zq$ denote the cyclic group of order $q$ (written additively),
