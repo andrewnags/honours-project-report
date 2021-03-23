@@ -523,7 +523,7 @@
     \begin{alignat*}{2}
       &\forall x \in X\ x 1_G = x \\
       \text{and } &\forall x \in X\ \forall g, h \in G\
-        (x g) h = x(hg)
+        (x g) h = x(gh)
     \end{alignat*}
     then the induced map $G \to \Sym X$ will be a homomorphism,
     so that these definitions are equivalent.
@@ -580,8 +580,8 @@
       Then,
       \begin{alignat*}{3}
         xg &= (yh) g &\\
-        &= y (gh) &\\
-        &= y (hg) \quad&\text{ since $G$ is abelian}\\
+        &= y (hg) &\\
+        &= y (gh) \quad&\text{ since $G$ is abelian}\\
         &= (yg) h &\\
         &= zh \ .&\\
       \end{alignat*}
@@ -590,6 +590,19 @@
       but by definition, $z = yg \neq y$,
       so $xg = zh \neq x$.
     \end{proof}
+
+    An alternate characterization of regular actions will be useful in this
+    report.  To see this, note that for a pair $x, y \in X$, there exists a $g
+    \in G$ such that $xg = y$ by transitivity; for any $g' \in G$ satisfying
+    $xg' = y$, 
+    $$
+      xg = xg' \implies x = x g'g^{-1}
+    $$
+    so that $g'g^{-1} = 1$ since the action is free, and so $g' = g$.
+    Conversely, if for each $x, y \in X$ there existed a unique $g \in G$
+    satisfying $xg = y$, then the action would clearly be transitive; since $x 1
+    = x$, $1$ is the unique group element fixing any point, so the action must
+    be free.
 
   \section{Character Theory}
     \begin{defn}[Characters]\label{character}
@@ -684,15 +697,15 @@
     and the inverse of a character in $G^*$ is the entrywise inversion of the
     vector.
 
-    Furthermore, given an ordering $G^* = \set{\psi_1, \ldots, \psi_n}$,
+    Furthermore, given an ordering $G^* = \set{\psi^1, \ldots, \psi^n}$,
     the matrix whose rows consist of the characters of $G^*$ is called the
     \textsc{character table} of $G$:
     \begin{equation}\label{character-table}
       H =
       \begin{bmatrix}
-        \horzbar & \psi_1 & \horzbar \\
+        \horzbar & \psi^1 & \horzbar \\
                  & \vdots &          \\
-        \horzbar & \psi_n & \horzbar \\
+        \horzbar & \psi^n & \horzbar \\
       \end{bmatrix}
       \ .
     \end{equation}
