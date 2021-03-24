@@ -16,6 +16,7 @@
 \newcommand*{\horzbar}{\rule[.5ex]{2.5ex}{0.5pt}}
 
 \newcommand{\AS}{\mathcal{A}}
+\newcommand{\BMA}{\mathbb{A}}
 \newcommand{\Zq}{\Z_q}
 \newcommand{\Zqz}{\Z_q \setminus \set{0}}
 \newcommand{\Zqd}{\Z_q^d}
@@ -402,9 +403,103 @@
     Note in fact that the same argument will apply to any refinement of
     $\sigma*$, and will show that $\col HS \not\subseteq \col R$ for any
     partition which is not a refinement of $\sigma^*$.
-    \cite[Section 12.7]{godsil}
 
-    TODO
+    \begin{thm}[Bridges and Mena {{\cite[Theorem~12.10.1]{godsil}}}]
+      \label{translation-char}
+      Let $G$ be a finite abelian group,
+      let $\sigma = \set{C_0, C_1, \ldots, C_d}$ be a partition of $G$
+      into inverse-closed parts where $C_0 = \set{1}$, and
+      let $\sigma^*$ be the induced row partition
+      of the character table $H$ of $G$.
+
+      Then $\abs{\sigma^*} \geq \abs{\sigma}$,
+      and the graphs $\Gamma_i := \Cay(G, C_i)$ form the classes of an
+      association scheme if and only if $\abs{\sigma^*} = \abs{\sigma}$.
+    \end{thm}
+
+    \begin{proof}
+      Let $A_i$ be the adjacency matrix of $\Gamma_i$,
+      and observe that the set $\set{A_0, A_1, \ldots, A_d}$ is linearly
+      independent.  This is because the sets $C_i$ partition $G$, and in each
+      $\Gamma_i$ the set $C_i$ consists of the neighbours of $1$.
+      The fact that the $C_i$ partition $G$ also implies that $\sum_i A_i = J$,
+      and since $C_0 = \set{1}$, $A_0 = I$.
+
+      By (\ref{cayley-eigen}), each character $\psi$ of $G$ (i.e. row of $H$)
+      is a common eigenvector of $A_0, A_1, \ldots, A_d$,
+      with eigenvalue $\psi(C_i)$ at $A_i$.
+      Define $\BMA := \Span\set{A_0, A_1, \ldots, A_d}$.
+      Let $\chi_{C_i}$ be the characteristic vector of $C_i$ in $G$,
+      and let
+      \begin{equation}\label{part-mat-sigma}
+        \chi(\sigma) =
+        \begin{bmatrix}
+          \vertbar   & \vertbar   &        & \vertbar   \\
+          \chi_{C_0} & \chi_{C_1} & \cdots & \chi_{C_d} \\
+          \vertbar   & \vertbar   &        & \vertbar   \\
+        \end{bmatrix}
+      \end{equation}
+      be the partition matrix of $\sigma$.
+
+      Let $D_0, D_1, \ldots, D_e$ be the parts of $\sigma^*$;
+      then $i, k$ (or, their characters $\psi^i, \psi^k$)
+      belong to the same part $D_j$ precisely when the rows
+      $\psi^i \chi(\sigma), \psi^k \chi(\sigma)$ in
+      \begin{equation}
+        H \chi(\sigma) =
+        \begin{bmatrix}
+          \horzbar & \psi^1 & \horzbar \\
+                   & \vdots &          \\
+          \horzbar & \psi^n & \horzbar \\
+        \end{bmatrix}
+        \begin{bmatrix}
+          \vertbar   & \vertbar   &        & \vertbar   \\
+          \chi_{C_0} & \chi_{C_1} & \cdots & \chi_{C_d} \\
+          \vertbar   & \vertbar   &        & \vertbar   \\
+        \end{bmatrix}
+      \end{equation}
+      are equal.
+      Together, the characters of each $D_j$ span a common eigenspace of the
+      $A_i$: let $F_j$ be the orthogonal projection matrix onto this subspace.
+
+      Define $\mathbb{F} := \Span\set{F_0, F_1, \ldots, F_e}$.
+      Since each $\col F_j$ is spanned by a disjoint set of characters,
+      these subspaces are orthogonal and the $F_j$ are linearly independent;
+      since together the characters span $\R^n$ (where $n$ is the order of
+      $G$), the (direct) sum of the subspaces is $\R^n$ as well.  Therefore,
+      $$
+        I = F_0 + F_1 + \cdots + F_e
+        \ .
+      $$
+      Furthermore, since $\col F_j$ is a common eigenspace for the $A_i$,
+      for $i = 0, 1, \ldots, d$ and $j = 0, 1, \ldots, e$ there exist constants
+      $P_i(j)$ such that
+      $$
+        A_i F_j = P_i(j) F_j
+        \implies A_i = \sum_{j = 0}^e P_i(j) F_j
+        \implies \BMA \leq \mathbb{F}
+        \ .
+      $$
+      Note that this implies that $d = \dim\BMA \leq \dim\mathbb{F} = e$.
+
+      TODO: maybe we can remove (\ref{larger-row-partition})?
+
+      Note that the $F_0, F_1, \ldots, F_e$ are orthogonal idempotents,
+      so they are closed under the regular matrix product.
+      This implies that the algebra they generate is simply $\mathbb{F}$.
+      On the other hand, while $A_0, A_1, \ldots, A_d$ are orthogonal
+      idempotents with respect to the \textit{Schur product},
+      they may generate an algebra with the usual product
+      that is strictly larger than $\BMA$ --
+      it must, however, be contained in $\mathbb{F}$.
+      We will show that these two algebras are actually equal.
+      In this case, $e = d$ if and only if $\BMA$ is closed under regular matrix
+      multiplication; given the results above, this will then be true if and
+      only if $A_0, A_1, \ldots, A_d$ forms an association scheme.
+
+      TODO
+
+    \end{proof}
 
   \section{The Eigenvalues of the Hamming Scheme}
     Let $\Zq$ denote the cyclic group of order $q$ (written additively),
