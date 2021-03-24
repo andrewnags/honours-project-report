@@ -131,7 +131,7 @@
     certain automorphisms may be classified in this way.
 
     More importantly for the purposes of this report, the structure revealed by
-    the automorphisms of graphs (or schemes) allows to compute their eigenvalues
+    the automorphisms of graphs (or schemes) allows one to compute their eigenvalues
     significantly more efficiently than otherwise would be the case, as outlined
     in the previous sections.
 
@@ -184,7 +184,7 @@
     For example, every Cayley graph is \textsc{vertex transitive}: for every
     pair $u, v$ in the vertex set, there is a automorphism taking $u \mapsto v$.
     To see this, note that $G$ acts (\ref{group-action}) on $\Cay(G, C)$ through
-    the group operation, since the vertex set is also equal to the group.
+    the group operation, since the vertex set is also the group.
     To verify that this is a homomorphism, if $u \sim v$ in $\Cay(G, C)$, then 
     $$
       uv^{-1} \in C
@@ -211,17 +211,17 @@
       for some inverse-closed $C \subseteq G$.
     \end{lem}
 
-    Before beginning the proof, it will be worthwhile to examine the neighbours
+    Since the above argument demonstrates the reverse implication,
+    only the forward direction will be shown here.
+
+    Before beginning the proof, it will be worthwhile to note the neighbours
     of $1_G$ in $\Cay(G, C)$: $g \sim 1_G$ precisely when $g1^{-1} = g \in C$.
 
     \begin{proof}
-      Since the above argument demonstrates the reverse implication,
-      only the forward direction will be shown here.
-
       Choose a vertex $v \in V(\Gamma)$ to identify with $1_G$.  (This choice
       will not matter in the end, as Cayley graphs are vertex transitive.)
       Since the action is regular, for each $u \in V(\Gamma)$ there exists a
-      unique $g_u \in G$ such that $vg_u = u$.
+      unique $g_u \in G$ such that $vg_u = u$ (\ref{regular-unique}).
 
       Then define
       $$
@@ -245,6 +245,15 @@
     As promised at the beginning of the section, the next lemma demonstrates
     (for graphs) how automorphisms may be used to derive eigenvalues, and
     moreover, their eigenvectors.
+    Naively, computing the eigenvalues of a matrix $A$ involves solving its
+    characteristic polynomial, which is generically difficult.
+    Then for an eigenvalue $\theta$, finding a $\theta$-eigenvector involves
+    computing the kernel of $A - \theta I$, which can be computed in polynomial
+    time (though not in linear time), and fast numeric algorithms are typically
+    inexact.  (TODO citation)
+
+    However, given the right information about a group, the following result
+    finds the eigenvectors and eigenvalues almost instantaneously.
 
     \begin{lem}\label{cayley-eigen}
       Let $G$ be a finite abelian group,
@@ -280,7 +289,7 @@
 
     TODO How to get real eigenvectors out of this?
 
-  \section{Translation Schemes}
+  \section{Partitions and Translation Schemes}
     \begin{itemize}
       \item Equitable partitions of matrices
       \item Group partitions yielding association schemes
@@ -288,8 +297,8 @@
         rest of this report)
     \end{itemize}
 
-    In a sense, this section generalizes the latter result of the previous
-    section to the setting of association schemes, using the former result.
+    In a sense, this section generalizes the characterization of Cayley graphs
+    from the previous section to the setting of association schemes.
     Throughout this section, a transitive, abelian group of automorphisms will
     replace the regular automorphism group which corresponds to a Cayley graph.
     As per (\ref{faithful-transitive-abelian}) the transitive, abelian group
@@ -331,8 +340,8 @@
     In order to characterize the translation schemes in a similar manner to the
     Cayley graphs, an examination of partitions of matrices and groups will be
     required.  This will lead to a simple criterion that distinguishes those
-    partitions into inverse-closed subsets of an abelian group which generate a
-    translation scheme from those which do not. \cite[Section~12.10]{godsil}
+    partitions which generate a translation scheme translation scheme from those
+    which do not.  \cite[Section~12.10]{godsil}
 
     \begin{defn}[Partition Matrix]\label{partition-matrix}
       If $\sigma$ is a partition of a set $X$,
@@ -351,13 +360,15 @@
     is induced by the diagonal relation.)
 
     Given any matrix $H$, if $\sigma$ is a partition of the columns with
-    partition matrix $S$ then the \textsc{induced row partition} $\sigma^*$
-    is the partition of the rows of $H$ such that two rows are in the same part
-    if and only if the corresponding rows in $HS$ are equal.  In other words, if
-    $f$ is the function which maps each row index $i$ of $H$ to the row vector
-    $(HS)_i$, then $\sigma^*$ is the partition given by the fibres of $f$.
+    partition matrix $\chi(\sigma)$ then the \textsc{induced row partition}
+    $\sigma^*$ is the partition of the rows of $H$ such that two rows are in the
+    same part if and only if the corresponding rows in $H\chi(\sigma)$ are
+    equal.  In other words, if $f$ is the function which maps each row index
+    $i$ of $H$ to the row vector $(H\chi(\sigma))_i$, then $\sigma^*$ is the
+    partition given by the fibres of $f$.
+    \cite[Section 12.7]{godsil}
 
-    \begin{lem}\label{larger-row-partition}
+    \begin{lem}[{{\cite[Section 12.7]{godsil}}}] \label{larger-row-partition}
       If $\sigma$ is a column partition of a matrix $H$ with full column-rank,
       and $\sigma^*$ is the induced row partition,
       then $\abs{\sigma^*} \geq \abs{\sigma}$.
@@ -375,10 +386,13 @@
       then $\rank R = \abs{\sigma^*}$.  Therefore, to prove $\abs{\sigma} \leq
       \abs{\sigma^*}$ it suffices to show that $\col HS \subseteq \col R$.
 
-      However, $\sigma^*$ is defined so that whever two rows of $HS$ are equal,
+      However, $\sigma^*$ is defined so that whenever two rows of $HS$ are equal,
       the rows will belong to the same part of $\sigma^*$,
       and thus the rows will be equal in $R$
       (this should be clear upon contemplating the definition of $R$).  
+      More importantly for this proof, the converse holds:
+      whenever two rows of $R$ are equal, the corresponding rows of $HS$ must
+      also be equal.
       Therefore, for any vector in the column space of $HS$,
       where $R$ has equal rows the vector is guaranteed to have equal
       components (since those rows of $HS$ will be equal)
@@ -402,8 +416,8 @@
     In particular, $C_0 = \set{0}$ and
     $$
       C_1 = \Zqz \times \set{0}^{d - 1}
-      \sqcup \set{0} \times \Zqz \times \set{0}^{d - 2}
-      \sqcup \cdots \sqcup
+      \ \bigsqcup\ \set{0} \times \Zqz \times \set{0}^{d - 2}
+      \ \bigsqcup\ \cdots \quad\bigsqcup\ 
       \set{0}^{d - 1} \times \Zqz 
       \ .
     $$
@@ -413,7 +427,8 @@
     so that this partition yields the Hamming scheme.
     In particular, $H(d, q) \cong \Cay(\Zqd, C_1)$.
 
-    For $\psi \in (\Zqd)^*$ and $x = (x_1, \ldots, x_d) = \sum_{i=1}^d x_i e_i$
+    For a character of the group $\psi \in (\Zqd)^*$ (\ref{character}) and
+    $x = (x_1, \ldots, x_d) = \sum_{i=1}^d x_i e_i$ in the group
     (here $e_i$ is the tuple of all zeroes, and a $1$ in the $i^\text{th}$
     spot), then since $\psi$ is a homomorphism,
     $$
@@ -428,8 +443,9 @@
     Let $\omega$ be a primitive $q^\text{th}$ root of unity,
     so that $1 = \omega^0, \omega^1, \ldots, \omega^{q-1}$ are distinct.
     Then every choice in  $\set{\omega^0, \omega^1, \ldots, \omega^{q-1}}^d$
-    will yield a distinct character, by assigning this tuple to $\psi$
-    (using the same identificationg used in (\ref{character-vector})),
+    will yield a distinct character
+    by assigning the $i^\text{th}$ entry to $\psi(e_i)$
+    (identifying $\psi$ with the tuple as in (\ref{character-vector})),
     and defining the value of $\psi$ at all other $x = (x_1, \ldots, x_d)$ by
     $$
       \psi(x) := \prod_{i=1}^d \psi(e_i)^{x_i} \ .
@@ -445,7 +461,7 @@
 
     Therefore, $(\Zqd)^* \cong \set{\omega^0, \ldots, \omega^{q-1}}^n$
     (taking entrywise multiplication as the group product on the right),
-    so that characters $\psi$ will be identified with row vectors
+    so that the characters $\psi$ will be identified with row vectors
     $$
       \psi \rightsquigarrow
       \begin{bmatrix}
@@ -456,11 +472,11 @@
 
     (Note that this notation deviates from (\ref{character-vector}),
     but will be more convenient for this purpose.
-    In fact, this show that $(\Zqd)^* \cong \Zqd$ directly,
+    In fact, this shows that $(\Zqd)^* \cong \Zqd$ directly,
     confirming (\ref{character-duality}).)
 
     Then, in the $i^\text{th}$-distance Hamming graph,
-    $\psi$ is a $\psi(C_i)$-eigenvalue,
+    $\psi$ is a $\psi(C_i)$-eigenvalue (\ref{cayley-eigen}),
     and for the Hamming graph, it can be computed directly.
     \begin{alignat*}{3}
       \psi(C_1)
@@ -827,6 +843,10 @@
   but do not fit naturally into other sections of the report, then perhaps they
   could go here as well.
 
+  \begin{itemize}
+    \item Computing the character table of an abelian group
+  \end{itemize}
+
 \appendix
 
 \chapter{Linear Algebra}
@@ -948,6 +968,12 @@
     satisfying $xg = y$, then the action would clearly be transitive; since $x 1
     = x$, $1$ is the unique group element fixing any point, so the action must
     be free.
+
+    \begin{lem}\label{regular-unique}
+      A group action $G$ on $X$ is regular if and only if
+      for all $x, y \in X$, there exists a unique $g \in G$
+      such that $xg = y$.
+    \end{lem}
 
   \section{Character Theory}
     \begin{defn}[Characters]\label{character}
@@ -1127,6 +1153,28 @@
       However, for the diagonal, $(\psi, \psi)$-entries of $HH^*$,
       $\psi \psi^* = 1_{G^*}(G) = n$, which proves the claim.
     \end{proof}
+
+  \section{The Structure of Finite Abelian Groups}
+    TODO I need a citation for this.
+    I'm also not sure if this section shouldn't go before the section on
+    Character Theory, as it will be used in (\ref{character-duality}).
+
+    \begin{thm}[Structure Theorem]\label{structure-theorem}
+      If $G$ is a finitely generated abelian group,
+      then $G$ is isomorphic to a direct product of cyclic groups.
+      Specifically,
+      $$
+        G \cong
+        \Z_{q_1}^{d_1} \times \cdots \times \Z_{q_t}^{d_t}
+        \times \Z^f
+      $$
+      where the $q_i$ are distinct prime powers.
+      Moreover, this decomposition is unique up to the ordering of its factors.
+    \end{thm}
+
+    This is a well-known and well-used result.  It comes as a direct result of
+    the Structure Theorem for Finitely Generated Modules over PIDs, using the
+    language of rings and modules, but this is out of the scope of this report.
 
 \chapter{Notation}
   I've included these sections mostly as an excuse to add the citations to the
