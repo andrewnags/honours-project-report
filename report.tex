@@ -80,6 +80,8 @@
   \section{Hamming Graphs}
 
   \section{Distance-Regular Graphs}
+    Define $M$-cliques.
+
     I'm not sure if I should maybe merge this section with $P$-polynomial
     section?
 
@@ -90,18 +92,177 @@
     \end{itemize}
 
 \chapter{Association Schemes}
-  \section{Association Schemes}
+  \section{Association Schemes}\label{sec:AS:AS}
     \begin{itemize}
       \item Definition(s)
       \item Examples?
       \item Basic parameters
     \end{itemize}
 
-    \subsection{The Bose-Mesner Algebra}
+    \begin{defn}[Commutative Association Scheme -- Combinatorial
+      {{\cite[Section 2.1]{delsarte}}}]
+      \label{association-scheme-comb}
+      Let $D = \set{0, 1, \ldots, d}$ for some $d \geq 1$.
+      A \textsc{commutative association scheme} $\AS$ is a set $X$, called the
+      \textsc{vertex set}, together with a set of relations $\set{R_i}_{i=0}^d$ 
+      satisfying the following axioms:
+      \begin{enumerate}
+        \item The set of relations $\set{R_i}_{i=0}^d$ partitions $X \times X$;
+          \label{cAS-part}
+        \item $R_0$ is the diagonal relation $\buildset{(x, x)}{x \in X}$;
+          \label{cAS-diag}
+        \item For each $i \in D$, there is an $i' \in D$ such that $R_{i'}$ is
+          the \textit{opposite relation} $\buildset{(y, x)}{(x, y) \in R_i}$ of
+          $R_i$;
+          \label{cAS-sym}
+        \item For every triple $i, j, k \in D$, there exists a constant $p_{i,
+          j}^k$ such that for all $(x, y) \in R_k$, there are exactly $p_{i,
+          j}^k$ vertices $z$ such that $(x, z) \in R_i$ and $(z, y) \in R_j$;
+          furthermore, $p_{i, j}^k = p_{j, i}^k$.
+          \label{cAS-reg}
+      \end{enumerate}
 
-    \subsection{Duality}
+      As used above, the elements of $X$ are called \textsc{vertices},
+      and vertices $(x, y) \in R_i$ are called \textsc{$i^\text{th}$ associates}.
 
-  \section{$P$-Polynomial Schemes}
+      Each relation $R_i$ is called a \textsc{class} of $\AS$, which has
+      \textsc{diameter} $d$ (this will be explained in connection with
+      distance-regular graphs in the next section (\ref{sec:AS:PPS})).
+      Sometimes, $\AS$ is said to be a $d$-class association scheme (as the
+      diagonal relation is discounted).
+    \end{defn}
+
+    To every relation $R \subseteq X \times X$ there exists a $X \times X$ $01$
+    matrix $A$, where
+    \begin{equation}\label{adjacency-matrix}
+      A_{xy} = \begin{cases}
+        1 & \If (x, y) \in R \\
+        0 & \If (x, y) \not\in R \\
+      \end{cases};
+    \end{equation}
+    $A$ is then called the \textsc{adjacency matrix} of $R$.
+    This is a bijective correspondence between relations on $X \times X$,
+    and $X \times X$ matrices with each entry either $0$ or $1$.
+    (Note that binary relations are precisely directed graphs without parallel
+    edges, and this usage of the term \textit{adjacency matrix} agrees with its
+    usage in graph theory.)
+
+    \begin{defn}[Commutative Association Scheme -- Algebraic
+      {{\cite[Chapter 12]{godsil}}}]
+      \label{association-scheme-alg}
+      Let $\circ$ denote the \textsc{Schur} product of matrices of the same shape:
+      \begin{equation}\label{schur-prod}
+        (A \circ B)_{xy} = A_{xy} B_{xy}
+        \ .
+      \end{equation}
+      (This is also called the \textit{Hadamard}, or \textit{entrywise} product.)
+      If each relation $R_i$ has adjacency matrix $A_i$,
+      the above axioms can be reformulated as follows:
+      \begin{enumerate}
+        \item $\displaystyle \sum_{i=0}^d A_i = J$, the all-ones matrix,
+          and $A_i \circ A_j = \delta_{i, j} A_i$;
+          \label{aAS-part}
+        \item $A_0 = I$, the identity matrix;
+          \label{aAS-diag}
+        \item For every $i \in D$ there is an $i' \in D$ such that $A_i^T =
+          A_{i'}$;
+          \label{aAS-sym}
+        \item For every $i, j$,
+          $$
+            A_i A_j = A_j A_i = \sum_{k = 0}^d p_{i, j}^k A_k
+            \ .
+          $$
+          \label{aAS-reg}
+      \end{enumerate}
+    \end{defn}
+
+    The first three equivalences are straightforward translations.  To see the
+    last, observe that
+    $$
+      (A_i A_j)_{xy} = \sum_{z \in X} (A_i)_{xz} (A_j)_{zy}
+    $$
+    which counts the number of vertices $z \in X$ such that
+    $$
+      \begin{cases}
+        (A_i){xz} = 1 & \iff (x, z) \in R_i \\
+        (A_j){zy} = 1 & \iff (z, y) \in R_j \\
+      \end{cases}\ .
+    $$
+    Then, $(A_i A_j)_{xy} = p_{ij}^k$ exactly when $(A_k)_{xy} = 1 \iff (x, y)
+    \in R_k$.
+    \\
+
+    The requirement in (\hyperref[cAS-reg]{Combinatorial 4}) that $p_{i, j}^k =
+    p_{j, i}^k$ corresponds to the requirement that $A_i A_j = A_j A_i$
+    (\hyperref[aAS-reg]{Algebraic 4}), which is why such association schemes are
+    called \textit{commutative}.
+
+    If the requirement of \textit{commutativity} is dropped, then every finite
+    group $G$ is an association scheme in the following way.  Cayley's theorem
+    says that every group is isomorphic to the group of permutations on $G$
+    given by left multiplication (the same construction will work if right
+    multiplication is used everywhere instead of left).  By identifying each
+    element of $G$ with the $G \times G$ \textit{permutation matrix}, we obtain
+    an association scheme with $G$ as the vertex set, and permutation matrices
+    as the classes.  Since the identity element of $G$ will map to the identity
+    matrix, the product of two such permutations is another such permutation,
+    and the transpose of a permutation matrix is its inverse, axioms
+    (\ref{aAS-diag}, \ref{aAS-sym}, \ref{aAS-reg}) are satisfied.  Since for
+    every $g, h \in G$, only the element $hg^{-1}$ maps $g$ to $h$, exactly one
+    of the permutation matrices will have a $1$ in the $(g, h)$-entry; all the
+    others will be $0$.  This association scheme will be commutative if and only
+    if the group $G$ is.
+
+    Not every association scheme (commutative or not) arises is this way, but
+    many schemes of interest are closely related to a particular group.
+    Nevertheless, the connection between the combinatorial definition of
+    association schemes (\ref{association-scheme-comb}) and the algebraic one
+    (\ref{association-scheme-alg}) provides a rich connection between the two
+    subjects (\ref{sec:AS:AS:BMA}).
+    \\
+
+    A particularly important class of association scheme, called
+    \textsc{symmetric}, is one in which every relation is symmetric (i.e. $i =
+    i'$ in \hyperref[cAS-sym]{Combinatorial 3}), or equivalently, each adjacency
+    matrix is symmetric ($A_i^T = A_i$ in \hyperref[aAS-sym]{Algebraic 3}).
+    In this case, the relations $R_i$ form graphs $\Gamma_i$ with vertex set
+    $X$, and edge set given by
+    $$
+      x \sim y \iff (x, y) \in R_i \iff (y, x) \in R_i
+      \ .
+    $$
+    The most important class of symmetric association scheme (for the purposes
+    of this report) arise as the distance graphs of a distance-regular graph
+    (\ref{sec:AS:PPS}).  From this setting, we can generalize the following
+    definition.  (TODO define for DRGs)
+
+    \begin{defn}[Cliques and Cocliques {{\cite[Section 3.3]{delsarte}}}]
+      \label{AS-clique}
+      Let $Y \subseteq X$, and $C \subseteq D$, where $0 \in C$.
+      Then $Y$ is called a \textsc{$C$-clique} if
+      $$
+        R_i \cap Y^2 = \emptyset \quad \forall i \in D \setminus C
+        \ .
+      $$
+      Equivalently, $Y$ is a $C$-clique if for all $x, y \in Y$,
+      $$
+        (x, y) \in R_i \implies i \in C
+        \ .
+      $$
+      Let $C^* := C \setminus \set{0}$, and $\bar{C} = D \setminus C^*$.
+      Then $Y$ is a $C$-clique if and only if it is a
+      \textsc{$\bar{C}$-coclique}.
+
+      (TODO Move below note to DRG defn.)
+      (Note that such a set $Y$ is called a \textit{$C$-code},
+      or \textit{$\bar{C}$-anticode} in \cite{godsil}.)
+    \end{defn}
+
+    \subsection{The Bose-Mesner Algebra}\label{sec:AS:AS:BMA}
+
+    \subsection{Duality}\label{sec:AS:AS:duality}
+
+  \section{$P$-Polynomial Schemes}\label{sec:AS:PPS}
     \begin{itemize}
       \item Definitions
       \item ``Equivalence" to DRGs
@@ -1007,6 +1168,19 @@
   \begin{itemize}
     \item Computing the character table of an abelian group
   \end{itemize}
+
+\chapter{Discussion}
+  I'm not sure if "Discussion" is the right name for a chapter of this sort, if
+  it is even worth including.  If it is, I would try and keep this part brief.
+
+  \section{Conclusion}
+    I know papers typically have some sort of conclusion or summary towards the
+    end, but I wasn't sure if it would be valuable to include something like
+    that in a report of this kind.
+
+  \section{Other Applications}
+    Perhaps it might be worth mentioning number of other applications of
+    association schemes, for example to design theory, or statistics?
 
 \appendix
 
