@@ -360,49 +360,18 @@
     (The rows will \textbf{not} be linearly independent unless the partition
     is induced by the diagonal relation.)
 
-    Given any matrix $H$, if $\sigma$ is a partition of the columns with
-    partition matrix $\chi(\sigma)$ then the \textsc{induced row partition}
-    $\sigma^*$ is the partition of the rows of $H$ such that two rows are in the
-    same part if and only if the corresponding rows in $H\chi(\sigma)$ are
-    equal.  In other words, if $f$ is the function which maps each row index
+    \begin{defn}[Induced Row Partition]\label{induced-row-partition}
+      Given a matrix $H$, if $\sigma$ is a partition of the columns with
+      partition matrix $\chi(\sigma)$ then the \textsc{induced row partition}
+      $\sigma^*$ is the partition of the rows of $H$ such that two rows are in the
+      same part if and only if the corresponding rows in $H\chi(\sigma)$ are
+      equal.  
+    \end{defn}
+
+    In other words, if $f$ is the function which maps each row index
     $i$ of $H$ to the row vector $(H\chi(\sigma))_i$, then $\sigma^*$ is the
     partition given by the fibres of $f$.
     \cite[Section 12.7]{godsil}
-
-    \begin{lem}[{{\cite[Section 12.7]{godsil}}}] \label{larger-row-partition}
-      If $\sigma$ is a column partition of a matrix $H$ with full column-rank,
-      and $\sigma^*$ is the induced row partition,
-      then $\abs{\sigma^*} \geq \abs{\sigma}$.
-    \end{lem}
-
-    \begin{proof}
-      Let $S$ be the partition matrix of $\sigma$.
-      If $HSx = 0$ then since the columns of $H$ are linearly independent,
-      $Sx = 0$, and since the columns of $S$ are linearly independent,
-      $x = 0$.  Therefore the columns of $HS$ are linearly independent.
-      Since there are $\abs{\sigma}$ columns of $HS$,
-      $\rank HS = \abs{\sigma}$.
-
-      Similarly, if $R$ is the partition matrix of $\sigma*$,
-      then $\rank R = \abs{\sigma^*}$.  Therefore, to prove $\abs{\sigma} \leq
-      \abs{\sigma^*}$ it suffices to show that $\col HS \subseteq \col R$.
-
-      However, $\sigma^*$ is defined so that whenever two rows of $HS$ are equal,
-      the rows will belong to the same part of $\sigma^*$,
-      and thus the rows will be equal in $R$
-      (this should be clear upon contemplating the definition of $R$).  
-      More importantly for this proof, the converse holds:
-      whenever two rows of $R$ are equal, the corresponding rows of $HS$ must
-      also be equal.
-      Therefore, for any vector in the column space of $HS$,
-      where $R$ has equal rows the vector is guaranteed to have equal
-      components (since those rows of $HS$ will be equal)
-      so that the vector will also belong to the column space of $R$.
-    \end{proof}
-
-    Note in fact that the same argument will apply to any refinement of
-    $\sigma*$, and will show that $\col HS \not\subseteq \col R$ for any
-    partition which is not a refinement of $\sigma^*$.
 
     \begin{thm}[Bridges and Mena {{\cite[Theorem~12.10.1]{godsil}}}]
       \label{translation-char}
@@ -480,9 +449,11 @@
         \implies \BMA \leq \mathbb{F}
         \ .
       \end{equation}
-      Note that this implies that $d = \dim\BMA \leq \dim\mathbb{F} = e$.
-
-      TODO: maybe we can remove (\ref{larger-row-partition})?
+      This implies that
+      $$
+        \abs{\sigma} = d = \dim\BMA \leq \dim\mathbb{F} = e = \abs{\sigma^*}
+        \ .
+      $$
 
       Note that the $F_0, F_1, \ldots, F_e$ are orthogonal idempotents,
       so they are closed under the regular matrix product.
