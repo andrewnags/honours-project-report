@@ -11,3 +11,5 @@ An archive of previously-rendered reports
 [report Tue Mar 23 20:52:05 UTC 2021](/report Tue Mar 23 20:52:05 UTC 2021.pdf)
 
 [report Wed Mar 24 20:12:39 UTC 2021](/report Wed Mar 24 20:12:39 UTC 2021.pdf)
+
+[report Fri Apr  2 15:54:27 UTC 2021](/report Fri Apr  2 15:54:27 UTC 2021.pdf)
