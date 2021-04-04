@@ -259,6 +259,82 @@
     \end{defn}
 
     \subsection{The Bose-Mesner Algebra}\label{sec:AS:AS:BMA}
+      For any association scheme $\AS$,
+      there are the adjacency matrices
+      $A_0, A_1, \ldots, A_d$ (\ref{association-scheme-alg}).
+      Since any product of these matrices belongs to their span (\ref{aAS-reg}),
+      their span
+      \begin{equation}\label{BMA}
+        \BMA := \Span\set{A_0, A_1, \ldots, A_d}
+      \end{equation}
+      is closed under matrix multiplication.  This structure is called the
+      \textsc{Bose-Mesner algebra} of $\AS$.
+
+      Note also that from the first axiom of an association scheme
+      (\ref{aAS-part}), $\BMA$ is also closed under the \textit{Schur product},
+      so that $\BMA$ is actually an algebra with respect to two
+      \textit{different} products.
+      This \textit{duality} will form an important aspect of the theory of
+      association schemes, and will be discussed in detail in this section and
+      the next (\ref{sec:AS:AS:duality}).
+
+      Since the adjoint $A_i^* = A_i^T$ belongs to $A_0, A_1, \ldots, A_d$ for
+      every $i$, and these matrices all commute, each $A_i$ is a normal operator
+      (TODO reference).  From the spectral theorem,
+      we can decompose each matrix
+      $$
+        A_i = \sum_j \theta_{ij} \tilde{F_{ij}}
+      $$
+      into a linear combination of orthogonal idempotents $\tilde{F_{ij}}$, where
+      $$
+        I = \sum_j \tilde{F_{ij}}
+        \ .
+      $$
+      Since each $\tilde{F_{ij}}$ is a polynomial in $A_i$, and the $A_i$ all
+      commute, so too do the $\tilde{F_{ij}}$.  Therefore, the products
+      $\prod_i \tilde{F_{i{k_i}}}$ (for any choices of $k_i$) are also
+      orthogonal idempotents, though some may be zero, so that the nonzero
+      products are linearly independent.  Furthermore, their sum is the identity
+      matrix
+      $$
+        I = I^{d+1}
+        = \prod_i \( \sum_j \tilde{F_{ij}} \)
+        = \sum \( \prod_i \tilde{F_{i{k_i}}} \)
+      $$
+      where the latter sum is taken over all choices of $k_i$.
+      Therefore, we can express each $A_i$ as linear combinations of these
+      products, as
+      \begin{alignat*}{2}
+        A_i \prod_{i'} \tilde{F_{i{k_i}}}
+        &= A_i \tilde{F_{i{k_i}}} \prod_{i' \neq i} \tilde{F_{i{k_i}}} \\
+        &= \theta_{i{k_i}} \tilde{F_{i{k_i}}}
+          \prod_{i' \neq i} \tilde{F_{i{k_i}}} \\
+        &= \theta_{i{k_i}} \prod_{i'} \tilde{F_{i{k_i}}} \\
+        \implies A_i = A_i I
+        &= \sum \theta_{i{k_i}} \prod_{i'} \tilde{F_{i{k_i}}} \ .
+      \end{alignat*}
+
+      Therefore, the non-zero products $\prod_i \tilde{F_{ik_i}}$ span $\BMA$
+      and are linearly independent, so there are precisely $d+1 = \dim \BMA$ of
+      them: $F_0, F_1, \ldots, F_d$.  They are orthogonal idempotents, and each
+      is self-adjoint since the $\tilde{F_{ij}}$ are self-adjoint and commute.
+      These matrices are called the \textsc{idempotents} of $\AS$, and form an
+      alternative basis to $A_0, A_1, \ldots, A_d$.  (Because the $A_i$ are
+      orthogonal idempotents under the Schur product, they are sometimes called
+      \textsc{Schur idempotents}.)
+      Then, one can write
+      $$
+        A_i = \sum_{j = 0}^d P_i(j) F_j
+      $$
+      and form the $(d+1) \times (d+1)$ matrix $P$ by $P_{ji} = P_i(j)$
+      (note the reversed indices).
+      This is called the \textsc{matrix of eigenvalues} of $\AS$.
+      \cite[Theorem 12.2.1]{godsil}
+
+      In the case that $\AS$ is symmetric, each $A_i$ is a real, symmetric
+      operator, so its eigenvalues $\theta_{ij}$ are real, as are its
+      idempotents $\tilde{F_{ij}}$.  Therefore, the idempotents $F_j$ are real,
+      as is the matrix of eigenvalues $P$.
 
     \subsection{Duality}\label{sec:AS:AS:duality}
 
