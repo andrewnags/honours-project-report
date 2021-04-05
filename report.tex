@@ -182,7 +182,7 @@
       \label{association-scheme-comb}
       Let $D = \set{0, 1, \ldots, d}$ for some $d \geq 1$.
       A \textsc{commutative association scheme} $\AS$ is a set $X$, called the
-      \textsc{vertex set}, together with a set of relations $\set{R_i}_{i=0}^d$ 
+      \textsc{vertex set}, together with a set of relations $\set{R_i}_{i=0}^d$
       satisfying the following axioms:
       \begin{enumerate}
         \item The set of relations $\set{R_i}_{i=0}^d$ partitions $X \times X$;
@@ -225,6 +225,10 @@
     edges, and this usage of the term \textit{adjacency matrix} agrees with its
     usage in graph theory.)
 
+    By exchanging the relations $R_i$ for their adjacency matrices $A_i$, the
+    combinatorial definition of an association scheme can be reformulated as
+    follows:
+
     \begin{defn}[Commutative Association Scheme -- Algebraic
       {{\cite[Chapter 12]{godsil}}}]
       \label{association-scheme-alg}
@@ -234,8 +238,9 @@
         \ .
       \end{equation}
       (This is also called the \textit{Hadamard}, or \textit{entrywise} product.)
-      If each relation $R_i$ has adjacency matrix $A_i$,
-      the above axioms can be reformulated as follows:
+
+      A \textsc{commutative association scheme} is a vertex set $X$ along with
+      $X \times X$ matrices $A_0, A_1, \ldots A_d$ such that
       \begin{enumerate}
         \item $\displaystyle \sum_{i=0}^d A_i = J$, the all-ones matrix,
           and $A_i \circ A_j = \delta_{i, j} A_i$;
@@ -254,6 +259,8 @@
       \end{enumerate}
     \end{defn}
 
+    It is clear from the first axiom that the $A_i$ are $01$ matrices.
+
     The first three equivalences are straightforward translations.  To see the
     last, observe that
     $$
@@ -269,6 +276,7 @@
     Then, $(A_i A_j)_{xy} = p_{ij}^k$ exactly when $(A_k)_{xy} = 1 \iff (x, y)
     \in R_k$.
     \\
+
 
     The requirement in (\hyperref[cAS-reg]{Combinatorial 4}) that $p_{i, j}^k =
     p_{j, i}^k$ corresponds to the requirement that $A_i A_j = A_j A_i$
@@ -293,22 +301,23 @@
 
     Not every association scheme (commutative or not) arises is this way, but
     many schemes of interest are closely related to a particular group.
-    Nevertheless, the connection between the combinatorial definition of
-    association schemes (\ref{association-scheme-comb}) and the algebraic one
-    (\ref{association-scheme-alg}) provides a rich connection between the two
-    subjects (\ref{sec:AS:AS:BMA}).
+    Nevertheless, much of the utility of association schemes, and the elegance
+    of their theory, derives from the connection between the combinatorial view
+    of schemes as relations or (di)graphs (\ref{association-scheme-comb}), and
+    the algebraic view of schemes as matrices (\ref{association-scheme-alg}).
     \\
 
     A particularly important class of association scheme, called
     \textsc{symmetric}, is one in which every relation is symmetric (i.e. $i =
     i'$ in \hyperref[cAS-sym]{Combinatorial 3}), or equivalently, each adjacency
     matrix is symmetric ($A_i^T = A_i$ in \hyperref[aAS-sym]{Algebraic 3}).
-    In this case, the relations $R_i$ form graphs $\Gamma_i$ with vertex set
-    $X$, and edge set given by
+    In this case, the relations $R_i$ form \textit{undirected} graphs $\Gamma_i$
+    with vertex set $X$, and edge set given by
     $$
       x \sim y \iff (x, y) \in R_i \iff (y, x) \in R_i
       \ .
     $$
+
     The most important class of symmetric association scheme (for the purposes
     of this report) arise as the distance graphs of a distance-regular graph
     (\ref{sec:AS:PPS}).  From this setting, we can generalize the following
@@ -396,10 +405,10 @@
       and are linearly independent, so there are precisely $d+1 = \dim \BMA$ of
       them: $F_0, F_1, \ldots, F_d$.  They are orthogonal idempotents, and each
       is self-adjoint since the $\tilde{F_{ij}}$ are self-adjoint and commute.
-      These matrices are called the \textsc{idempotents} of $\AS$, and form an
-      alternative basis to $A_0, A_1, \ldots, A_d$.  (Because the $A_i$ are
-      orthogonal idempotents under the Schur product, they are sometimes called
-      \textsc{Schur idempotents}.)
+      These matrices are called the \textsc{principal idempotents} of $\AS$, and
+      form an alternative basis to $A_0, A_1, \ldots, A_d$.  (Because the $A_i$
+      are orthogonal idempotents under the Schur product, they are sometimes
+      called \textsc{Schur idempotents} of $\AS$.)
       Then, one can write
       $$
         A_i = \sum_{j = 0}^d P_i(j) F_j
@@ -974,7 +983,7 @@
       \item Cayley graphs
       \item Eigenspaces from characters
     \end{itemize}
-    
+
     The material in this section follows mostly from \cite[Chapter~9]{godsil}.
     \\
 
@@ -1040,7 +1049,7 @@
     pair $u, v$ in the vertex set, there is a automorphism taking $u \mapsto v$.
     To see this, note that $G$ acts (\ref{group-action}) on $\Cay(G, C)$ through
     the group operation, since the vertex set is also the group.
-    To verify that this is a homomorphism, if $u \sim v$ in $\Cay(G, C)$, then 
+    To verify that this is a homomorphism, if $u \sim v$ in $\Cay(G, C)$, then
     $$
       uv^{-1} \in C
       \implies (ug)(vg)^{-1} = ugg^{-1}v^{-1} = u 1 v^{-1} = u v^{-1} \in C
@@ -1219,7 +1228,7 @@
       partition matrix $\chi(\sigma)$ then the \textsc{induced row partition}
       $\sigma^*$ is the partition of the rows of $H$ such that two rows are in the
       same part if and only if the corresponding rows in $H\chi(\sigma)$ are
-      equal.  
+      equal.
     \end{defn}
 
     In other words, if $f$ is the function which maps each row index
@@ -1335,7 +1344,7 @@
       $$
       since the $F_j$ are orthogonal idempotents.
       Since any polynomial $g$ in $d+1$ variables is a linear combination of such
-      monomials, it follows that 
+      monomials, it follows that
       \begin{alignat*}{2}
         g(A_0, A_1, \ldots, A_d)
         &= \sum_j g(P_0(j), P_1(j), \ldots, P_d(j)) F_j \\
@@ -1382,7 +1391,7 @@
       $$
       where $f_j \neq 0$, so that $F_j$ can be written as a polynomial in $A_0,
       A_1, \ldots, A_d$.  This proves that each $F_j$ is contained in the
-      algebra generated by $\BMA$, and so all of $\mathbb{F}$ is contained in 
+      algebra generated by $\BMA$, and so all of $\mathbb{F}$ is contained in
       this algebra.  Since the reverse inclusion was already
       shown, this proves that the two algebras are equal, as desired.
     \end{proof}
@@ -1428,8 +1437,8 @@
     $$
       C_1 = \Zqz \times \set{0}^{d - 1}
       \ \bigsqcup\ \set{0} \times \Zqz \times \set{0}^{d - 2}
-      \ \bigsqcup\ \cdots \quad\bigsqcup\ 
-      \set{0}^{d - 1} \times \Zqz 
+      \ \bigsqcup\ \cdots \quad\bigsqcup\
+      \set{0}^{d - 1} \times \Zqz
       \ .
     $$
 
@@ -1687,7 +1696,7 @@
         In particular, since $y$ is a feasible solution to the dual program,
         and $x \geq 0$,
         $$
-          c \leq A^T y 
+          c \leq A^T y
           \implies x^T c \leq x^T A^T y = y^T A x
           \ .
         $$
@@ -1696,7 +1705,7 @@
         Similarly, since $x$ is a feasible solution to the primal program,
         and $y \geq 0$,
         $$
-          b \geq A x 
+          b \geq A x
           \implies y^T b \geq y^T A x
           \ .
         $$
@@ -1992,7 +2001,7 @@
     An alternate characterization of regular actions will be useful in this
     report.  To see this, note that for a pair $x, y \in X$, there exists a $g
     \in G$ such that $xg = y$ by transitivity; for any $g' \in G$ satisfying
-    $xg' = y$, 
+    $xg' = y$,
     $$
       xg = xg' \implies x = x g'g^{-1}
     $$
