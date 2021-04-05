@@ -14,6 +14,84 @@
 
 \newcommand*{\vertbar}{\rule[-1ex]{0.5pt}{2.5ex}}
 \newcommand*{\horzbar}{\rule[.5ex]{2.5ex}{0.5pt}}
+\newcommand{\mysep}{
+  \begin{center}
+  \scalebox{0.2}{
+  \begin{tikzpicture}
+    \tikzset{
+      dot/.style = {circle, fill, minimum size=4pt,
+      inner sep=0pt, outer sep=0pt},
+      dot/.default = 4pt % size of the circle diameter
+    }
+
+    \node[dot] (-) {};
+
+    \node[dot, above right of = -] (0) {};
+    \node[dot, right of = 0] (1) {};
+    \draw (0) edge (1);
+
+    \node[dot, below right of = 1] (00) {};
+    \node[dot, right of = 00] (01) {};
+    \node[dot, above of = 00] (10) {};
+    \node[dot, right of = 10] (11) {};
+    \draw[-, line width=0.5pt]
+      (00) edge (01)
+      (00) edge (10)
+      (01) edge (11)
+      (10) edge (11)
+    ;
+
+    \node[dot, right of = 01] (000) {};
+    \node[dot, right of = 000] (001) {};
+    \node[dot, above of = 000] (010) {};
+    \node[dot, right of = 010] (011) {};
+    \node[dot, above right of = 000] (100) {};
+    \node[dot, right of = 100] (101) {};
+    \node[dot, above of = 100] (110) {};
+    \node[dot, right of = 110] (111) {};
+    \draw[-, line width=0.5pt]
+      (001) edge (101)
+      (010) edge (011)
+      (010) edge (110)
+      (000) edge (001)
+      (001) edge (011)
+      (101) edge (111)
+      (100) edge (101)
+      (100) edge (110)
+      (000) edge (010)
+      (000) edge (100)
+      (110) edge (111)
+      (011) edge (111)
+    ;
+
+    \node[dot, right of = 101] (00') {};
+    \node[dot, right of = 00'] (01') {};
+    \node[dot, above of = 00'] (10') {};
+    \node[dot, right of = 10'] (11') {};
+    \draw[-, line width=0.5pt]
+      (00') edge (01')
+      (00') edge (10')
+      (01') edge (11')
+      (10') edge (11')
+    ;
+
+    \node[dot, below right of = 01'] (0') {};
+    \node[dot, right of = 0'] (1') {};
+    \draw (0') edge (1');
+
+    \node[dot, above right of = 1'] (-') {};
+  \end{tikzpicture}
+  }
+  \end{center}
+}
+
+\usepackage{array}
+\newcolumntype{C}{>{$\displaystyle}c<{$}}  % math display mode in table
+% A new columntype to apply automatic stepping
+\newcounter{rowcntr}[table]
+\renewcommand{\therowcntr}{\thetable.\arabic{rowcntr}}
+\newcolumntype{N}{>{\refstepcounter{rowcntr}\therowcntr}c}
+\AtBeginEnvironment{tabular}{\setcounter{rowcntr}{0}}  % reset the rowcntr counter at each new tabular
 
 \newcommand{\AS}{\mathcal{A}}
 \newcommand{\BMA}{\mathbb{A}}
@@ -336,7 +414,435 @@
       idempotents $\tilde{F_{ij}}$.  Therefore, the idempotents $F_j$ are real,
       as is the matrix of eigenvalues $P$.
 
-    \subsection{Duality}\label{sec:AS:AS:duality}
+    \subsection{Duality and Characterization}\label{sec:AS:AS:duality}
+      Already a comparison between the two bases $A_0, A_1, \ldots, A_d$
+      and $F_0, F_1, \ldots, F_d$ of $\BMA$ suggests a duality.  For example,
+      the $A_i$ are orthogonal idempotents with respect to the Schur product,
+      while the $F_j$ are orthogonal idempotents with respect to the usual
+      product; $\sum_i A_i = J$, the identity of the Schur product, while
+      $\sum_j F_j = I$, the identity of the usual product.
+      In this section, additional ``dual'' properties will be discovered by
+      examining relations with respect to one basis, and searching for analogous
+      ones in the opposite basis.
+
+      Many of these properties will involve two matrices to be introduced, which
+      describe how each basis is transformed into the other.  Some will be vital
+      to the later analysis of cliques in association schemes.  Others will be
+      used to show that either of these matrices, taken in isolation, completely
+      characterize the scheme!
+      \\
+
+      First, the axioms of an association scheme (\ref{association-scheme-alg})
+      require that $A_0 = I$, the identity of the usual product.  As already
+      illustrated, $J$ the all-ones matrix acts as the ``dual'' of $I$, so let
+      us examine:
+      $$
+        JF_j = \( \sum_i A_i \) F_j = \( \sum_i P_i(j) \) F_j
+        \ .
+      $$
+      Letting $\gamma_j := \sum_i P_i(j)$, $J F_j = \gamma_j F_j$ demonstrates
+      that $\gamma_j$ is an eigenvalue of $J$, with eigenvectors in the column
+      space of $F_j$.  Since $J$ is orthogonally diagonalizable,
+      with eigenvalues $n = \abs{X}$ of multiplicity $1$,
+      and $0$ of multiplicity $n - 1$,
+      and the $F_j$ are orthogonal idempotents whose columns are eigenvectors of
+      $J$, there is exactly one $j$ with $\gamma_j = n$.
+      Since $J F_j = n F_j$, each row of $F_j$ is equal;
+      but $F_j$ is self-adjoint the columns are all equal as well.
+      Therefore, $F_j = \alpha J$, and $F_j$ is idempotent,
+      so that
+      $$
+        F_j = \alpha J = \alpha^2 J^2 = \alpha^2 n J
+        \implies \alpha = \frac{1}{n}
+        \ .
+      $$
+      Since the ordering $F_0, F_1, \ldots, F_d$ is arbitrary,
+      by convention an order is taken such that $F_0 = \frac{1}{n}J$.
+
+      Since the $F_j$ are orthogonal, $\gamma_j = 0$ for all $j > 0$,
+      so that the row sums of $P$ are known:
+      \begin{equation}\label{P-row-sum}
+        \sum_{i = 0}^d P_i(j) =
+        \begin{cases}
+          n & \If j = 0 \\
+          0 & \If j > 0
+        \end{cases} \ .
+      \end{equation}
+
+      Moreover, since $F_0 = \frac{1}{n}J$, the all-ones vector $\vone$ is an
+      eigenvector of each $A_i$: let $\nu_i$ be the eigenvalue, so that $A_i
+      \vone = \nu_i \vone$.  Note that $\nu_i$ is the (constant) row sum of
+      $A_i$.  Since $A_i^T = A_{i'}$, the column sums of $A_i$ are constant as
+      well, and if the scheme is symmetric, $A_i^T = A_i$, so the column sums
+      are equal to $\nu_i$ as well.  The quantity $\nu_i$ is called the
+      \textsc{valency} of $A_i$.  (This usage agrees with its usage for regular
+      graphs, where it equals the (constant) degree of vertices.  This is also
+      equal to the row sum of the adjacency matrix.)
+      \\
+
+      Next, since $F_0, F_1, \ldots, F_d$ is a basis for $\BMA$,
+      we can write
+      \begin{equation}\label{F-basis}
+        A_i = \sum_j P_i(j) F_j
+      \end{equation}
+      uniquely, and since the $F_j$ are orthogonal idempotents,
+      $A_i F_j = P_i(j) F_j$.
+      Dually, $A_0, A_1, \ldots, A_d$ is a basis for $\BMA$, so we can write
+      \begin{equation}\label{A-basis}
+        F_j = \frac{1}{n} \sum_i Q_j(i) A_i
+      \end{equation}
+      uniquely, and since the $A_i$ are Schur orthogonal idempotents,
+      $F_j \circ A_i = \frac{1}{n} Q_i(j) A_i$.
+      These coefficients form the \textsc{matrix of dual eigenvalues} $Q$,
+      defined such that $Q_{ij} = Q_j(i)$.
+
+      By substituting (\ref{A-basis}) into (\ref{F-basis}), we obtain
+      $$
+        n A_i = \sum_j P_i(j) \sum_{i'} Q_j(i') A_{i'}
+        = \sum_{i'} \( \sum_j P_i(j) Q_j(i') \) A_{i'}
+        \ .
+      $$
+      Because the $A_i$ form a basis,
+      $n A_i$ is written uniquely,
+      so that
+      $$
+        \sum_j P_i(j) Q_j(i') = n \delta_{ii'}
+        \implies PQ = nI
+        \ .
+      $$
+      Since the first row sum of $P$ is $n$ (\ref{P-row-sum}),
+      if we are given $P$ and \textit{no other information},
+      then by computing its inverse we can derive $Q$.
+
+      If we were given only $Q$ instead,
+      we could calculate $P$ by taking the inverse
+      and multiplying by $n$.
+      All that remains, then, is to derive $n$ from $Q$.
+      In the other direction, this was done by examining the row sums of $P$,
+      so we do the same with $Q$.
+      The rows of $Q$ correspond to the $A_i$,
+      the columns to the $F_j$,
+      and $F_j \circ A_i = \frac{1}{n} Q_j(i) A_i$,
+      so we fix a row and sum over the columns:
+      $$
+        \( \sum_j F_j \) \circ A_i = \frac{1}{n} \( \sum_j Q_j(i) \) A_i
+        \ .
+      $$
+      But $\sum_j F_j = I = A_0$ and $A_0 A_i = \delta_{0 i} A_i$
+      so
+      \begin{equation}\label{Q-row-sum}
+        \sum_{j = 0}^d Q_j(i) =
+        \begin{cases}
+          n & \If i = 0 \\
+          0 & \If i > 0
+        \end{cases} \ .
+      \end{equation}
+      \\
+
+      Therefore, given either $P$ or $Q$, and no other information, the other
+      can be derived.  However, this process involves matrix inversion, which is
+      both expensive to compute and awkward to contemplate.  In fact, if a
+      little extra information is known, then there exists an extraordinarily
+      simple formula relating the two matrices.  This extra information consists
+      of the valencies and their dual concept, the multiplicities, of the scheme.
+
+      We have already encountered the valency $\nu_i$ of $A_i$.  Since by
+      definition $\nu_i = P_i(0)$, consider the first row of $Q$ and denote
+      $Q_j(0)$ by $\mu_j$.  From the definition of $Q$ we have $F_j \circ A_0 =
+      \frac{1}{n} \mu_j A_0$, but $A_0$ is the identity matrix, so that the
+      diagonal entries of $F_j$ are identically $\mu_j/n$.  Moreover, $F_j$ is
+      an $n \times n$ matrix, so $\trace F_j = \mu_j$, and since $F_j$ is
+      idempotent, $\rank F_j = \trace F_j$ (TODO reference).  If we fix $i$ and
+      suppose momentarily that the $P_i(j)$ are all distinct, then the column
+      space of $F_j$ is the $P_i(j)$-eigenspace of $A_i$, in which case $\mu_j =
+      \dim\col F_j$, which is the algebraic multiplicity.  For this reason (even
+      if the $P_i(j)$ are not distinct), $\mu_j$ will be called the
+      \textsc{multiplicity} of $F_j$.
+      (Is it possible that the $P_i(j)$ are not
+      all distinct for any $i$?)
+
+      Consider the different products between matrices in one basis
+      and matrices in the other: $A_i F_j$ and $A_i \circ F_j$.
+      Since $F_j$ is self-adjoint, and commutes with $A_i$,
+      $A_i F_j = F_j^* A_i$.
+      Writing the product in this way, we might notice that the trace of the
+      regular product is actually the (standard) inner product of $A_i$ and
+      $F_j$, as is the sum of all entries in the Schur product.
+      $$
+        \innerprod{A_i}{F_j} = \trace F_j^* A_i = \Sum A_i \circ F_j
+      $$
+      On one hand,
+      $$
+        \trace A_i F_j
+        = P_i(j) \trace F_j = P_i(j) \mu_j
+        \ ,
+      $$
+      while on the other hand, the $n$ rows of $A_i$ all sum to $\nu_i$, so
+      $$
+        \Sum A_i \circ F_j
+        = \frac{1}{n} Q_j(i) \Sum A_i
+        = Q_j(i) \nu_i
+        \ .
+      $$
+      Of course these two expressions must be equal,
+      so letting $\nu$ denote the vector of valencies,
+      and $\mu$ the vector of multiplicities,
+      we see that
+      \begin{equation}\label{P-Q-reln}
+        P^T \diag{\mu} = \diag{\nu} Q
+        \ .
+      \end{equation}
+      Therefore, given the valencies and multiplicities, $Q$ can be
+      computed inexpensively from $P$ and vice versa.  Furthermore, this
+      explicit expression will be useful in later chapters when contemplating
+      expressions involving $Q$ and vice versa.
+      \\
+
+      Briefly, note that in the definition of an association scheme, it was
+      required that $A_0 = I$, but it is only by a conventional order that $F_0
+      = \frac{1}{n} J$.  If instead we only required that $A_i = I$ for some
+      $i$, then $\nu$ can still be identified within the permuted matrix of
+      eigenvalues as the only row with nonzero sum.  Similarly, $\mu$ can be
+      identified within $Q$ as the only row with nonzero sum, even if we do not
+      adhere to our convention.
+
+      \mysep
+
+      For the remainder of this report, the above properties of the Bose-Mesner
+      algebra and its duality will suffice.  However, with just a little extra
+      work, we show that $\BMA$ is actually characterized by its matrix of
+      eigenvalues (or its matrix of dual eigenvalues).
+      \\
+
+      The Bose-Mesner algebra has three kinds of structures on it: it is a
+      vector space over $\C$, it is a ring with respect to the usual matrix
+      product, and it is a ring with respect to the Schur product.
+      In order to characterize $\BMA$, we will need to define all three
+      structures from $P$ alone.
+
+      First, $P$ is a $(d+1) \times (d+1)$ matrix when $\dim \BMA = d+1$.  Since
+      vector spaces are characterized complete by their field and their
+      dimension, the shape of $P$ suffices here.
+
+      Next, since we have a basis $F_0, F_1, \ldots, F_d$ in which the usual
+      matrix product is ``known'' (that is, they are orthogonal idempotents),
+      this structure also will be characterized (vacuously) by $P$.
+
+      Finally, we must characterize the Schur product in $\BMA$.  We also have a
+      basis of orthogonal idempotents with respect to this product -- namely
+      $A_0, A_1, \ldots, A_d$ -- but since this is a different basis from the
+      one used previously, for the two products to be characterized
+      simultaneously, we must be able to perform a change of basis.  However,
+      $A_i = \sum_j P_i(j) F_j$ and $F_j = \sum_i Q_j(i) A_i$,
+      where $Q$ can be derived from $P$.
+
+      In other words, all the information needed to compute the isomorphism
+      between $\BMA$ and $\C^{d+1}$ is encapsulated in $P$.  By picking a basis
+      $f_0, f_1, \ldots, f_d$ in $\C^{d+1}$, the regular product can be defined
+      by $f_i f_j := \delta_{ij} f_i$, and extended bilinearly.  Then, the Schur
+      product can be defined by rewriting any element of $\C^{d+1}$ in the basis
+      $a_i = \sum_j P_i(j)$ computing $a_i a_j = \delta_{ij} a_i$ and extending
+      bilinearly.
+
+      Because $P$ can be derived from $Q$, the Bose-Mesner algebra of $\AS$ is
+      also characterized by $Q$.  Moreover, if $\AS$ is symmetric, then $\C$ can
+      be replaced by $\R$ throughout the previous discussion.
+      \\
+
+      However, more can be said about the characterization of the two products
+      on $\BMA$.  In particular, the usual product can be defined in terms of
+      the basis of Schur idempotents where
+      $$
+        A_i A_j = \sum_{k=0}^d p_{ij}^k A_k \ .
+      $$
+      These $p_{ij}^k$ are called the \textsc{intersection numbers} of $\AS$.
+      Similarly, we can define numbers $q_{ij}^k$, called the \textsc{Krein
+      parameters}, such that
+      $$
+        F_i \circ F_j = \frac{1}{n} \sum_{k=0}^d q_{ij}^k F_k \ .
+      $$
+      These dual families of parameters can also be derived from $P$ or $Q$ in
+      the following manner.
+
+      Since the $A_i$ are Schur orthogonal idempotents, we can pick out the
+      $p_{ij}^k$ by multiplying $(A_i A_j) \circ A_k = p_{ij}^k A_k$.  Summing
+      over all entries of this product, $\Sum p_{ij}^k A_k = p_{ij}^k n \nu_k$.
+      However, since the sum of entries in a Schur product is the inner product
+      of the factors,
+      $$
+        \trace A_k^* A_i A_j
+        = \trace \(\sum_{r=0}^d P_i(r) P_j(r) \bar{P_k(r)} F_r\)
+        = \sum_{r=0}^d P_i(r) P_j(r) \bar{P_k(r)} \mu_r
+        \ ,
+      $$
+      where $\bar{P_k(r)}$ is the complex conjugate of $P_k(r)$.
+      (This is done by rewriting each of $A_i, A_j, A_k$ in terms of the $F_r$
+      and expanding the product.)
+      In the case that $\AS$ is symmetric $P$ is real, so that $\bar{P_k(r)} =
+      P_k(r)$.  Then, it is clear that $p_{ij}^k$ remains unchanged when the
+      indices $i, j, k$ are permuted.
+
+      Similarly, $(F_i \circ F_j) F_k = q_{ij}^k F_k$, and $F_k$ is
+      self-adjoint, so taking the trace $\trace q_{ij}^k F_k = q_{ij}^k \mu_k$.
+      However, since the trace of a product is the inner product of the factors,
+      $$
+        \Sum F_k \circ F_i \circ F_j
+        = \Sum \( \frac{1}{n^3}\sum_{r=0}^d Q_i(r) Q_j(r) Q_k(r) A_r \)
+        = \frac{1}{n^2}\sum_{r=0}^d Q_i(r) Q_j(r) Q_k(r) \nu_r
+        \ .
+      $$
+      As with the intersection numbers, $q_{ij}^k$ remains unchanged when the
+      indices $i, j, k$ are permuted.
+      \\
+
+      (TODO? Derive $P$ from the $p_{ij}^k$?)
+
+      \mysep
+
+      Thus far, almost purely algebraic techniques have been used to derive
+      results.  There two last dual pairs of results: the first is purely
+      algebraic, while the second comes from graph theory.
+
+      \begin{prop}
+        The first columns of $P$ and $Q$ are the all-ones vector, $\vone$.
+      \end{prop}
+
+      \begin{proof}
+        The first column of $P$ holds the eigenvalues of $A_0$, which by
+        definition is equal to $I$.  Therefore, $A_0 F_j = P_0(j) F_j = F_j$, so
+        $P_0(j) = 1$.
+
+        The first column of $Q$ corresponds to $F_0 = \frac{1}{n} J$.
+        Therefore, $F_0 \circ A_i = \frac{1}{n} Q_0(i) A_i$, so $Q_0(j) = 1$.
+      \end{proof}
+
+      Note that because $P^T \diag{\mu} = \diag{\nu} Q$, the each of the two
+      results above could be derived from the other.
+
+      \begin{prop}
+        For all $i, j \in D$, we have $\abs{P_i(j)} \leq \nu_i$.
+      \end{prop}
+
+      \begin{proof}
+        We know that for each $i$, we have $A_i \vone = \nu_i \vone$.
+        Let $x$ be a $\theta$-eigenvector of $A_i$,
+        scaled so that its largest component (say, $x_u$)
+        has modulus $1$; let $\theta$ have largest modulus amongst the
+        eigenvalues of $A_i$.
+        Then $\abs{(A_i x)_u} = \abs{(\theta x)_u} = \abs{\theta}$, and
+        $$
+          \abs{\theta}
+          = \abs{(A_i x)_u}
+          \leq \sum_{v} (A_i)_{vu} \abs{x_v}
+          \leq \sum_{v} (A_i)_{vu} \abs{x_u}
+          = (A_i \vone)_u = \nu_i
+          \ .
+        $$
+        The proposition follows, as each $P_i(j)$ is an eigenvalue of $A_i$.
+      \end{proof}
+
+      Note that $A_i \vone$ is the vector of row sums of $A_i$; the sum of
+      each row is precisely the out-degrees of the relation (directed graph) of
+      $A_i$.  Therefore, this proposition shows that the eigenvalues of a
+      directed graph all have modulus less than the maximum out-degree.  In the
+      case of a regular graph, this is simply the valency.
+
+      \begin{cor}
+        For all $i, j \in D$, we have $\abs{Q_j(i)} \leq \mu_j$.
+      \end{cor}
+
+      \begin{proof}
+        This follows from the previous proposition, as $Q_j(i) =
+        \frac{\mu_j}{\nu_i} P_i(j)$, and both the valencies and multiplicities
+        are all positive integers.
+      \end{proof}
+
+      This completes the list of standard properties of the Bose-Mesner algebra
+      and its duality.  The results are summarised in the table on the next
+      page.
+
+      \newpage
+
+      \begin{table}[H]
+      \centering
+      \caption{Dual Properties of the Bose-Mesner Algebra}
+      \label{tab:prop}
+      {
+      \renewcommand{\arraystretch}{2.5}
+      \begin{tabular}{NC|C}
+        \label{tab:prop:identity} &
+          I = A_0
+        &
+           \frac{1}{n} J = F_0
+        \\
+        \label{tab:prop:sum} &
+          J = \sum_{i=0}^d A_i
+        &
+          I = \sum_{j=0}^d F_j
+        \\
+        \label{tab:prop:idem} &
+          A_i \circ A_j = \delta_{ij} A_i
+        &
+          F_i F_j = \delta_{ij} F_j
+        \\ \hline
+        \label{tab:prop:basis} &
+          A_i = \sum_{j=0}^d P_i(j) F_j
+        &
+          F_j = \frac{1}{n} \sum_{i=0}^d Q_j(i) A_i
+        \\
+        \label{tab:prop:eigen} &
+          A_i F_j = P_i(j) F_j
+        &
+          F_j \circ A_i = \frac{1}{n} Q_j(i) A_i
+        \\
+        \label{tab:prop:first-row} &
+          P(0) = \nu^T
+        &
+          Q(0) = \mu^T
+        \\
+        \label{tab:prop:first-col} &
+          P_0 = \vone
+        &
+          Q_0 = \vone
+        \\
+        \label{tab:prop:row-sum} &
+          \sum_{i=0}^d P_i(j) = n \delta_{0j}
+        &
+          \sum_{j=0}^d Q_j(i) = n \delta_{0i}
+        \\
+        \label{tab:prop:modulus} &
+          \abs{P_i(j)} \leq \nu_i
+        &
+          \abs{Q_j(i)} \leq \mu_j
+        \\
+        \label{tab:prop:valency-multiplicity} &
+          P \diag{\nu}^{-1} P^T = n \diag{\mu}^{-1}
+        &
+          Q \diag{\mu}^{-1} Q^T = n \diag{\nu}^{-1}
+        \\
+        \label{tab:prop:inverse} &
+          \multicolumn{2}{C}{PQ = nI}
+        \\
+        \label{tab:prop:similar} &
+          \multicolumn{2}{C}{P^T \diag{\mu} = \diag{\nu} Q}
+        \\ \hline
+        \label{tab:prop:product} &
+          A_i A_j = \sum_{k=0}^d p_{ij}^k A_k
+        &
+          F_i \circ F_j = \frac{1}{n} \sum_{k=0}^d q_{ij}^k F_k
+        \\
+        \label{tab:prop:intersection-krein} &
+          p_{ij}^k = \frac{1}{n\nu_k} \sum_{r=0}^d P_i(r) P_j(r) \bar{P_k(r)}
+          \mu_r
+        &
+          q_{ij}^k = \frac{1}{n^2 \mu_k} \sum_{r=0}^d Q_i(r) Q_j(r) Q_k(r) \nu_r
+        \\
+      \end{tabular}
+      }
+      \end{table}
+
+      \newpage
+
 
   \section{$P$-Polynomial Schemes}\label{sec:AS:PPS}
     \begin{itemize}
@@ -1262,6 +1768,11 @@
 
 \chapter{Linear Algebra}
   \section{The Spectral Theorem}
+    \subsection{Orthogonal Projection}
+      \begin{itemize}
+        \item The trace of an idempotent matrix is its rank.
+      \end{itemize}
+    \subsection{Spectral Decomposition}
 
   \section{Adjacency Matrices}
     Basic results about the spectra of adjacency matrices, which may be used
