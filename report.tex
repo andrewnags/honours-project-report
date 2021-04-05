@@ -850,9 +850,120 @@
       \item ``Equivalence" to DRGs
     \end{itemize}
 
-    If we want to focus on the LP bound and translation schemes, I'm not sure
-    that this section is necessary, but it is very interesting and provides an
-    important class of examples.
+    Our motivation in this report for the definition of an association scheme
+    was the class of distance-regular graphs.  However, the class of association
+    schemes -- even symmetric ones -- is much more general.  In this section, we
+    will investigate a restricted class of symmetric association schemes: the
+    $P$-polynomial schemes.
+
+    Note that in this section, and for the remainder of this report, all
+    association schemes will be symmetric unless otherwise specified.
+
+    \begin{defn}\label{p-polynomial}
+      An association scheme of adjacency matrices $A_0, A_1, \ldots, A_d$ is
+      \textsc{$P$-polynomial} if they can be ordered such that $A_i$ is a
+      polynomial in $A_1$ of degree $i$.
+    \end{defn}
+
+    It happens that every distance-regular graph forms a $P$-polynomial scheme,
+    and that every $P$-polynomial scheme arises in this way.
+
+    To demonstrate that distance-regular graphs generate $P$-polynomial schemes,
+    we show that each distance matrix $A_i$ is a degree-$i$ polynomial in $A_1$
+    by induction.  In order to do this, we need to be able to write $A_{i+1}$ in
+    terms of the matrices at distance $i' \leq i$.
+
+    \begin{lem}
+      Let $\Gamma$ be a distance-regular graph with diameter $d$, vertex set
+      $V$, and adjacency matrices $A_0, A_1, \ldots, A_d$.
+      Then for all $i, j$,
+      $$
+        A_i A_j = \sum_{k=0}^d p_{ij}^k A_k
+      $$
+      where $p_{ij}^k = \abs{\buildset{w \in V}{d(u, w) = i \And d(w, v) = j}}$
+      for fixed vertices $u$ and $v$ such that $d(u, v) = k$.
+    \end{lem}
+
+    \begin{proof}\label{drg-mult-closed}
+      Let $\Gamma$ be a distance-regular graph with vertex set $V$, diameter
+      $d$, and distance graphs $\Gamma_0, \Gamma_1, \ldots, \Gamma_d$
+      with adjacency matrices $A_0, A_1, \ldots, A_d$.
+      Then for vertices $u, v$ at distance $k$,
+      \begin{alignat*}{2}
+        p_{ij}^k &= \abs{N_i(u) \cap N_j(v)} \\
+        &= \buildset{w \in V}{d(u, w) = i \And d(w, v) = j} \\
+        &= \buildset{w \in V}{(u, w) \in \Gamma_i \And (w, v) \in \Gamma_j}
+        \ .
+      \end{alignat*}
+      Then $A_i A_j = \sum_k p_{ij}^k A_k$ as shown in the equivalence between
+      the two definitions of an association scheme
+      (\ref{association-scheme-alg}, \ref{association-scheme-comb}).
+    \end{proof}
+
+    \begin{lem}\label{drg-mult-restricted}
+      Let $\Gamma$ be a distance-regular graph with diameter $d$ and
+      adjacency matrices $A_0, A_1, \ldots, A_d$.  Then for all $i$,
+      $$
+        A_i A_1 = \sum_{k=0}^d p_{i1}^k A_k
+      $$
+      where $p_{i1}^{i+1} \neq 0$,
+      and $p_{i1}^k = 0$ for all $k > i + 1$.
+    \end{lem}
+
+    \begin{proof}
+      If $\Gamma$ has diameter $d$, then there is a shortest path of length $d$.
+      Note that every subpath of a shortest path is also a shortest path, so
+      that there exists a shortest path of every length $k \leq d$.
+
+      Let $u, v$ be vertices at distance $i+1$, and consider a shortest path
+      between them.  On this path from $u$ to $v$, consider the first vertex $w$
+      after $u$.  Then $d(u, w) = 1$, and since the remaining portion of the
+      path, from $w$ to $v$ is also a shortest path, $d(w, v) = i$.  Therefore,
+      $$
+      \abs{\buildset{w \in V}{d(u, w) = 1 \And d(w, v) = i}}
+      = p_{1i}^{i+1} = p_{i1}^{i+1} > 0 \ .
+      $$
+
+      Now consider $u, v$ at distance any $k$, and $w \in N_1(u) \cap N_i(v)$.
+      By the triangle inequality,
+      $$
+        k = d(u, v) \leq d(u, w) + d(w, v)
+        = 1 + i
+        \ ,
+      $$
+      so that if $k > i + 1$, then $p_{i1}^k = 0$.
+    \end{proof}
+
+    \begin{thm}
+      Every distance-regular graph $\Gamma$ forms a $P$-polynomial association
+      scheme $\AS$, with the distance graphs of $\Gamma$ for classes.
+      Moreover, the diameter of $\Gamma$ is the diameter of $\AS$.
+    \end{thm}
+
+    \begin{proof}
+      Let $\Gamma$ be a distance-regular graph with diameter $d$,
+      distance graphs $\Gamma_0, \Gamma_1, \ldots, \Gamma_d$,
+      and distanc matrices $A_0, A_1, \ldots, A_d$.
+      From lemma (\ref{drg-mult-closed}), the product of distance matrices
+      of a distance-regular graph belongs to the span of distance
+      matrices.  Since the distance matrices are symmetric, the rest of the
+      axioms follow.  Therefore, $\Gamma$ is an association scheme.
+
+      Note that $A_0 = I$ is a polynomial of degree $0$ in $A_1$, and $A_1$ is a
+      polynomial of degree $1$ in itself.  Then, supposing $A_i$ is a polynomial
+      of degree $i$ in $A_1$, we have that $A_i A_1$ is a polynomial of degree
+      $i+1$.  Then by lemma (\ref{drg-mult-restricted}),
+      $$
+        A_i A_1 = \sum_{k = 0}^{i+1} p_{i1}^k A_k
+        \implies A_{i+1} = \frac{1}{p_{i1}^{i+1}} \(
+          A_i A_1 - \sum_{k=0}^i p_{i1}^k A_k
+        \)\ ,
+      $$
+      which demonstrates that $A_{i+1}$ is a polynomial of degree $i+1$ in
+      $A_1$.
+    \end{proof}
+
+    \mysep
 
     \subsection{$Q$-Polynomial Schemes}
 
