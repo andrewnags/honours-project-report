@@ -170,7 +170,7 @@
     intended to mean, or incorrectly guess that the true message was ``I hate
     you''.  On the other hand, if the friend hears ``l shgbot gtin'', then they
     will know for sure that the message was corrupted; they will know not to
-    misinterpret the message, and may ask that it be retransmitted.
+    misinterpret the message, and may ask that it be re-transmitted.
     \\
 
     These are the two fundamental goals of coding theory: to encode data in such
@@ -180,7 +180,7 @@
     a limited number of errors, or detect some number of errors.  For this
     report, we will focus on the former goal.
 
-    In general, a coding scheme will consist of a set of signals $V$, amongst
+    In general, a coding scheme will consist of a set of signals $V$, among
     which a subset $Y$ (called the \textsc{code}) might consist of valid
     messages.  Then, the receiver will need a function $V \times V \to \N$ to
     tell how many errors would be required to change one signal into another.
@@ -257,7 +257,7 @@
       $$
     \end{defn}
 
-    Since a linear subspace must be closed under substraction, the minimum
+    Since a linear subspace must be closed under subtraction, the minimum
     distance of a linear code is the same as its minimum (nonzero) weight.
     Also, the distance between two vectors is the number of coordinates on which
     they differ.  Meanwhile, the rate of the code is the ratio of the dimension
@@ -285,7 +285,7 @@
     Note that in the case of linear codes, if $F_q$ is a finite field of order
     $q$, then $q$ must be a prime power.  Also, all vector spaces of dimension $d$
     are isomorphic to $F_q^d$.  However, in the setting of Hamming graphs $H(d,
-    q)$, the interger $q$ need not be a prime power.  Thus, the vertex set can
+    q)$, the integer $q$ need not be a prime power.  Thus, the vertex set can
     be modelled as $\Z_q^d$.  If $q$ is a prime power, then $\Z_q$ still may not
     be isomorphic to the additive group of $F_q$ (they are isomorphic if and only if
     $q$ is prime).  However, the Hamming graph with $Z_q^d$ as its vertex set
@@ -879,7 +879,7 @@
         We know that for each $i$, we have $A_i \vone = \nu_i \vone$.
         Let $x$ be a $\theta$-eigenvector of $A_i$,
         scaled so that its largest component (say, $x_u$)
-        has modulus $1$; let $\theta$ have largest modulus amongst the
+        has modulus $1$; let $\theta$ have largest modulus among the
         eigenvalues of $A_i$.
         Then $\abs{(A_i x)_u} = \abs{(\theta x)_u} = \abs{\theta}$, and
         $$
@@ -910,7 +910,7 @@
       \end{proof}
 
       This completes the list of standard properties of the Bose-Mesner algebra
-      and its duality.  The results are summarised in the table on the next
+      and its duality.  The results are summarized in the table on the next
       page.
 
       \newpage
@@ -1095,7 +1095,7 @@
     \begin{proof}
       Let $\Gamma$ be a distance-regular graph with diameter $d$,
       distance graphs $\Gamma_0, \Gamma_1, \ldots, \Gamma_d$,
-      and distanc matrices $A_0, A_1, \ldots, A_d$.
+      and distance matrices $A_0, A_1, \ldots, A_d$.
       From lemma (\ref{drg-mult-closed}), the product of distance matrices
       of a distance-regular graph belongs to the span of distance
       matrices.  Since the distance matrices are symmetric, the rest of the
@@ -1667,7 +1667,7 @@
     \begin{equation}
       \begin{cases}
         qk - d & k = 0, 1, \ldots, d \\
-        \binom{d}{k}(q - 1)^{d - k} & \quad\text{(multiplicy)} \\
+        \binom{d}{k}(q - 1)^{d - k} & \quad\text{(multiplicity)} \\
       \end{cases} \ .
     \end{equation}
 
@@ -1688,7 +1688,7 @@
     constraints, follows from \cite{matousek}.
 
     A \textsc{linear programming problem} (or \textsc{linear program})
-    is an optimization problem in which one seeks to maximise or minimize
+    is an optimization problem in which one seeks to maximize or minimize
     a linear function of one or more variables, subject to linear constraints.
     That is, fixing a vector $c$, one tries to maximize or minimize
     the linear combinations of the components of $c$:
@@ -1703,7 +1703,7 @@
     the function to be maximized ($c^T x$ in this case)
     is called the \textsc{objective (function)}.
 
-    In most cases, there will be contraints on the inputs to the objective
+    In most cases, there will be constraints on the inputs to the objective
     function, and for the purposes of linear programming these will also have
     to be linear.
     That is, there will be a matrix $A$ and vector $b$
@@ -1730,7 +1730,7 @@
     the feasible solutions will be further constrained
     to those with all non-negative components (i.e. $x \geq 0$).
     These are called the \textsc{non-negativity constraints},
-    in constrast with the \textit{principal constraints}.
+    in contrast with the \textit{principal constraints}.
     The non-negativity constraints will be required throughout the remainder of
     this report.
 
@@ -1980,7 +1980,7 @@
       \leq& 0
       \ .
     \end{alignat*}
-    This equivalence recover's Delsarte's formulation of
+    This equivalence recovers Delsarte's formulation of
     the dual linear program:
     \begin{equation}\label{dlp-dual}
       \min\buildset{
