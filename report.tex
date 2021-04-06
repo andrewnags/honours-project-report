@@ -99,6 +99,8 @@
 \newcommand{\Zqz}{\Z_q \setminus \set{0}}
 \newcommand{\Zqd}{\Z_q^d}
 \newcommand{\diag}[1]{\operatorname{diag}\( #1 \)}
+\newcommand{\wt}[1]{\operatorname{wt}\( #1 \)}
+\newcommand{\dist}[2]{\operatorname{dist}\( #1, #2 \)}
 \newcommand{\chiN}{\chi_{N}}
 \newcommand{\chiM}{\chi_{M}}
 \newcommand{\chiNs}{\chi_{N^*}}
@@ -112,7 +114,7 @@
 \newcommand{\diagmu}{\diag{\mu}}
 \newcommand{\vone}{\mathbf{1}}
 
-\title{Cliques in Association Schemes}
+\title{Cliques, Codes, and Association Schemes}
 \author{
   Andrew Nagarajah \\
   Supervised by: Prof. Mike Newman
@@ -144,18 +146,159 @@
 
 \chapter{Introduction}
   \section{Coding Theory}
-    I'm also not sure if I should include a section like this, but seeing as
-    coding theory was the original motivation behind Delsarte's LP bound,
-    and it remains (presumably?) a strong motivator for this theory,
-    I figured it might be interesting to mention this as an application.
+    In most communication, a transmitter in one location must send a message to
+    a receiver in another location, possibly by means of a faulty (or
+    \textit{noisy}) channel which may introduce errors into the message.
 
-    \begin{itemize}
-      \item Basics of Coding Theory
-      \item Linear Graphs
-      \item Finite Vector Spaces
-    \end{itemize}
+    For example, a spacecraft might send scientific data back to earth from
+    another planet by means of a radio signal.  Along the way, other sources of
+    electromagnetic radiation might interfere with the signal, such that when it
+    arrives at earth, the signal received is slightly different from the one
+    sent.
+    The scientific data, if successfully received, might needed to be saved in
+    some storage medium so that it may be accessed in the future.  Over time
+    however, the storage medium may degrade, so that when the data is retrieved,
+    it may be slightly different from when it was saved.
 
-  \section{Hamming Graphs}
+    In human speech, if two friends are speaking in a loud environment and one
+    says ``I love you'', if the ambient noise is loud enough, the friend might
+    hear ``I lave you'' instead.  Not all possible sounds (or combinations of
+    letters) are valid messages in English though, so the friend could
+    reasonably guess at what was meant.  In this sense, English contains
+    \textit{redundancy}.  However, if the environment is so loud that the friend
+    hears ``I late you'', then they might not know what the message what
+    intended to mean, or incorrectly guess that the true message was ``I hate
+    you''.  On the other hand, if the friend hears ``l shgbot gtin'', then they
+    will know for sure that the message was corrupted; they will know not to
+    misinterpret the message, and may ask that it be retransmitted.
+    \\
+
+    These are the two fundamental goals of coding theory: to encode data in such
+    a way that it can be recovered if some errors are introduced; or if it
+    cannot be recovered, then at least to detect that the message was corrupted.
+    As the above example illustrates, and encoding scheme may be able to correct
+    a limited number of errors, or detect some number of errors.  For this
+    report, we will focus on the former goal.
+
+    In general, a coding scheme will consist of a set of signals $V$, amongst
+    which a subset $Y$ (called the \textsc{code}) might consist of valid
+    messages.  Then, the receiver will need a function $V \times V \to \N$ to
+    tell how many errors would be required to change one signal into another.
+    We assume that if $s$ errors convert signal $u$ into signal $v$, then $s$
+    ``opposite'' errors can convert $v$ into $u$.  Furthermore, if $v$ can be
+    converted into $w$ with $t$ errors, then $u$ can be converted into $w$ with
+    no more that $s + t$ errors (this is called the \textsc{triangle
+    inequality}).  Finally, $u$ will require $0$ errors to be converted into
+    itself; conversely for any pair of distinct signals $u$ and $v$, a nonzero
+    number of errors should be required to convert one into the other.  Such a
+    set of signals, paired with such an error-counting function, is called a
+    \textsc{(discrete) metric space}, and its function is typically called a
+    \textsc{distance}.  When a signal $u$ arrives at the receiver, they can try
+    and find a signal $v$ in the code $Y$ which minimizes the distance between
+    $u$ and $v$.  If there is a unique such minimizer $v$, then we decode $u$
+    into $v$.
+
+    For example, if we wish to encode the messages $0$ (or `no') and $1$ (or
+    `yes'), the set of signals might consist of all binary strings of length
+    three, with $000$ and $111$ as the codewords.  If errors consist of
+    individual bit flips, then the message $101$ can be decoded into $111$, as
+    only one error is required to convert the latter into the former.  However
+    if two errors occur and $100$ is received, then this will be decoded into
+    $000$, since fewer errors are required to convert between the two.
+    Therefore, this code (called a \textit{repetition code}) can correct at most
+    $1$ error.
+
+    More generally, if $d$ is the \textsc{minimum distance} between any two
+    codewords, and $w$ is a signal at distance no more than $\floor{\frac{d -
+    1}{2}}$ from a codeword $u$, then its distance to any other codeword $v$
+    must be greater.  Otherwise, $u$ could be converted to $v$ with at most $d -
+    1$ errors -- a contradiction!
+
+    On the other hand, in the example repetition code given above, there were
+    $2^1 = 2$ codewords, and $2^3 = 8$ possible signals.  So, for every message
+    we wish to send, three times as many bits need to be transmitted.  This is
+    called the \textsc{rate} of the code.
+
+    These two parameters, the minimum distance of the code, and the proportion
+    of signals which are codewords, are the two primary measures of the
+    effectiveness and efficiency of a code.  A large minimum distance in a code
+    will mean that many errors can be corrected, while a large proportion will
+    mean that messages are being transmitted efficiently.  The challenge, then,
+    is to design codes which have simultaneously a large minimum distance and a
+    large proportion of codewords.  One of the aims of this report is to put
+    bounds on how efficient a code can be given a target effectiveness; plainly,
+    if we want a certain minimum distance code in a set of signals, at most how
+    many codewords can there be?  The approach to this question is ultimately
+    due to Delsarte \cite{delsarte}, and has be expanded upon by Schrijver
+    \cite{schrijver}.
+
+  \section{Linear Codes and Hamming Graphs}
+
+    Let $V$ be denote a vector space of dimension $d$ over a finite field of
+    order $q$.  Then $Y \subseteq V$ is a \textsc{linear code} if $Y$ is a linear
+    subspace of $V$.  One such vector space is the set of length $d$ bitstrings:
+    this is a vector space of dimension $d$ over the finite field of two
+    elements.  (Here, the addition of vectors corresponds to the bitwise
+    exclusive-or of bitstrings.)  A code in such a vector space would be
+    immediately applicable to digital data.  This motivates the study of linear
+    codes.  One way in which binary data can be corrupted is through bit flips.
+    Analogously, if $v = v_1 e_1 + \cdots + v_d e_d$ is a vector written in the
+    fixed basis $e_1, \ldots, e_d$, then an error may occur by picking an index
+    $i$, and changing the value of $v_i$.  In order to count such errors, we
+    define the following distance function on $V$.
+
+    \begin{defn}\label{hamming-distance}
+      If $V$ is the vector space of $d$-tuples over a finite field, then the
+      \textsc{(Hamming) weight} of a vector $v = (v_1, \ldots, v_d)$ is the number of
+      nonzero components $v_i$; this is denoted $\wt{v}$.
+      Then the \textsc{(Hamming) distance} between vectors $u, v$ is defined
+      $$
+        \dist{u}{v} := \wt{u - v} \ .
+      $$
+    \end{defn}
+
+    Since a linear subspace must be closed under substraction, the minimum
+    distance of a linear code is the same as its minimum (nonzero) weight.
+    Also, the distance between two vectors is the number of coordinates on which
+    they differ.  Meanwhile, the rate of the code is the ratio of the dimension
+    of the code to the dimension of its ambient space.
+    \\
+
+    While much of coding theory is done in this setting, this report will look
+    at codes through a combinatorial lens.  A \textsc{directed graph} on a
+    vertex set $V$ is (for the purposes of this report) a binary relation $R
+    \subseteq V \times V$.  If the relation is symmetric, then the graph is said
+    to be \textsc{undirected}.  For each vector space as describe above, we can
+    define a corresponding graph, and investigate codes in this graph instead.
+
+    \begin{defn}\label{hamming-graph}
+      The \textsc{Hamming graph} $H(d, q)$ is defined so that its vertex set $V$
+      is the set of all $d$-tuples, each entry of which belongs to a fixed set
+      of $q$ elements.  Two vertices are said to be adjacent if they have
+      hamming distance $1$.
+
+      The graph $H_i(d, q)$ is defined on the same vertex set; however, vertices
+      in this graph are adjacent if they have hamming distance $i$.  With this
+      definition, $H(d, q) = H_1(d, q)$.
+    \end{defn}
+
+    Note that in the case of linear codes, if $F_q$ is a finite field of order
+    $q$, then $q$ must be a prime power.  Also, all vector spaces of dimension $d$
+    are isomorphic to $F_q^d$.  However, in the setting of Hamming graphs $H(d,
+    q)$, the interger $q$ need not be a prime power.  Thus, the vertex set can
+    be modelled as $\Z_q^d$.  If $q$ is a prime power, then $\Z_q$ still may not
+    be isomorphic to the additive group of $F_q$ (they are isomorphic if and only if
+    $q$ is prime).  However, the Hamming graph with $Z_q^d$ as its vertex set
+    will be isomorphic to the Hamming graph with $F_q^d$ as its vertex set, as
+    adjacency is solely determined by the number of components of two tuples
+    which as the same.  The algebraic structure plays no role.
+
+    By generalizing finite vector spaces to Hamming graphs in this way, the
+    explicit algebraic structure of the vector space is lost.  However, the
+    Hamming graphs have many combinatorial properties which will prove useful in
+    this report.  (It will also turn out that the Hamming graphs have a number
+    of elegant algebraic properties as well, but this is not obvious \textit{a
+    priori}.)
 
   \section{Distance-Regular Graphs}
     Define $M$-cliques.
@@ -1721,6 +1864,8 @@
       provides an upper bound on the maximum of the primal,
       and every feasible solution to the primal program
       provides a lower bound on the minimum of the dual.
+
+      \mysep
 
       In fact the extremal values of dual programs
       (the maximum of the primal, and the minimum of the dual)
