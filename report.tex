@@ -1669,53 +1669,24 @@
     so that this partition yields the Hamming scheme.
     In particular, $H(d, q) \cong \Cay(\Zqd, C_1)$.
 
-    For a character of the group $\psi \in (\Zqd)^*$ (\ref{character}) and
-    $x = (x_1, \ldots, x_d) = \sum_{i=1}^d x_i e_i$ in the group
-    (here $e_i$ is the tuple of all zeroes, and a $1$ in the $i^\text{th}$
-    spot), then since $\psi$ is a homomorphism,
-    $$
-      \psi(x)
-      = \prod_{i=1}^d \psi(x_i e_i)
-      = \prod_{i=1}^d \psi\(\sum_{j=1}^{x_i} e_i\)
-      = \prod_{i=1}^d \prod_{j=1}^{x_i} \psi(e_i)
-      = \prod_{i=1}^d \psi(e_i)^{x_i}
-    $$
-    so that $\psi$ is completely determined by its values on $e_1, \ldots, e_d$.
-
-    Let $\omega$ be a primitive $q^\text{th}$ root of unity,
-    so that $1 = \omega^0, \omega^1, \ldots, \omega^{q-1}$ are distinct.
-    Then every choice in  $\set{\omega^0, \omega^1, \ldots, \omega^{q-1}}^d$
-    will yield a distinct character
-    by assigning the $i^\text{th}$ entry to $\psi(e_i)$
-    (identifying $\psi$ with the tuple as in (\ref{character-vector})),
-    and defining the value of $\psi$ at all other $x = (x_1, \ldots, x_d)$ by
-    $$
-      \psi(x) := \prod_{i=1}^d \psi(e_i)^{x_i} \ .
-    $$
-    Note that this is a homomorphism since
-    $$
-      \psi(x + y)
-      = \prod_{i=1}^d \psi(e_i)^{x_i + y_i}
-      = \prod_{i=1}^d \psi(e_i)^{x_i} \psi(e_i)^{y_i}
-      = \prod_{i=1}^d \psi(e_i)^{x_i} \prod_{i=1}^d \psi(e_i)^{y_i}
-      = \psi(x) \psi(y) \ .
-    $$
-
-    Therefore, $(\Zqd)^* \cong \set{\omega^0, \ldots, \omega^{q-1}}^n$
-    (taking entrywise multiplication as the group product on the right),
-    so that the characters $\psi$ will be identified with row vectors
+    From the proof that $\Z_q^d \cong \(Z_q^d\)^*$ (\ref{character-duality}), if
+    $\omega$ is a $q^\text{th}$ complex root of unity, we see that we can
+    identify characters $\psi$ with row vectors of the form
     $$
       \psi \rightsquigarrow
       \begin{bmatrix}
         \omega^{\psi_1} & \cdots & \omega^{\psi_d}
       \end{bmatrix}
     $$
-    where $\psi_i \in \set{0, 1, \ldots, q - 1}$.
-
+    where $\psi_i \in \set{0, 1, \ldots, q - 1}$, and
+    $$
+      \psi(x) = \prod_{i=1}^d \omega^{\psi_i x_i} \ .
+    $$
     (Note that this notation deviates from (\ref{character-vector}),
-    but will be more convenient for this purpose.
-    In fact, this shows that $(\Zqd)^* \cong \Zqd$ directly,
-    confirming (\ref{character-duality}).)
+    but will be more convenient for this purpose.)
+    As in the proof of (\ref{character-duality}), let $e_i$ denote the tuple of
+    all zeroes, with a $1$ in the $i^\text{th}$ position, so that each group
+    element $x = (x_1, \ldots, x_d)$ can be expressed as $\sum_{i=1}^d x_i e_i$.
 
     Then, in the $i^\text{th}$-distance Hamming graph,
     $\psi$ is a $\psi(C_i)$-eigenvalue (\ref{cayley-eigen}),
@@ -1729,7 +1700,7 @@
       &\qquad\qquad\qquad\qquad\text{
         \ and the inner sum picks the value
       }\\
-      &= \sum_{i=1}^d \sum_{j=1}^{q-1} \psi(e_i)^j
+      &= \sum_{i=1}^d \sum_{j=1}^{q-1} \omega^{\psi_i j}
       = \sum_{i=1}^d \sum_{j=1}^{q-1} \(\omega^{\psi_i}\)^j \\
       &= \sum_{i=1}^d
         \(\frac{1 - \(\omega^{\psi_i}\)^q}{1 - \omega^{\psi_i}} - 1\)
@@ -2313,7 +2284,74 @@
     \end{thm}
 
     \begin{proof}
-      TODO
+      Let
+      $$
+        G = \Z_{q_1} \times \cdots \times \Z_{q_d}
+      $$
+      for $q_i \in \N_{>0}$.  Since all finite abelian groups are isomorphic to
+      a group of this form, it suffices to prove that each group of this form is
+      isomorphic to its group of characters.
+
+      For each $i$, let $e_i$ be the tuple of all zeroes, with a $1$ in the
+      $i^\text{th}$ spot.  Then, every element $x$ of $G$ is of the form $x =
+      (x_1, \ldots, x_d) = \sum_{i=1}^d x_i e_i$, where each $x_i$ is some
+      element of $\Z_{q_i}$.  Furthermore, for all $i$, let $\omega_i$ be
+      \textit{any} primitive $q_i^\text{th}$ complex root of unity, so that
+      $\omega_i^0, \omega_i^1, \ldots, \omega_i^{q_i - 1}$ are all distinct.
+
+      First, we claim that every character $\psi$ is completely determined by
+      its values on $e_1, \ldots, e_d$.  To see this, take any group element
+      $z$, and compute
+      $$
+        \psi(z)
+        = \prod_{i=1}^d \psi(z_i e_i)
+        = \prod_{i=1}^d \psi\(\sum_{j=1}^{z_i} e_i\)
+        = \prod_{i=1}^d \prod_{j=1}^{z_i} \psi(e_i)
+        = \prod_{i=1}^d \psi(e_i)^{z_i}
+        \ .
+      $$
+      Furthermore, note that $\psi(e_i)$ is a $q_i^\text{th}$ complex root of
+      unity, since $q_i \cdot e_i = 0$ and $\psi(q_i \cdot e_i) =
+      \psi(e_i)^{q_i}$, while $\psi(0) = 1$.
+
+      So, define the map $^*: G \to G^*$ by
+      $$
+        x^* :
+          z \mapsto \prod_{i=1}^d \omega_i^{x_iz_i}
+        \ .
+      $$
+      Then $x^*$ is a character of $G$ since $x^*(0) = \prod_{i=1}^d \omega_i^0
+      = 1$, and for group elements $z$ and $\tilde{z}$,
+      $$
+        x^*(z + \tilde{z})
+        = \prod_{i=1}^d \omega_i^{x_i(z_i + \tilde{z_i})}
+        = \prod_{i=1}^d \omega_i^{x_iz_i} \omega_i^{x_i\tilde{z_i}}
+        = \prod_{i=1}^d \omega_i^{x_iz_i} \prod_{i=1}^d \omega_i^{x_i\tilde{z_i}}
+        = x^*(z) x^*(\tilde{z})
+        \ .
+      $$
+      Therefore, this map is well-defined.
+
+      Next, we claim that this map is a homomorphism.  To see this, note that
+      for any group element $z$, $0^*(x) = \prod_{i=1}^d \omega_i^0 = 1$.  Then,
+      for any three group elements $x$, $y$, and $z$,
+      $$
+        (x + y)^*(z)
+        = \prod_{i=1}^d \omega_i^{(x_i + y_i)z_i}
+        = \prod_{i=1}^d \omega_i^{x_i z_i} \omega_i^{y_i z_i}
+        = \prod_{i=1}^d \omega_i^{x_i z_i} \prod_{i=1}^d \omega_i^{y_i z_i}
+        = x^*(z) y^*(z)
+      $$
+      which demonstrates that $(x + y)^* = x^* y^*$.
+
+      Finally, we show that this map is bijective.  First, note that if a
+      character maps each $e_i$ to $1$, then that character is the identity.
+      Since, $x^*(e_i) = \omega_i^{x_i}$, which is $1$ if and only if $x_i = 0$,
+      $x^*$ is the identity if and only if $x = 0$.  Furthermore, if $\psi$ is
+      any character, then $\psi$ is completely determined by the values
+      $\psi(e_1), \ldots, \psi(e_d)$.  Since each $\psi(e_i)$ is a
+      $q_i^\text{th}$ root of unity, $\psi(e_i) = \omega_i^{x_i}$ for some $x_i$
+      in $\Z_{q_i}$.  Therefore, $\psi = (x_1, \ldots, x_d)^*$.
     \end{proof}
 
     While by transitivity this shows that $G^{**} \cong G$,
