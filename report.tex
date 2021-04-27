@@ -232,7 +232,7 @@
     due to Delsarte \cite{delsarte}, and has be expanded upon by Schrijver
     \cite{schrijver}.
 
-  \section{Linear Codes and Hamming Graphs}
+  \section{Linear Codes and Distance-Regular Graphs}
 
     Let $V$ be denote a vector space of dimension $d$ over a finite field of
     order $q$.  Then $Y \subseteq V$ is a \textsc{linear code} if $Y$ is a linear
@@ -268,8 +268,11 @@
     at codes through a combinatorial lens.  A \textsc{directed graph} on a
     vertex set $V$ is (for the purposes of this report) a binary relation $R
     \subseteq V \times V$.  If the relation is symmetric, then the graph is said
-    to be \textsc{undirected}.  For each vector space as describe above, we can
-    define a corresponding graph, and investigate codes in this graph instead.
+    to be \textsc{undirected}.  (Note that this definition will prohibit
+    parallel edges, but not loops.)  The relation $R$ is typically denoted $~$
+    and written infix when the graph is clear from the context.  For each vector
+    space as describe above, we can define a corresponding graph, and
+    investigate codes in this graph instead.
 
     \begin{defn}\label{hamming-graph}
       The \textsc{Hamming graph} $H(d, q)$ is defined so that its vertex set $V$
@@ -283,12 +286,12 @@
     \end{defn}
 
     Note that in the case of linear codes, if $F_q$ is a finite field of order
-    $q$, then $q$ must be a prime power.  Also, all vector spaces of dimension $d$
+    $q$, then $q$ must be a prime power, and all vector spaces of dimension $d$
     are isomorphic to $F_q^d$.  However, in the setting of Hamming graphs $H(d,
     q)$, the integer $q$ need not be a prime power.  Thus, the vertex set can
     be modelled as $\Z_q^d$.  If $q$ is a prime power, then $\Z_q$ still may not
     be isomorphic to the additive group of $F_q$ (they are isomorphic if and only if
-    $q$ is prime).  However, the Hamming graph with $Z_q^d$ as its vertex set
+    $q$ is prime).  However, the Hamming graph with $\Z_q^d$ as its vertex set
     will be isomorphic to the Hamming graph with $F_q^d$ as its vertex set, as
     adjacency is solely determined by the number of components of two tuples
     which as the same.  The algebraic structure plays no role.
@@ -298,7 +301,83 @@
     Hamming graphs have many combinatorial properties which will prove useful in
     this report.  (It will also turn out that the Hamming graphs have a number
     of elegant algebraic properties as well, but this is not obvious \textit{a
-    priori}.)
+    priori}.)  In particular, the Hamming graphs are a family of
+    \textit{distance-regular graphs}.
+
+    \begin{defn}\label{defn:drg}
+      Let $\Gamma$ be a graph, and $u, v$ be a vertex in the graph.  then the
+      distance between $u$ and $v$ in $\Gamma$, denoted $\dist(u, v)$, is the
+      length of a shortest path between $u$ and $v$.  Then let $N_i(u)$ denote
+      the set of vertices at distance $i$ from $u$.  In particular, if $u$ is
+      not incident to a loop, then $N_1(u)$ will be the neighbourhood of $u$.
+
+      A graph is said to be
+      \textsc{distance-regular} if for all distances $i$, $j$, and $k$, and any
+      two vertices $u, v$ at distance $k$, there is a constant $p_{ij}^k$ such
+      that
+      $$
+        \abs{N_i(u) \cap N_j(v)} = p_{ij}^k \ .
+      $$
+      In particular, at $u = v$ and $i = j = 1$, if the graph is loopless,
+      the above constraint implies that the graph is \textsc{regular} -- that
+      the degree of each vertex is constant.  This degree is also called the
+      \textsc{valency} of the graph.
+
+      If $\Gamma$ is any graph, then the \textsc{distance graphs} of $\Gamma$
+      are the graphs $\Gamma_0, \Gamma_1, \Gamma_2, \ldots$ where each shares
+      the same vertex set as $\Gamma$, and vertices are adjacent in $\Gamma_i$
+      if and only if they are at distance $i$ in $\Gamma$.  Note that if
+      $\Gamma$ is loopless, then $\Gamma = \Gamma_1$.  If $\Gamma_d$ is the last
+      non-empty graph in this sequence (i.e. $d$ is the maximum distance in the
+      graph), then $d$ is called the \textsc{diameter}.
+    \end{defn}
+
+    Note that the distance graph $\Gamma_0$ is always the diagonal relation on
+    its vertex set.  Furthermore, if $d$ is the diameter, then $\Gamma_0,
+    \Gamma_1, \ldots, \Gamma_d$ partition the vertex set.
+
+    Not only are the Hamming graphs distance-regular, but the graphs $H_i(d, q)$
+    are the distance graphs of $H(d, q)$, and $d$ is the diameter.
+
+    \mysep
+
+    The easiest way to show that the Hamming graphs are distance-regular is to
+    show that they satisfy a stronger property, called
+    \textit{distance-transitivity}, which has to do with the symmetry of the
+    Hamming graphs.
+
+    \begin{defn}\label{defn:distance-transitive}
+      An \textsc{automorphism} of a graph $\Gamma$ with vertex set $V$ is a
+      bijection $\phi: V \to V$ such that for all vertices $u$ and $v$,
+      $$
+        u \sim v \iff \phi(u) \sim \phi(v) \ .
+      $$
+
+      A graph $\Gamma$ is \textsc{distance-transitive} if for all pairs of vertices $u,
+      v$ and $u', v'$ such that $\dist(u, v) = \dist(u', v')$, there is an
+      automorphism of $\Gamma$ mapping $u$ to $u'$ and $v$ to $v'$.
+    \end{defn}
+
+    \begin{lem}\label{lem:distance-transitive->drg}
+      Every distance-transitive graph is distance-regular.
+    \end{lem}
+
+    \begin{proof}
+    \end{proof}
+
+    \begin{lem}\label{lem:hamming-characterized-distance}
+    \end{lem}
+
+    \begin{proof}
+    \end{proof}
+
+    \begin{lem}\label{lem:hamming-distance-transitive}
+      For any positive integers $d, q$, the Hamming graph $H(d, q)$ is
+      distance-transitive.
+    \end{lem}
+
+    \begin{proof}
+    \end{proof}
 
   \section{Distance-Regular Graphs}
     Define $M$-cliques.
