@@ -259,22 +259,22 @@
       $$
     \end{defn}
 
-    Since a linear subspace must be closed under subtraction, the minimum
-    distance of a linear code is the same as its minimum (nonzero) weight.
-    Also, the distance between two vectors is the number of coordinates on which
-    they differ.  Meanwhile, the rate of the code is the ratio of the dimension
-    of the code to the dimension of its ambient space.
+    In other words, the distance between two vectors is the number of
+    coordinates on which they differ.  Since a linear subspace must be closed
+    under subtraction, the minimum distance of a linear code is the same as its
+    minimum (nonzero) weight.  Meanwhile, the rate of the code is the ratio of
+    the dimension of the code to the dimension of its ambient space.
     \\
 
     While much of coding theory is done in this setting, this report will look
     at codes through a combinatorial lens.  A \textsc{directed graph} on a
-    vertex set $V$ is (for the purposes of this report) a binary relation $R
-    \subseteq V \times V$.  If the relation is symmetric, then the graph is said
-    to be \textsc{undirected}.  (Note that this definition will prohibit
-    parallel edges, but not loops.)  The relation $R$ is typically denoted $~$
-    and written infix when the graph is clear from the context.  For each vector
-    space as describe above, we can define a corresponding graph, and
-    investigate codes in this graph instead.
+    vertex set $V$ is a binary relation $\Gamma \subseteq V \times V$.  If the
+    relation is symmetric, then the graph is said to be \textsc{undirected}.
+    (Note that this definition will prohibit parallel edges, but not loops.) The
+    relation $\Gamma$ is typically denoted $\sim$ and written infix when the
+    graph is clear from the context.  For each vector space as described above,
+    we can define a corresponding graph and investigate codes in this graph
+    instead.
 
     \begin{defn}\label{hamming-graph}
       The \textsc{Hamming graph} $H(d, q)$ is defined so that its vertex set $V$
@@ -287,36 +287,30 @@
       definition, $H(d, q) = H_1(d, q)$.
     \end{defn}
 
-    Note that in the case of linear codes, if $F_q$ is a finite field of order
-    $q$, then $q$ must be a prime power, and all vector spaces of dimension $d$
-    are isomorphic to $F_q^d$.  However, in the setting of Hamming graphs $H(d,
-    q)$, the integer $q$ need not be a prime power.  Thus, the vertex set can
-    be modelled as $\Z_q^d$.  If $q$ is a prime power, then $\Z_q$ still may not
-    be isomorphic to the additive group of $F_q$ (they are isomorphic if and only if
-    $q$ is prime).  However, the Hamming graph with $\Z_q^d$ as its vertex set
-    will be isomorphic to the Hamming graph with $F_q^d$ as its vertex set, as
-    adjacency is solely determined by the number of components of two tuples
-    which as the same.  The algebraic structure plays no role.
+    Note that, unlike vector spaces of the form $\GF(q)^d$, the Hamming graph
+    $H(d, q)$ is not restricted to prime powers for $q$.  Therefore, we will
+    frequently take $\Z_q^d$ to be the vertex set of the Hamming graph.  In the
+    case that $q$ is a prime power, we may take $\GF(q)^d$ as the vertex set
+    instead.  While these algebraic structures are not isomorphic, their Hamming
+    graphs are.
 
     By generalizing finite vector spaces to Hamming graphs in this way, the
     explicit algebraic structure of the vector space is lost.  However, the
     Hamming graphs have many combinatorial properties which will prove useful in
-    this report.  (It will also turn out that the Hamming graphs have a number
-    of elegant algebraic properties as well, but this is not obvious \textit{a
-    priori}.)  In particular, the Hamming graphs are a family of
-    \textit{distance-regular graphs}.
+    this report.  It will also turn out that the Hamming graphs have interesting
+    algebraic properties; for example, they have large automorphism groups.
+    More importantly however, they are \textit{distance-regular graphs}.
 
     \begin{defn}\label{defn:drg}
-      Let $\Gamma$ be a graph, and $u, v$ be a vertex in the graph.  then the
-      distance between $u$ and $v$ in $\Gamma$, denoted $\dist(u, v)$, is the
-      length of a shortest path between $u$ and $v$.  Then let $N_i(u)$ denote
-      the set of vertices at distance $i$ from $u$.  In particular, if $u$ is
-      not incident to a loop, then $N_1(u)$ will be the neighbourhood of $u$.
+      Let $\Gamma$ be a graph, and $u, v$ be vertices in the graph.  Then the
+      distance between $u$ and $v$ in $\Gamma$, denoted $\dist{u}{v}$, is the
+      length of a shortest path between $u$ and $v$.  Let $N_i(u)$ denote the
+      set of vertices at distance $i$ from $u$ (if $u$ is not incident to a
+      loop, then $N_1(u)$ will be the neighbourhood of $u$).
 
-      A graph is said to be
-      \textsc{distance-regular} if for all distances $i$, $j$, and $k$, and any
-      two vertices $u, v$ at distance $k$, there is a constant $p_{ij}^k$ such
-      that
+      A graph is said to be \textsc{distance-regular} if for all distances $i$,
+      $j$, and $k$, and any two vertices $u, v$ at distance $k$, there is a
+      constant $p_{ij}^k$ such that
       $$
         \abs{N_i(u) \cap N_j(v)} = p_{ij}^k \ .
       $$
@@ -840,30 +834,7 @@
     $$
     The most important class of symmetric association scheme (for the purposes
     of this report) arise as the distance graphs of a distance-regular graph
-    (\ref{sec:AS:PPS}).  From this setting, we can generalize the following
-    definition.  (TODO define for DRGs)
-
-    \begin{defn}[Cliques and Cocliques {{\cite[Section 3.3]{delsarte}}}]
-      \label{AS-clique}
-      Let $Y \subseteq X$, and $C \subseteq D$, where $0 \in C$.
-      Then $Y$ is called a \textsc{$C$-clique} if
-      $$
-        R_i \cap Y^2 = \emptyset \quad \forall i \in D \setminus C
-        \ .
-      $$
-      Equivalently, $Y$ is a $C$-clique if for all $x, y \in Y$,
-      $$
-        (x, y) \in R_i \implies i \in C
-        \ .
-      $$
-      Let $C^* := C \setminus \set{0}$, and $\bar{C} = D \setminus C^*$.
-      Then $Y$ is a $C$-clique if and only if it is a
-      \textsc{$\bar{C}$-coclique}.
-
-      (TODO Move below note to DRG defn.)
-      (Note that such a set $Y$ is called a \textit{$C$-code},
-      or \textit{$\bar{C}$-anticode} in \cite{godsil}.)
-    \end{defn}
+    (\ref{sec:AS:PPS}).
 
     \subsection{The Bose-Mesner Algebra}\label{sec:AS:AS:BMA}
       For any association scheme $\AS$,
