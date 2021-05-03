@@ -2621,22 +2621,127 @@
 \appendix
 
 \chapter{Linear Algebra}
+
+  The reader of this report is expected to be familier with the standard notions
+  of finite-dimensional vector spaces over $\R$ or $\C$.  Some topics which are
+  more important to this report, and less commonly emphasized elsewhere, are
+  included here for reference.
+
+  Throughout the report, the vector spaces in question will typically be $\C^n$
+  or $\R^n$, for various values of $n$, with the standard inner product.  Given
+  a matrix (or vector) $M$, its adjoint will be written $M^*$.  If $M$ is real,
+  then this is simply the transpose; if $M$ is complex, then it is the conjugate
+  transpose.
+
   \section{The Spectral Theorem}
     \subsection{Orthogonal Projection}
-      \begin{itemize}
-        \item The trace of an idempotent matrix is its rank.
-      \end{itemize}
+
+      Let $X$ be an inner product space, let $W$ be a subspace of $X$, and let
+      the columns of a matrix $U$ be a basis for $W$.  Then the matrix $UU^*$,
+      which maps all vectors into $W$, is the \textit{orthogonal projection}
+      onto $W$.  It is a \textit{projection} in that it is idempotent ($(UU^*)^2
+      = UU^*$), and it is \textit{orthogonal} because it maps vectors $x$ to the
+      closest vector $w$ in $W$ to $x$ (then $x - w$ is orthogonal to $W$).
+
+      Recall that the \textit{trace} of a matrix is the sum of its diagonal
+      entries.  If the matrix is diagonalizable, then it is also the sum of its
+      eigenvalues (with multiplicity).  The following facts will be importing in
+      the course of the report.
+
+      \begin{lem}
+        The eigenvalues of an idempotent matrix are all in $\set{0, 1}$.
+      \end{lem}
+
+      \begin{proof}
+        Let $F$ be an idempotent matrix, so that $F^2 - F = 0$.  If $v$ is an
+        eigenvector with eigenvalue $\lambda$, then
+        $$
+          0 =(F^2 - F)v = F^2v - Fv = \lambda^2 v - \lambda v = (\lambda^2 -
+          \lambda)v \ .
+        $$
+        Since $v$ cannot be zero, this implies that $\lambda(\lambda - 1) = 0$.
+      \end{proof}
+
+      \begin{prop}
+        The trace of diagonalizable idempotent matrix is its rank.
+      \end{prop}
+
+      \begin{proof}
+        The trace of a matrix is the sum of its eigenvalues, and the eigenvalues
+        of an idempotent matrix are all in $\set{0, 1}$.  The trace is the
+        number of $1$s in the diagonal representation of the matrix, which is
+        equal to the rank.
+      \end{proof}
+
     \subsection{Spectral Decomposition}
 
-  \section{Adjacency Matrices}
-    Basic results about the spectra of adjacency matrices, which may be used
-    elsewhere in the report.  E.g. the sum of eigenvalues with multiplicity, and
-    consequences.
+      \begin{defn}
+        A linear operator is called \textsc{normal} if it commutes with its
+        adjoint.
+      \end{defn}
+
+      The following result regarding normal operators of a finite-dimensional
+      inner product space is central to this report.
+
+      \begin{thm}
+        If $M$ is a normal operator, then $M$ is unitarily diagonalizable.  That
+        is, there exists a unitary matrix $U$ and a diagonal matrix $\Delta$
+        such that $M = UDU^*$.
+      \end{thm}
+
+      While this is the way that the spectral theorem is normally presented, it
+      will be useful to look closer at this result.
+
+      Let $M$ be a normal matrix with distinct eigenvalues $\theta$, and
+      eigenspaces $E_\theta$.  Let $F_\theta$ be the orthogonal projection onto
+      $E_\theta$.  Then,
+      $$
+        M = \sum_\theta \theta F_\theta \quad\And\quad
+        I = \sum_\theta F_\theta \ .
+      $$
+      This \textit{spectral decomposition} will be the form used throughout this
+      report.
+
+      There are a number of important facts about this decomposition which will
+      also be useful.  First, the $F_\theta$ are orthogonal idempotents, in that
+      $F_\theta F_{\theta'} = \delta_{\theta \theta'} F_\theta$.  This implies
+      the following fact.  If $f$ is any polynomial, then $f(M) = \sum_\theta
+      f(\theta) F_\theta$.  Since the eigenvalues $\theta$ are distinct, for
+      each eigenvalue $\theta$, there exists a polynomial -- for example,
+      $\prod_{\theta' \neq \theta} (x - \theta')$ -- which is nonzero on exactly
+      $\theta$ and no other eigenvalues.  This allows one to express each
+      $F_\theta$ as a polynomial in $M$.
 
   \section{Positive Semi-Definite Matrices}
     Depending on which proof of the clique-coclique bound I use, and how much
     detail I go into Schrijver's SDP bound, I could make some comments about PSD
     matrices.
+
+    In this section, we will restrict the discussion to real, symmetric
+    matrices.
+
+    \begin{defn}
+      A real, symmetric matrix $M$ is \textsc{positive semi-definite} if for all
+      vectors $x$,
+      $$
+        x^T M x \geq 0 \ .
+      $$
+    \end{defn}
+
+    This is the most common definition of a positive semi-definite matrix, but
+    in fact there are a number of other equivalent conditions.
+
+    \begin{thm}
+      The following are equivalent:
+      \begin{itemize}
+        \item The matrix $M$ is positive semi-definite.
+        \item There exists a (possibly non-square) matrix $B$ such that $M = B^T
+          B$.
+        \item All the eigenvalues of $M$ are non-negative.
+      \end{itemize}
+    \end{thm}
+
+    These conditions will be used interchangeably in this report.
 
 \chapter{Group Theory}
   \section{Group Actions}
