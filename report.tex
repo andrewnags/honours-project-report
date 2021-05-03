@@ -101,18 +101,19 @@
 \newcommand{\diag}[1]{\operatorname{diag}\( #1 \)}
 \newcommand{\wt}[1]{\operatorname{wt}\( #1 \)}
 \newcommand{\dist}[2]{\operatorname{dist}\( #1, #2 \)}
-\newcommand{\chiN}{\chi_{N}}
-\newcommand{\chiM}{\chi_{M}}
-\newcommand{\chiNs}{\chi_{N^*}}
-\newcommand{\chiMs}{\chi_{M^*}}
+\newcommand{\chiD}{\chi_{D}}
+\newcommand{\chiC}{\chi_{C}}
+\newcommand{\chiDs}{\chi_{D^*}}
+\newcommand{\chiCs}{\chi_{C^*}}
 \newcommand{\diagz}{\diag{\chi_0}}
-\newcommand{\diagN}{\diag{\chiN}}
-\newcommand{\diagM}{\diag{\chiM}}
-\newcommand{\diagNs}{\diag{\chiNs}}
-\newcommand{\diagMs}{\diag{\chiMs}}
+\newcommand{\diagD}{\diag{\chiD}}
+\newcommand{\diagC}{\diag{\chiC}}
+\newcommand{\diagDs}{\diag{\chiDs}}
+\newcommand{\diagCs}{\diag{\chiCs}}
 \newcommand{\diagnu}{\diag{\nu}}
 \newcommand{\diagmu}{\diag{\mu}}
 \newcommand{\vone}{\mathbf{1}}
+\newcommand{\vzero}{\mathbf{0}}
 
 \title{Cliques, Codes, and Association Schemes}
 \author{
@@ -144,8 +145,8 @@
 
 \tableofcontents
 
-\chapter{Introduction}
-  \section{Coding Theory}
+\chapter{Introduction}\label{ch:intro}
+  \section{Coding Theory}\label{sec:intro:coding}
     In most communication, a transmitter in one location must send a message to
     a receiver in another location, possibly by means of a faulty (or
     \textit{noisy}) channel which may introduce errors into the message.
@@ -208,11 +209,11 @@
     Therefore, this code (called a \textit{repetition code}) can correct at most
     $1$ error.
 
-    More generally, if $d$ is the \textsc{minimum distance} between any two
-    codewords, and $w$ is a signal at distance no more than $\floor{\frac{d -
-    1}{2}}$ from a codeword $u$, then its distance to any other codeword $v$
-    must be greater.  Otherwise, $u$ could be converted to $v$ with at most $d -
-    1$ errors -- a contradiction!
+    More generally, if $\delta$ is the \textsc{minimum distance} between any two
+    codewords, and $w$ is a signal at distance no more than $\floor{\frac{\delta
+    - 1}{2}}$ from a codeword $u$, then its distance to any other codeword $v$
+    must be greater.  Otherwise, $u$ could be converted to $v$ with at most
+    $\delta - 1$ errors -- a contradiction!
 
     On the other hand, in the example repetition code given above, there were
     $2^1 = 2$ codewords, and $2^3 = 8$ possible signals.  So, for every message
@@ -232,7 +233,8 @@
     due to Delsarte \cite{delsarte}, and has be expanded upon by Schrijver
     \cite{schrijver}.
 
-  \section{Linear Codes and Distance-Regular Graphs}
+  \section{Linear Codes and Distance-Regular
+    Graphs}\label{sec:intro:linear->drg}
 
     Let $V$ be denote a vector space of dimension $d$ over a finite field of
     order $q$.  Then $Y \subseteq V$ is a \textsc{linear code} if $Y$ is a linear
@@ -332,122 +334,419 @@
       graph), then $d$ is called the \textsc{diameter}.
     \end{defn}
 
-    Note that the distance graph $\Gamma_0$ is always the diagonal relation on
-    its vertex set.  Furthermore, if $d$ is the diameter, then $\Gamma_0,
-    \Gamma_1, \ldots, \Gamma_d$ partition the vertex set.
+    The Hamming graphs are distance-regular, where the graphs $H_i(d, q)$ are
+    the distance graphs of $H(d, q)$, and $d$ is the diameter.  Other examples
+    of distance-regular graphs include the Johnson graphs and the Grassman
+    graphs.
 
-    Not only are the Hamming graphs distance-regular, but the graphs $H_i(d, q)$
-    are the distance graphs of $H(d, q)$, and $d$ is the diameter.
+    For any graph with distance graphs $\Gamma_0, \Gamma_1, \ldots, \Gamma_d$,
+    we can define a \textit{code} to be a subset of the vertex set, where the
+    distance between vertices is their distance in the graph; that is,
+    $\dist{u}{v} = i$ if and only if $u$ and $v$ are adjacent in $\Gamma_i$.
+    Then the code has minimum distance $\delta$ if and only if $\delta$ is the
+    least positive distance $i$ in $\set{1, \ldots, d}$ for which there exists a
+    pair of codewords which are adjacent in $\Gamma_i$.  In part because the
+    Hamming graphs belong to this class, we will study coding theory in the
+    context of distance-regular graphs for the remainder of this report.
+    \\
+
+    Note that the study of codes in graphs is also connected to the study of
+    \textit{cocliques} (or \textit{independent sets}).  A \textsc{coclique} in a
+    graph is a set of vertices, none of which are adjacent.  Equivalently, a
+    coclique is a code in a graph with minimum distance $2$.  On the other hand,
+    given distance graphs $\Gamma_0, \Gamma_1, \ldots, \Gamma_d$, then a code of
+    minimum distance $\delta$ is an independent set in the graph obtained by
+    taking the union of the edgesets of $\Gamma_1, \ldots, \Gamma_\delta$.
+
+  \section{Hamming Graphs}\label{sec:intro:hamming}
+
+    This section will discuss some of the algebraic properties of the Hamming
+    graphs.  The fact that the Hamming graphs are distance-regular will be used
+    without comment throughout the remainder of the report.  The automorphism
+    group of a Hamming graph is helpful in demonstrating this fact.  The
+    automorphism group also plays an important role in Schrijver's SDP bound
+    (\ref{sec:SDP-bound:SDP-bound}).  Readers who are familiar with the
+    automorphism groups of the Hamming graphs, or are willing to accept that
+    these graphs are distance-regular, may omit this section.  
+
+    The simplest way to show that the Hamming graphs are distance-regular is to
+    show that they satisfy a stronger property, called
+    \textit{distance-transitivity}.  To do this, it will be helpful to examine
+    the automorphism group of the Hamming graph $H(d, q)$.
+
+    Throughout this section, the vertex set of $H(d, q)$ will be taken to be
+    $\Z_q^d$, and $e_i$ will denote the tuple of all zeroes, and a $1$ in the
+    $i^\text{th}$ entry.  Then, the neighbours of any vertex $v$ are the
+    vertices of the form $v + \alpha e_i$, where $\alpha \in \Z_q \setminus
+    \set{0}$.  We will denote by $[d]$ the set $\set{1, \ldots, d}$.
+    \\
+
+    The most important property of the automorphism group of a Hamming graph is
+    that the action of any automorphism is completely determined by its action
+    on a small subset of the graph.  In particular, given any vertex $v$, any
+    automorphism is determined by its action on $v$ and the neighbourhood of
+    $v$.  
+
+    \begin{lem}\label{lem:hamming-characterized-distance}
+      Fix any vertex $v$ in $H(d, q)$.  Then for each vertex $u$, the relation
+      $$
+        D_v(u) := \buildset{
+          (v + \alpha e_i,\ \dist{v + \alpha e_i}{u})
+        }{
+          \alpha \in \Z_q ,\ 
+          i \in [d]
+        }
+      $$
+      completely characterizes the vertex $u$.  (We will call this relation the
+      \emph{distance profile} of $u$ with respect to $v$.)
+    \end{lem}
+
+    \begin{proof}
+      Note that for any two vertices $w$ and $u$, their distance is given by the
+      Hamming weight of their difference: $\dist{w}{u} = \wt{w - u}$.
+
+      Then, for any $\alpha \neq 0$, we know that
+      $$
+        \dist{u}{v + \alpha e_i}
+        = \wt{u - (v + \alpha e_i)}
+        = \wt{(u - v) - \alpha e_i}
+        = \begin{cases}
+          > \wt{u - v} & \If u_i = v_i \\
+          < \wt{u - v} & \If u_i - v_i = \alpha \\
+          = \wt{u - v} & \Else
+        \end{cases};
+      $$
+      precisely; the only case when subtracting $\alpha e_i$ from $u - v$
+      lowers the weight of the vector is in the case that the $i^\text{th}$
+      component of $u - v$ is $\alpha$.  Therefore, if we are given all the
+      weights $\dist{u}{v + \alpha e-i}$, we can reconstruct $u$ as follows:
+      $$
+        u = v + \sum_{i \in [d]} e_i \sum_{\alpha \in \Z_q \setminus \set{0}}
+          \alpha \cdot \mathbbm{1}\[
+            \dist{u}{v + \alpha e_i} < \dist{u}{v}
+          \]
+      $$
+      where $\mathbbm{1}$ is the indicator function.  Note that for each $i$,
+      there will be \emph{at most one value} of $\alpha$ for which $\dist{u}{v
+      + \alpha e_i} < \dist{u}{v}$.
+    \end{proof}
+
+    \begin{cor}\label{cor:hamming-aut-characterized-nbhd}
+      For any vertex $v$, the action of any automorphism of a Hamming graph is
+      completely determined by its action on $\buildset{v + \alpha e_i}{\alpha
+      \in \Z_q,\ i \in [d]}$.
+    \end{cor}
+
+    \begin{proof}
+      Note that every graph automorphism preserves the distances in that graph.
+
+      Fix a vertex $v$ and suppose that $g$ and $g'$ are automorphisms of $H(d,
+      q)$ such that $(v + \alpha e_i) g = (v + \alpha e_i) g'$ for all $\alpha$
+      and $i$.  Then for any vertex $u$, let $D_v(u) = \set{(v + \alpha e_i,\
+      d_{\alpha, i})}_{\alpha, i}$ be the distance profile of $u$ with respect
+      to $v$.  Then since automorphisms preserve distances, for all $\alpha$ and
+      $i$,
+      \begin{alignat*}{2}
+        d_{\alpha, i} &= \dist{(v + \alpha e_i) g}{ug} \\
+        d_{\alpha, i} &= \dist{(v + \alpha e_i) g'}{ug'} \\
+      \end{alignat*}
+      and $(v + \alpha e_i)g = (v + \alpha e_i) g'$.  Therefore, the distance
+      profiles of $ug$ and $ug'$ with respect to $vg$ are identical, since $vg =
+      vg'$, so that $ug = ug'$.
+    \end{proof}
+
+    Now, to compute the automorphism group of $H(d, q)$, we will employ a
+    strategy following the orbit-stabilizer theorem: we will show that there is
+    a single orbit, so that the size of the group is the size of the vertex set
+    times the size of stabilizer of a single vertex, say $\vzero$.  Since the
+    group is finite, by finding a set of automorphisms which map $\vzero$ to
+    each other vertex, and the stabilizer of $\vzero$, taking the compositions
+    of all pairs of automorphisms from these two subgroups will generate all
+    automorphisms.
+
+    \begin{lem}\label{lem:hamming-shift-automorphisms}
+      For any vertex $v$, the map $T_v : u \mapsto u + v$ is an automorphism of
+      $H(d, q)$.  On the other hand, every automorphism of $H(d, q)$ is the
+      composition of an automorphism of the form $T_v$ for some vertex $v$, and
+      an automorphism fixing $\vzero$.
+    \end{lem}
+
+    \begin{proof}
+      Let $v$ be a vertex of $H(d, q)$.  Then $T_v$ is invertible, since
+      $T_v^{-1} = T_{-v}$.  Furthermore, for any vertices $u$ and $w$,
+      $$
+        \wt{uT_v - wt_v}
+        = \wt{(u + v) - (w + v)}
+        = \wt{u - w}
+      $$
+      so $T_v$ preserves adjacency.
+
+      Let $g$ be any automorphism of $H(d, q)$, and let $\vzero g = v$.  Then 
+      $\vzero g T_{-v} = \vzero$, so $g = g' T_v$, where $g'$ is an automorphism
+      fixing $\vzero$.
+    \end{proof}
+
+    Note that this result tells us that the Hamming graph $H(d, q)$ is vertex
+    transitive, since for all vertices $u$ and $u'$, $u T_{u' - u} = u + (u' -
+    u) = u'$.
+
+    Now let us consider the stabiliser of $\vzero$.  Since automorphisms
+    preserve distances, if $g$ fixes $\vzero$, then it will permute the
+    neighbours $\alpha e_i$ of $\vzero$.
+
+    \begin{lem}\label{lem:hamming-automorphisms-preserve-component}
+      Let $g$ be an automorphism  of $H(d, q)$ which fixes $\vzero$.  Then for
+      each $\alpha$ and $e_i$, $g: \alpha e_i \mapsto \beta e_j$ where $\alpha$
+      is zero if and only if $\beta$ is.
+      Moreover, if $g: \alpha e_i \mapsto \beta e_j$ for some $\alpha$, then for
+      all $\alpha'$ there exists a $\beta'$ such that $g: \alpha' e_i \mapsto
+      \beta' e_j$.
+    \end{lem}
+
+    \begin{proof}
+      Note that if $g: \alpha e_i \mapsto \beta e_j$, then $\alpha = 0 \iff \beta
+      = 0$ follows directly from the fact that $g$ fixes $\vzero$.  Then, if
+      $\alpha$ is nonzero, $\alpha e_i$ will be a neighbour of $\vzero$, so its
+      image under an automorphism must also be a neighbour of $\vzero$.  Since
+      every neighbour of $\vzero$ is of the form $\beta e_j$, the result
+      follows.
+
+      Suppose then that $g: \alpha e_i \mapsto \beta e_j$ with $\alpha \neq 0$.
+      If $\alpha' \neq 0$ and $\alpha' \neq \alpha$, then $\alpha e_i$ and
+      $\alpha' e_i$ are neighbours, so $\alpha' e_i g$ must be adjacent to
+      $\beta e_j$.  By the previous paragraph, $\beta \neq 0$, so all neighbours
+      of $\beta e_j$ are of the form $\beta' e_j$.
+    \end{proof}
+
+    Now let us consider some examples of automorphisms of $H(d, q)$ that fix
+    $\vzero$.  We will then show how all such automorphisms can be constructed
+    from the examples we find.
+
+    \begin{lem}\label{lem:hamming-component-permutation}
+      Let $\sigma \in \Sym [d]$, and let $\sigma$ act on $H(d, q)$ by mapping
+      $(x_1, \ldots, x_d)$ to $(x_{\sigma(1)}, \ldots, x_{\sigma(d)})$.  Then
+      $\sigma$ is an automorphism of $H(d, q)$ which fixes $\vzero$.
+    \end{lem}
+
+    \begin{proof}
+      Note that the action of $\sigma$ on $H(d, q)$ is invertible, with inverse
+      given by the action of $\sigma^{-1}$ (as a permutation on $[d]$).
+      Furthermore, note that $\sigma$ does not alter the weight the vertices it
+      acts on.  Thus, $\vzero \sigma = \vzero$, and since, $v \sigma - u \sigma
+      = (v - u) \sigma$, $\sigma$ is an automorphism.
+    \end{proof}
+
+    \begin{lem}\label{lem:hamming-coefficient-permutation}
+      Let $\tau \in \Sym\( \Z_q \setminus \set{0} \)$; then $\tau$ extends
+      naturally to a permutation on $\Z_q$ by fixing $0$.  Fixing any $i \in
+      [d]$, $\tau$ acts on $H(d, q)$ by mapping $(x_1, \ldots, x_i, \ldots,
+      x_d)$ to $(x_1, \ldots, \tau(x_i), \ldots, x_d)$ .
+      For each $\tau$ and $i$, this action is an automorphism on $H(d, q)$
+      fixing $\vzero$.
+    \end{lem}
+
+    \begin{proof}
+      Note that since the action of $\tau$ on $\Z_q$ fixes $0$, the action of
+      $\tau$ on $H(d, q)$ fixes $\vzero$.  Furthermore, if $\tau$ acts on the
+      $i^\text{th}$ component of vertices in the graph, then this action of
+      $\tau$ is invertible by applying the inverse of $\tau$ in $\Sym \Z_q$ to
+      the $i^\text{th}$ component.
+
+      Suppose that $u \sim v$ are vertices: then $u - v = \alpha e_j$ for some
+      $\alpha \neq 0$ and $j \in [d]$.  For $j' \neq j$, $u_{j'} = v_{j'}$ which
+      implies that $\tau(u_{j'}) = \tau(v_{j'}) \implies (u \tau - v \tau)_{j'}
+      = 0$.  On the other hand, since $\tau$ is a permutation, $u_j \neq v_j
+      \implies \tau(u_j) \neq \tau(v_j)$ so that $(u\tau - v\tau)_j \neq 0$.
+    \end{proof}
+
+    \begin{thm}\label{thm:hamming-automorphisms}
+      Every automorphism of $H(d, q)$ is of the form $\tau \sigma T_v$ where
+      $\tau = \tau_1 \cdots \tau_d$, and each $\tau_i \in \Sym\( \Z_q \setminus
+      \set{0} \)$; where $\sigma \in \Sym[d]$; and where $v$ is any vertex.
+    \end{thm}
+
+    \begin{proof}
+      Let $g$ be any automorphism of $H(d, q)$, and suppose $\vzero g = v$.
+      Then by Lemma (\ref{lem:hamming-shift-automorphisms}) $g' := g T_{-v}$ is
+      an automorphism which fixes $\vzero$.  Then by Lemma
+      (\ref{lem:hamming-automorphisms-preserve-component}) for all $i$ there
+      exists a $j$ such that for all nonzero $\alpha$, $g': \alpha e_i \mapsto
+      \beta e_j$ for some nonzero $\beta$.  Therefore, let $\sigma^{-1}$ be the
+      permutation mapping each $j$ back to $i$, so that $g'' = g' \sigma^{-1}$
+      maps $\alpha e_i$ to $\beta e_i$ (Lemma
+      \ref{lem:hamming-component-permutation}).  Finally, for each $i$ and
+      nonzero $\alpha$, by Lemma
+      (\ref{lem:hamming-automorphisms-preserve-component}) $\beta$ is nonzero,
+      so define $\tau_i$ to be the permutation on $\Z_q$ mapping $\alpha$ to
+      $\beta$, and fixing $0$ (Lemma \ref{lem:hamming-coefficient-permutation}).
+      Setting $\tau := \tau_1 \cdots \tau_d$, we see that $g'' \tau^{-1}: \alpha
+      e_i \mapsto \alpha e_i$ for all $i$ and all $\alpha$.  Since automorphisms
+      of $H(d, q)$ preserve distances in the graph and are completely
+      determined by their action on $\buildset{\alpha e_i}{\alpha \in \Z_q,\ i
+      \in [d]}$, $g T_v^{-1} \sigma^{-1} \tau^{-1}$ is the identity on $H(d,
+      q)$.
+    \end{proof}
+
+    \begin{cor}
+      There are exactly $q!^d d!$ automorphisms of $H(d, q)$.
+    \end{cor}
+
+    \begin{proof}
+      It is straightforward to see that for each distinct tuple of vertex $v$
+      and permutations $\sigma \in \Sym[d]$ and $\tau_1, \ldots, \tau_d \in
+      \Sym\( \Z_q \setminus \set{0} \)$ there is a distict automorphism $\tau_1
+      \cdots \tau_d \sigma T_v$.  There are $q^d$ vertices $v$, $d!$
+      permutations $\sigma$, and $(q - 1)!^d$ permutations $\tau = \tau_1 \cdots
+      \tau_d$.
+    \end{proof}
+
 
     \mysep
 
-    The easiest way to show that the Hamming graphs are distance-regular is to
-    show that they satisfy a stronger property, called
-    \textit{distance-transitivity}, which has to do with the symmetry of the
-    Hamming graphs.
 
     \begin{defn}\label{defn:distance-transitive}
-      An \textsc{automorphism} of a graph $\Gamma$ with vertex set $V$ is a
-      bijection $\phi: V \to V$ such that for all vertices $u$ and $v$,
-      $$
-        u \sim v \iff \phi(u) \sim \phi(v) \ .
-      $$
-
-      A graph $\Gamma$ is \textsc{distance-transitive} if for all pairs of vertices $u,
-      v$ and $u', v'$ such that $\dist(u, v) = \dist(u', v')$, there is an
-      automorphism of $\Gamma$ mapping $u$ to $u'$ and $v$ to $v'$.
+      A graph $\Gamma$ is \textsc{distance-transitive} if for all pairs of
+      vertices $u, v$ and $u', v'$ such that $\dist{u}{v} = \dist{u'}{v'}$,
+      there is an automorphism of $\Gamma$ mapping $u$ to $u'$ and $v$ to $v'$.
     \end{defn}
+
+    Recall that $N_k(v)$ denotes the set of vertices at distance $k$ from $v$.
+    The following result follows almost directly from the characterization of
+    the automorphism group of $H(d, q)$.
+
+    % TODO Ask Newman about this language.
+    \begin{lem}
+      The set $N_k(\vzero)$ is transitive under the action of the stabilizer of
+      $\vzero$.  That is, for any two vertices $u, u' \in N_k(\vzero)$, there is
+      an automorphism fixing $\vzero$ which maps $u$ to $u'$.
+    \end{lem}
+
+    \begin{proof}
+      If $u \in N_k(\vzero)$, then there exist coefficients $\alpha_i \in \Z_q$
+      -- exactly $k$ of which are nonzero -- such that $u = \sum_i \alpha_i
+      e_i$.  Likewise, since $u' \in N_k(\vzero)$, there exists exactly $k$
+      nonzero coefficients $\alpha_i' \in \Z_q$ such that $u' = \sum_i \alpha_i'
+      e_i$.  Note that each permutation $\sigma \in \Sym[d]$ gives an
+      automorphism fixing $\vzero$; so we may choose two permutations to map $u$
+      and $u'$ such that the first $k$ values of $\alpha_i$ and $\alpha_i'$ are
+      nonzero.  Therefore, assume without loss of generality that
+      $$
+        u = \sum_{i=0}^k \alpha_i e_i \quad \And \quad
+        u' = \sum_{i=0}^k \alpha_i' e_i \ .
+      $$
+      Then, for all $i$ in $[k]$, $\alpha_i \neq 0$ and $\alpha_i' \neq 0$, so
+      there exist permutations $\tau_i$ in $\Sym\( \Z_q \setminus \set{0} \)$
+      such that $\tau := \tau_1 \cdots \tau_k$ maps each $\alpha_i$ to
+      $\alpha_i'$.
+    \end{proof}
+
+    \begin{cor}\label{lem:hamming->distance-transitive}
+      The Hamming graph $H(d, q)$ is distance-transitive.
+    \end{cor}
+
+    \begin{proof}
+      Let $u, u', v, v'$ be vertices such that $\dist{u}{v} = \dist{u'}{v'}$.
+      Since automorphisms preserve distance, and the shift automorphisms
+      $T_{-u'}$ and $T_{-u}$ map $u'$ and $u$ to $\vzero$, we may assume without
+      loss of generality that $u = u' = \vzero$.  Then, for $k :=
+      \dist{\vzero}{v} = \dist{\vzero}{v'}$, we find that $v$ and $v'$ are in
+      $N_k(\vzero)$.  Since this set is transitive under the action of the
+      stabilizer of $\vzero$, there must exist an automorphism fixing $\vzero$
+      and mapping $v$ to $v'$.
+    \end{proof}
 
     \begin{lem}\label{lem:distance-transitive->drg}
       Every distance-transitive graph is distance-regular.
     \end{lem}
 
     \begin{proof}
+      Let $i, j$, and $k$ be non-negative integers, and let $u, u', v, v'$ be
+      vertices such that $k = \dist{u}{v} = \dist{u'}{v'}$.  It suffices to show
+      that the number of vertices $w$ satisfying $\dist{u}{w} = i$ and
+      $\dist{w}{v} = j$ equals the number of vertices $w'$ satisfying
+      $\dist{u'}{w'} = i$ and $\dist{w'}{v'} = j$.  Since the graph in question
+      is distance-transitive, there exists an automorphism mapping $u$ to $u'$
+      and $v$ to $v'$.  Then, since automorphisms preserve distances, each $w$
+      in $N_i(u) \cap N_j(v)$ will get mapped to an element $w'$ in $N_i(u')
+      \cap N_j(v')$.  Since automorphisms are invertible, this provides the
+      required bijection.
     \end{proof}
 
-    \begin{lem}\label{lem:hamming-characterized-distance}
-    \end{lem}
+    \begin{cor}
+      The Hamming graphs are distance-regular.
+    \end{cor}
 
-    \begin{proof}
-    \end{proof}
+    By considering the automorphisms of the Hamming graphs $H(d, q)$, we noticed
+    that they satisfying the property of \textit{distance-transitivity}.  In
+    turn, all distance-transitive graphs satisfy a regularity condition in the
+    numbers of vertices at certain distances from other vertices.  It is
+    interesting to note that not all distance-regular graphs have large
+    automorphism groups like the Hamming graphs.  While this numerical
+    regularity may not seem particularly important, by replacing the notion of
+    \textit{distance graphs} with any list of graphs, we arrive (roughly) at the
+    definition of an association scheme.  It will turn out that these objects
+    have many incredible properties, some of which will help us answer our
+    original question: what can we say about the size of a code in a graph?
+    While this numerical regularity will be sufficient for our answer in
+    general, it will be computationally easier when the association schemes have
+    ``nice'' automorphism groups.  In particular, the automorphism group of the
+    Hamming graph will help us answer our original question with greater
+    accuracy.
 
-    \begin{lem}\label{lem:hamming-distance-transitive}
-      For any positive integers $d, q$, the Hamming graph $H(d, q)$ is
-      distance-transitive.
-    \end{lem}
-
-    \begin{proof}
-    \end{proof}
-
-  \section{Distance-Regular Graphs}
-    Define $M$-cliques.
-
-    I'm not sure if I should maybe merge this section with $P$-polynomial
-    section?
-
-    \begin{itemize}
-      \item Definition
-      \item Basic parameters
-      \item Examples?
-    \end{itemize}
-
-\chapter{Association Schemes}
+\chapter{Association Schemes}\label{ch:AS}
   \section{Association Schemes}\label{sec:AS:AS}
-    \begin{itemize}
-      \item Definition(s)
-      \item Examples?
-      \item Basic parameters
-    \end{itemize}
 
     \begin{defn}[Commutative Association Scheme -- Combinatorial
       {{\cite[Section 2.1]{delsarte}}}]
       \label{association-scheme-comb}
       Let $D = \set{0, 1, \ldots, d}$ for some $d \geq 1$.
-      A \textsc{commutative association scheme} $\AS$ is a set $X$, called the
-      \textsc{vertex set}, together with a set of relations $\set{R_i}_{i=0}^d$
+      A \textsc{commutative association scheme} $\AS$ is a set $V$, called the
+      \textsc{vertex set}, together with a set of relations $\set{\Gamma_i}_{i=0}^d$
       satisfying the following axioms:
       \begin{enumerate}
-        \item The set of relations $\set{R_i}_{i=0}^d$ partitions $X \times X$;
+        \item The set of relations $\set{\Gamma_i}_{i=0}^d$ partitions $V \times
+          V$;
           \label{cAS-part}
-        \item $R_0$ is the diagonal relation $\buildset{(x, x)}{x \in X}$;
+        \item $\Gamma_0$ is the diagonal relation $\buildset{(u, u)}{u \in V}$;
           \label{cAS-diag}
-        \item For each $i \in D$, there is an $i' \in D$ such that $R_{i'}$ is
-          the \textit{opposite relation} $\buildset{(y, x)}{(x, y) \in R_i}$ of
-          $R_i$;
+        \item For each $i \in D$, there is an $i' \in D$ such that $\Gamma_{i'}$ is
+          the \textit{opposite relation} $\buildset{(v, u)}{(u, v) \in \Gamma_i}$ of
+          $\Gamma_i$;
           \label{cAS-sym}
         \item For every triple $i, j, k \in D$, there exists a constant $p_{i,
-          j}^k$ such that for all $(x, y) \in R_k$, there are exactly $p_{i,
-          j}^k$ vertices $z$ such that $(x, z) \in R_i$ and $(z, y) \in R_j$;
+          j}^k$ such that for all $(u, v) \in \Gamma_k$, there are exactly $p_{i,
+          j}^k$ vertices $w$ such that $(u, w) \in \Gamma_i$ and $(w, v) \in
+          \Gamma_j$;
           furthermore, $p_{i, j}^k = p_{j, i}^k$.
           \label{cAS-reg}
       \end{enumerate}
 
-      As used above, the elements of $X$ are called \textsc{vertices},
-      and vertices $(x, y) \in R_i$ are called \textsc{$i^\text{th}$ associates}.
+      As used above, the elements of $V$ are called \textsc{vertices},
+      and vertices $(u, v) \in \Gamma_i$ are called \textsc{$i^\text{th}$ associates}.
 
-      Each relation $R_i$ is called a \textsc{class} of $\AS$, which has
+      Each relation $\Gamma_i$ is called a \textsc{class} of $\AS$, which has
       \textsc{diameter} $d$ (this will be explained in connection with
       distance-regular graphs in the next section (\ref{sec:AS:PPS})).
       Sometimes, $\AS$ is said to be a $d$-class association scheme (as the
       diagonal relation is discounted).
     \end{defn}
 
-    To every relation $R \subseteq X \times X$ there exists a $X \times X$ $01$
+    To every relation $\Gamma \subseteq V \times V$ there exists a $V \times V$ $01$
     matrix $A$, where
     \begin{equation}\label{adjacency-matrix}
-      A_{xy} = \begin{cases}
-        1 & \If (x, y) \in R \\
-        0 & \If (x, y) \not\in R \\
+      A_{uv} = \begin{cases}
+        1 & \If (u, v) \in \Gamma \\
+        0 & \If (u, v) \not\in \Gamma \\
       \end{cases};
     \end{equation}
-    $A$ is then called the \textsc{adjacency matrix} of $R$.
-    This is a bijective correspondence between relations on $X \times X$,
-    and $X \times X$ matrices with each entry either $0$ or $1$.
+    $A$ is then called the \textsc{adjacency matrix} of $\Gamma$.
+    This is a bijective correspondence between relations on $V \times V$,
+    and $V \times V$ matrices with each entry either $0$ or $1$.
     (Note that binary relations are precisely directed graphs without parallel
     edges, and this usage of the term \textit{adjacency matrix} agrees with its
     usage in graph theory.)
 
-    By exchanging the relations $R_i$ for their adjacency matrices $A_i$, the
+    By exchanging the relations $\Gamma_i$ for their adjacency matrices $A_i$, the
     combinatorial definition of an association scheme can be reformulated as
     follows:
 
@@ -456,13 +755,13 @@
       \label{association-scheme-alg}
       Let $\circ$ denote the \textsc{Schur} product of matrices of the same shape:
       \begin{equation}\label{schur-prod}
-        (A \circ B)_{xy} = A_{xy} B_{xy}
+        (A \circ B)_{uv} = A_{uv} B_{uv}
         \ .
       \end{equation}
       (This is also called the \textit{Hadamard}, or \textit{entrywise} product.)
 
-      A \textsc{commutative association scheme} is a vertex set $X$ along with
-      $X \times X$ matrices $A_0, A_1, \ldots A_d$ such that
+      A \textsc{commutative association scheme} is a vertex set $V$ along with
+      $V \times V$ matrices $A_0, A_1, \ldots A_d$ such that
       \begin{enumerate}
         \item $\displaystyle \sum_{i=0}^d A_i = J$, the all-ones matrix,
           and $A_i \circ A_j = \delta_{i, j} A_i$;
@@ -486,17 +785,17 @@
     The first three equivalences are straightforward translations.  To see the
     last, observe that
     $$
-      (A_i A_j)_{xy} = \sum_{z \in X} (A_i)_{xz} (A_j)_{zy}
+      (A_i A_j)_{uv} = \sum_{z \in V} (A_i)_{uw} (A_j)_{wv}
     $$
-    which counts the number of vertices $z \in X$ such that
+    which counts the number of vertices $z \in V$ such that
     $$
       \begin{cases}
-        (A_i){xz} = 1 & \iff (x, z) \in R_i \\
-        (A_j){zy} = 1 & \iff (z, y) \in R_j \\
+        (A_i){uw} = 1 & \iff (u, w) \in \Gamma_i \\
+        (A_j){wv} = 1 & \iff (w, v) \in \Gamma_j \\
       \end{cases}\ .
     $$
-    Then, $(A_i A_j)_{xy} = p_{ij}^k$ exactly when $(A_k)_{xy} = 1 \iff (x, y)
-    \in R_k$.
+    Then, $(A_i A_j)_{uv} = p_{ij}^k$ exactly when $(A_k)_{uv} = 1 \iff (u, v)
+    \in \Gamma_k$.
     \\
 
 
@@ -533,13 +832,12 @@
     \textsc{symmetric}, is one in which every relation is symmetric (i.e. $i =
     i'$ in \hyperref[cAS-sym]{Combinatorial 3}), or equivalently, each adjacency
     matrix is symmetric ($A_i^T = A_i$ in \hyperref[aAS-sym]{Algebraic 3}).
-    In this case, the relations $R_i$ form \textit{undirected} graphs $\Gamma_i$
-    with vertex set $X$, and edge set given by
+    In this case, the relations $\Gamma_i$ form \textit{undirected} graphs $\Gamma_i$
+    with vertex set $V$, and edge set given by
     $$
-      x \sim y \iff (x, y) \in R_i \iff (y, x) \in R_i
+      u \sim v \iff (u, v) \in \Gamma_i \iff (v, u) \in \Gamma_i
       \ .
     $$
-
     The most important class of symmetric association scheme (for the purposes
     of this report) arise as the distance graphs of a distance-regular graph
     (\ref{sec:AS:PPS}).  From this setting, we can generalize the following
@@ -1199,12 +1497,6 @@
     \subsection{$Q$-Polynomial Schemes}
 
   \section{Automorphisms and Cayley Graphs}
-    This section may be merged with the following section.
-    \begin{itemize}
-      \item Action of a regular group of automorphisms
-      \item Cayley graphs
-      \item Eigenspaces from characters
-    \end{itemize}
 
     The material in this section follows mostly from \cite[Chapter~9]{godsil}.
     \\
@@ -1376,12 +1668,6 @@
     TODO How to get real eigenvectors out of this?
 
   \section{Partitions and Translation Schemes}
-    \begin{itemize}
-      \item Equitable partitions of matrices
-      \item Group partitions yielding association schemes
-      \item Dual schemes? (Interesting, but not particularly necessary for the
-        rest of this report)
-    \end{itemize}
 
     In a sense, this section generalizes the characterization of Cayley graphs
     from the previous section to the setting of association schemes.
@@ -1669,7 +1955,7 @@
     so that this partition yields the Hamming scheme.
     In particular, $H(d, q) \cong \Cay(\Zqd, C_1)$.
 
-    From the proof that $\Z_q^d \cong \(Z_q^d\)^*$ (\ref{character-duality}), if
+    From the proof that $\Z_q^d \cong \(\Z_q^d\)^*$ (\ref{character-duality}), if
     $\omega$ is a $q^\text{th}$ complex root of unity, we see that we can
     identify characters $\psi$ with row vectors of the form
     $$
@@ -1725,8 +2011,8 @@
     computed as $\psi(C_i)$, although there may not be a particularly nice
     expression for this sum.
 
-\chapter{Delsarte's Linear Programming Bound}
-  \section{Linear Programming}
+\chapter{Delsarte's Linear Programming Bound}\label{ch:LP-bound}
+  \section{Linear Programming}\label{sec:LP-bound:LP}
     \begin{itemize}
       \item Basics of Linear Programming -- done
       \item Duality -- done
@@ -1954,21 +2240,21 @@
     this inequality will require some transformation to make it suitable for use
     in linear programming.
 
-    Let $Y$ be an $M$-clique with inner distribution $y$.
-    Then $y_i = 0$ for all $i \not\in M$,
-    so $Q^T y \geq 0 \iff Q^T \diagM y \geq 0$
-    since the action of $\diagM$ acting on the left
+    Let $Y$ be an $C$-clique with inner distribution $y$.
+    Then $y_i = 0$ for all $i \not\in C$,
+    so $Q^T y \geq 0 \iff Q^T \diagC y \geq 0$
+    since the action of $\diagC$ acting on the left
     is to zero out the \textit{rows} of $y$
-    with index not in $M$.
+    with index not in $C$.
     Similarly,
     $$
-      Q^T \diagM y
-      = Q(0)^T y_0 + Q^T \diagMs y
-      = \mu + Q^T \diagMs y
+      Q^T \diagC y
+      = Q(0)^T y_0 + Q^T \diagCs y
+      = \mu + Q^T \diagCs y
     $$
-    since the action of $\diagMs$ on the right
+    since the action of $\diagCs$ on the right
     is to zero out the \textit{columns} of $Q^T$
-    with index not in $M^*$,
+    with index not in $C^*$,
     $y_0 = 1$, and
     $$
       Q^T =
@@ -1982,66 +2268,67 @@
     $$
     Finally, since $y \geq 0$, $Q_0^T y \geq 0$ adds no new constraint,
     so that under the non-negativity constraint
-    $Q^T y \geq 0 \iff \diagNs Q^T y \geq 0$.
+    $Q^T y \geq 0 \iff \diagDs Q^T y \geq 0$.
 
     Putting all this together,
-    $Q^T y \geq 0 \iff \diagNs Q^T \diagMs y \geq -\mu$
+    $Q^T y \geq 0 \iff \diagDs Q^T \diagCs y \geq -\mu$
     so that Delsarte's LP can be written in standard form:
     \begin{alignat}{2}
       & \max\buildset{
-        \vone^T \diagM y
+        \vone^T \diagC y
       }{
-        Q^T \diagM y \geq 0,\
+        Q^T \diagC y \geq 0,\
         y \geq 0,\
         y_0 = 1
-      } \label{dlp-primal} \\
+      } \label{eqn:dlp-primal} \\
       =& \max\buildset{
-        \chiMs^T y
+        \chiCs^T y
       }{
-        - \diagNs Q^T \diagMs y \leq \diagNs \mu,\
+        - \diagDs Q^T \diagCs y \leq \diagDs \mu,\
         y \geq 0
-      } + 1 \label{dlp-primal-std}
+      } + 1 \label{eqn:dlp-primal-std}
       \ .
     \end{alignat}
 
     Taking the dual yields
     \begin{alignat}{2}
       & \min\buildset{
-        \mu^T \diagNs z
+        \mu^T \diagDs z
       }{
-        - \diagMs Q \diagNs z \geq \chiMs,\
+        - \diagCs Q \diagDs z \geq \chiCs,\
         z \geq 0
       } + 1 \label{dlp-dual-std} \\
       =& \min\buildset{
         \mu^T z
       }{
-        - \diagMs Q \diagNs z \geq \chiMs,\
+        - \diagCs Q \diagDs z \geq \chiCs,\
         z \geq 0,\
         z_0 = 1
       }
       \ .
     \end{alignat}
     Therefore, if $z_0 = 1$ is required,
-    recalling that $Q_0 = \vone$ and $\diagMs \vone = \chiMs$, then
+    recalling that $Q_0 = \vone$ and $\diagCs \vone = \chiCs$, then
     \begin{alignat*}{2}
-      & \diagMs Q \diagN z \\
-      =& \diagMs \( Q_0 z_0 + Q \diagNs z \) \\
-      =& \chiMs + \diagMs Q \diagNs z \\
+      & \diagCs Q \diagD z \\
+      =& \diagCs \( Q_0 z_0 + Q \diagDs z \) \\
+      =& \chiCs + \diagCs Q \diagDs z \\
       \leq& 0
       \ .
     \end{alignat*}
     This equivalence recovers Delsarte's formulation of
     the dual linear program:
-    \begin{equation}\label{dlp-dual}
+    \begin{equation}\label{eqn:dlp-dual}
       \min\buildset{
         \mu^T z
       }{
-        \diagMs Q z \leq 0,\
+        \diagCs Q z \leq 0,\
         z \geq 0,\
         z_0 = 1
       }
       \ .
     \end{equation}
+    \\
 
   \section{The Ratio Bound}
     We will use (\ref{dlp-dual}) frequently.
@@ -2212,6 +2499,28 @@
       such that $xg = y$.
     \end{lem}
 
+  \section{The Structure of Finite Abelian Groups}
+    TODO I need a citation for this.
+    I'm also not sure if this section shouldn't go before the section on
+    Character Theory, as it will be used in (\ref{character-duality}).
+
+    \begin{thm}[Structure Theorem]\label{thm:abelian-structure}
+      If $G$ is a finitely generated abelian group,
+      then $G$ is isomorphic to a direct product of cyclic groups.
+      Specifically,
+      $$
+        G \cong
+        \Z_{q_1}^{d_1} \times \cdots \times \Z_{q_t}^{d_t}
+        \times \Z^f
+      $$
+      where the $q_i$ are distinct prime powers.
+      Moreover, this decomposition is unique up to the ordering of its factors.
+    \end{thm}
+
+    This is a well-known and well-used result.  It comes as a direct result of
+    the Structure Theorem for Finitely Generated Modules over PIDs, using the
+    language of rings and modules, but this is out of the scope of this report.
+
   \section{Character Theory}
     \begin{defn}[Characters]\label{character}
       Given a group $G$, a \textsc{character} of the group $G$
@@ -2288,9 +2597,10 @@
       $$
         G = \Z_{q_1} \times \cdots \times \Z_{q_d}
       $$
-      for $q_i \in \N_{>0}$.  Since all finite abelian groups are isomorphic to
-      a group of this form, it suffices to prove that each group of this form is
-      isomorphic to its group of characters.
+      for $q_i \in \N_{>0}$ (\ref{thm:abelian-structure}).  Since all finite
+      abelian groups are isomorphic to a group of this form, it suffices to
+      prove that each group of this form is isomorphic to its group of
+      characters.
 
       For each $i$, let $e_i$ be the tuple of all zeroes, with a $1$ in the
       $i^\text{th}$ spot.  Then, every element $x$ of $G$ is of the form $x =
@@ -2460,28 +2770,6 @@
       However, for the diagonal, $(\psi, \psi)$-entries of $HH^*$,
       $\psi \psi^* = 1_{G^*}(G) = n$, which proves the claim.
     \end{proof}
-
-  \section{The Structure of Finite Abelian Groups}
-    TODO I need a citation for this.
-    I'm also not sure if this section shouldn't go before the section on
-    Character Theory, as it will be used in (\ref{character-duality}).
-
-    \begin{thm}[Structure Theorem]\label{structure-theorem}
-      If $G$ is a finitely generated abelian group,
-      then $G$ is isomorphic to a direct product of cyclic groups.
-      Specifically,
-      $$
-        G \cong
-        \Z_{q_1}^{d_1} \times \cdots \times \Z_{q_t}^{d_t}
-        \times \Z^f
-      $$
-      where the $q_i$ are distinct prime powers.
-      Moreover, this decomposition is unique up to the ordering of its factors.
-    \end{thm}
-
-    This is a well-known and well-used result.  It comes as a direct result of
-    the Structure Theorem for Finitely Generated Modules over PIDs, using the
-    language of rings and modules, but this is out of the scope of this report.
 
 \chapter{Notation}
   I've included these sections mostly as an excuse to add the citations to the

@@ -55,6 +55,7 @@
 
 % TEXT IN MATH MODE
 \newcommand{\If}{\quad\text{if}\quad}
+\newcommand{\Else}{\quad\text{else}\quad}
 \newcommand{\IF}{\quad\text{If}\quad}
 \renewcommand{\And}{\quad\text{and}\quad}
 \newcommand{\AND}{\quad\text{And}\quad}
@@ -86,7 +87,9 @@
   {\bfseries}% Thm head font
   {}%        No punctuation after thm head
   {\newline}% Space after thm head: \newline = linebreak
+  %{\\*}% Space after thm head: \newline = linebreak
   {}%         Thm head spec
+\renewcommand{\qedsymbol}{$\blacksquare$}
 
 \theoremstyle{break}
 \newtheorem{thm}{Theorem}[section]
