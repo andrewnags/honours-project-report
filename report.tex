@@ -139,13 +139,43 @@
   address questions in coding theory in particular, and combinatorics more
   broadly.  The centre of study is the \emph{association scheme}, which provides
   a setting in which to view various objects, especially \emph{distance-regular
-  graphs}.  This perspective enables the computation of various parameters of
-  interest, including the eigenvalues of graphs and upper bounds on codes,
-  cliques, and independent sets.
+  graphs}.  While computing the size of the largest clique or coclique in a
+  graph is famously NP-hard, in this setting, upper bounds for these quantities
+  can be computed much more efficiently using linear or semi-definite
+  programming.  This approach extends to the computation of upper bounds on the
+  size of codes of a certain minimum distance; this was one of Delsarte's
+  primary motivations.
+  \\
+
+  The first chapter is contains an elementary introduction to the theory of
+  error-correcting codes, which motivates this study.  Instead of using the
+  setting of finite vector spaces, this chapter discusses how coding theory is
+  done in the setting of graphs, especially the Hamming graphs.  Background on
+  some important properties of the Hamming graphs is also given.
+
+  Motivated by the distance-regularity property of the Hamming graphs, the
+  second chapter introduces the \emph{association scheme} its \emph{Bose-Mesner
+  algebra}.  This chapter also discusses the $P$-polynomial and translation
+  schemes, and uses the results obtained to calculate the eigenvalues of the
+  Hamming graphs.
+
+  The third chapter introduces the problem of linear programming.  Using many
+  of the properties of association schemes from the second chapter, a linear
+  program is constructed whose maximum is an upper bound on the size of codes.
+  Using the weak duality property of linear programs, some general bounds are
+  derived.
+
+  The fourth chapter introduces the problem of semi-definite programming.  It
+  also introduces the Terwilliger algebra of the binary Hamming scheme, as well
+  as a semi-definite program in this algebra whose maximum is an upper bound on
+  the size of codes.  The relatively low dimension of this algebra makes this
+  computation feasible.
+  \\
 
   This report aims to be mostly self-contained, though background knowledge of
   basic linear algebra and group theory is required.  The important aspects of
-  this theory are reviewed in the appendix.
+  this theory are reviewed in the appendix.  The language of graph theory is
+  used throughout.
 
 \end{abstract}
 
