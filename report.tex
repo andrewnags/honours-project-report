@@ -100,7 +100,6 @@
 \newcommand{\Zqd}{\Z_q^d}
 \newcommand{\diag}[1]{\operatorname{diag}\( #1 \)}
 \newcommand{\wt}[1]{\abs{ #1 }}
-%\newcommand{\wt}[1]{\operatorname{wt}\( #1 \)}
 \newcommand{\dist}[2]{\operatorname{dist}\( #1, #2 \)}
 \newcommand{\chiD}{\chi_{D}}
 \newcommand{\chiC}{\chi_{C}}
@@ -146,7 +145,7 @@
 
   This report aims to be mostly self-contained, though background knowledge of
   basic linear algebra and group theory is required.  The important aspects of
-  this theory is reviewed in the appendix.
+  this theory are reviewed in the appendix.
 
 \end{abstract}
 
@@ -163,7 +162,7 @@
     electromagnetic radiation might interfere with the signal, such that when it
     arrives at earth, the signal received is slightly different from the one
     sent.
-    The scientific data, if successfully received, might needed to be saved in
+    The scientific data, if successfully received, might be needed to be saved in
     some storage medium so that it may be accessed in the future.  Over time
     however, the storage medium may degrade, so that when the data is retrieved,
     it may be slightly different from when it was saved.
@@ -237,7 +236,7 @@
     bounds on how efficient a code can be given a target effectiveness; plainly,
     if we want a certain minimum distance code in a set of signals, at most how
     many codewords can there be?  The approach to this question is ultimately
-    due to Delsarte \cite{delsarte}, and has be expanded upon by Schrijver
+    due to Delsarte \cite{delsarte}, and has been expanded upon by Schrijver
     \cite{schrijver}.
 
   \section{Linear Codes and Distance-Regular
@@ -355,9 +354,10 @@
     \textit{cocliques} (or \textit{independent sets}).  A \textsc{coclique} in a
     graph is a set of vertices, none of which are adjacent.  Equivalently, a
     coclique is a code in a graph with minimum distance $2$.  On the other hand,
-    given distance graphs $\Gamma_0, \Gamma_1, \ldots, \Gamma_d$, then a code of
-    minimum distance $\delta$ is an independent set in the graph obtained by
-    taking the union of the edgesets of $\Gamma_1, \ldots, \Gamma_\delta$.
+    given distance graphs $\Gamma_0, \Gamma_1, \ldots, \Gamma_d$, 
+    an independent set in the graph whose edge set is the union of edge sets
+    from $\Gamma_1, \ldots, \Gamma_\delta$ is a code of minimum distance
+    $\delta$.
 
   \section{Hamming Graphs}\label{sec:intro:hamming}
 
@@ -379,7 +379,9 @@
     $\Z_q^d$, and $e_i$ will denote the tuple of all zeroes, and a $1$ in the
     $i^\text{th}$ entry.  Then, the neighbours of any vertex $v$ are the
     vertices of the form $v + \alpha e_i$, where $\alpha \in \Z_q \setminus
-    \set{0}$.  We will denote by $[d]$ the set $\set{1, \ldots, d}$.
+    \set{0}$.  We will denote by $[d]$ the set $\set{1, \ldots, d}$.  Note also
+    that group actions are written on the \textit{right}, so that the result of
+    applying action $g$ to element $u$ is denoted $ug$.
     \\
 
     The most important property of the automorphism group of a Hamming graph is
@@ -411,11 +413,11 @@
         \dist{u}{v + \alpha e_i}
         = \wt{u - (v + \alpha e_i)}
         = \wt{(u - v) - \alpha e_i}
-        = \begin{cases}
+        \begin{cases}
           > \wt{u - v} & \If u_i = v_i \\
           < \wt{u - v} & \If u_i - v_i = \alpha \\
           = \wt{u - v} & \Else
-        \end{cases};
+        \end{cases}
       $$
       precisely; the only case when subtracting $\alpha e_i$ from $u - v$
       lowers the weight of the vector is in the case that the $i^\text{th}$
@@ -427,9 +429,19 @@
             \dist{u}{v + \alpha e_i} < \dist{u}{v}
           \]
       $$
-      where $\mathbbm{1}$ is the indicator function.  Note that for each $i$,
-      there will be \emph{at most one value} of $\alpha$ for which $\dist{u}{v
-      + \alpha e_i} < \dist{u}{v}$.
+      where $\mathbbm{1}$ is the indicator function.  It is defined on
+      propositions such that
+      $$
+        \mathbbm{1}[\operatorname{condition}] :=
+        \begin{cases}
+          1 & \text{if the condition is true} \\
+          0 & \text{if the condition is false} \\
+        \end{cases} \ .
+      $$
+
+      Note that for each $i$, there will be \emph{at most one value} of $\alpha$
+      for which $\dist{u}{v + \alpha e_i} < \dist{u}{v}$.
+
     \end{proof}
 
     \begin{cor}\label{cor:hamming-aut-characterized-nbhd}
@@ -476,7 +488,7 @@
       Let $v$ be a vertex of $H(d, q)$.  Then $T_v$ is invertible, since
       $T_v^{-1} = T_{-v}$.  Furthermore, for any vertices $u$ and $w$,
       $$
-        \wt{uT_v - wt_v}
+        \wt{uT_v - wT_v}
         = \wt{(u + v) - (w + v)}
         = \wt{u - w}
       $$
@@ -617,9 +629,9 @@
 
     % TODO Ask Newman about this language.
     \begin{lem}
-      The set $N_k(\vzero)$ is transitive under the action of the stabilizer of
-      $\vzero$.  That is, for any two vertices $u, u' \in N_k(\vzero)$, there is
-      an automorphism fixing $\vzero$ which maps $u$ to $u'$.
+      The stabilizer of $\vzero$ acts transitively on $N_k(\vzero)$.  That is,
+      for any two vertices $u, u' \in N_k(\vzero)$, there is an automorphism
+      fixing $\vzero$ which maps $u$ to $u'$.
     \end{lem}
 
     \begin{proof}
@@ -732,8 +744,8 @@
       diagonal relation is discounted).
     \end{defn}
 
-    To every relation $\Gamma \subseteq V \times V$ there exists a $V \times V$ $01$
-    matrix $A$, where
+    To every relation $\Gamma \subseteq V \times V$ there exists a $V \times V$
+    $01$-matrix $A$, where
     \begin{equation}\label{adjacency-matrix}
       A_{uv} = \begin{cases}
         1 & \If (u, v) \in \Gamma \\
@@ -772,7 +784,8 @@
         \item For every $i \in D$ there is an $i' \in D$ such that $A_i^T =
           A_{i'}$;
           \label{aAS-sym}
-        \item For every $i, j$,
+        \item For every $i, j, k$, there exists a constant $p_{i, j}^k$ such
+          that
           $$
             A_i A_j = A_j A_i = \sum_{k = 0}^d p_{i, j}^k A_k
             \ .
@@ -870,17 +883,18 @@
       $$
         A_i = \sum_j \theta_{ij} \tilde{F_{ij}}
       $$
-      into a linear combination of orthogonal idempotents $\tilde{F_{ij}}$, where
+      into a linear combination of orthogonal idempotents $\tilde{F_{ij}}$ (with
+      $i$ fixed), where
       $$
         I = \sum_j \tilde{F_{ij}}
         \ .
       $$
       Since each $\tilde{F_{ij}}$ is a polynomial in $A_i$, and the $A_i$ all
-      commute, so too do the $\tilde{F_{ij}}$.  Therefore, the products
-      $\prod_i \tilde{F_{i{k_i}}}$ (for any choices of $k_i$) are also
-      orthogonal idempotents, though some may be zero, so that the nonzero
-      products are linearly independent.  Furthermore, their sum is the identity
-      matrix
+      commute, so too do the $\tilde{F_{ij}}$ (see Proposition
+      \ref{prop:spectral-decomp-polynomial}).  Therefore, the products $\prod_i
+      \tilde{F_{i{k_i}}}$ (for any choices of $k_i$) are also orthogonal
+      idempotents, though some may be zero, so that the nonzero products are
+      linearly independent.  Furthermore, their sum is the identity matrix
       $$
         I = I^{d+1}
         = \prod_i \( \sum_j \tilde{F_{ij}} \)
@@ -1065,8 +1079,6 @@
       \dim\col F_j$, which is the algebraic multiplicity.  For this reason (even
       if the $P_i(j)$ are not distinct), $\mu_j$ will be called the
       \textsc{multiplicity} of $F_j$.
-      (Is it possible that the $P_i(j)$ are not
-      all distinct for any $i$?)
 
       Consider the different products between matrices in one basis
       and matrices in the other: $A_i F_j$ and $A_i \circ F_j$.
@@ -1190,7 +1202,7 @@
       indices $i, j, k$ are permuted.
 
       Similarly, $(F_i \circ F_j) F_k = q_{ij}^k F_k$, and $F_k$ is
-      self-adjoint, so taking the trace $\trace q_{ij}^k F_k = q_{ij}^k \mu_k$.
+      self-adjoint, so taking the trace, $\trace q_{ij}^k F_k = q_{ij}^k \mu_k$.
       However, since the trace of a product is the inner product of the factors,
       $$
         \Sum F_k \circ F_i \circ F_j
@@ -1200,15 +1212,11 @@
       $$
       As with the intersection numbers, $q_{ij}^k$ remains unchanged when the
       indices $i, j, k$ are permuted.
-      \\
 
-      (TODO? Derive $P$ from the $p_{ij}^k$?)
+      Conversely, the eigenmatrices can be derived from the intersection
+      numbers.  For more on this, see \cite[Section~2.3]{delsarte}.
 
       \mysep
-
-      Thus far, almost purely algebraic techniques have been used to derive
-      results.  There two last dual pairs of results: the first is purely
-      algebraic, while the second comes from graph theory.
 
       \begin{prop}
         The first columns of $P$ and $Q$ are the all-ones vector, $\vone$.
@@ -1225,6 +1233,11 @@
 
       Note that because $P^T \diag{\mu} = \diag{\nu} Q$, the each of the two
       results above could be derived from the other.
+
+      Thus far, almost purely algebraic techniques have been used to derive
+      results.  However, the following results come from the algebraic theory of
+      graphs.  They are immediate consequences of the Perron-Frobenius theorem
+      for the adjacency matrices of regular graphs.
 
       \begin{prop}
         For all $i, j \in D$, we have $\abs{P_i(j)} \leq \nu_i$.
@@ -1380,7 +1393,7 @@
     by induction.  In order to do this, we need to be able to write $A_{i+1}$ in
     terms of the matrices at distance $i' \leq i$.
 
-    \begin{lem}
+    \begin{lem}\label{lem:drg-mult-closed}
       Let $\Gamma$ be a distance-regular graph with diameter $d$, vertex set
       $V$, and adjacency matrices $A_0, A_1, \ldots, A_d$.
       Then for all $i, j$,
@@ -1391,7 +1404,7 @@
       for fixed vertices $u$ and $v$ such that $d(u, v) = k$.
     \end{lem}
 
-    \begin{proof}\label{drg-mult-closed}
+    \begin{proof}
       Let $\Gamma$ be a distance-regular graph with vertex set $V$, diameter
       $d$, and distance graphs $\Gamma_0, \Gamma_1, \ldots, \Gamma_d$
       with adjacency matrices $A_0, A_1, \ldots, A_d$.
@@ -1413,7 +1426,7 @@
       $$
         A_i A_1 = \sum_{k=0}^d p_{i1}^k A_k
       $$
-      where $p_{i1}^{i+1} \neq 0$,
+      where $p_{i1}^{i+1} \neq 0$ (for $i < d$),
       and $p_{i1}^k = 0$ for all $k > i + 1$.
     \end{lem}
 
@@ -1451,7 +1464,7 @@
       Let $\Gamma$ be a distance-regular graph with diameter $d$,
       distance graphs $\Gamma_0, \Gamma_1, \ldots, \Gamma_d$,
       and distance matrices $A_0, A_1, \ldots, A_d$.
-      From lemma (\ref{drg-mult-closed}), the product of distance matrices
+      From lemma (\ref{lem:drg-mult-closed}), the product of distance matrices
       of a distance-regular graph belongs to the span of distance
       matrices.  Since the distance matrices are symmetric, the rest of the
       axioms follow.  Therefore, $\Gamma$ is an association scheme.
@@ -1519,11 +1532,11 @@
       whose inverse is also a homomorphism;
       an \textsc{automorphism} is an isomorphism from a graph to itself.
       $\Aut \Gamma$ denotes the set of all automorphisms on $\Gamma$;
-      it is the subgroup of $\Sym V\(\Gamma\)$,
+      it is the subgroup of $\Sym \(V\(\Gamma\)\)$,
       consisting of those permutations which preserve the
       (edge) structure of $\Gamma$.
 
-      An automorphism of an association scheme $\AS$ on vertex set $X$
+      An automorphism of an association scheme $\AS$ on a vertex set $X$
       is a map $X \to X$ which is simultaneously an automorphism of
       every class in the scheme.
       In other words, $\Aut \AS$ is the intersection of the automorphism groups
@@ -1570,10 +1583,11 @@
     which suggests the following lemma which provides a characterization of
     Cayley graphs.
 
-    (This action is also faithful since for $g \neq h \in G$, the vertex $1$
-    gets mapped to $g$ and $h$ respectively, which are unequal.  However this
-    observation irrelevant for this lemma, since it restricts to the action of
-    an automorphism group, which is automatically faithful.)
+    (This action is also faithful since if $g$ and $h$ in $G$ are distinct, then
+    they map the vertex $1$ to different images -- namely $g$ and $h$
+    respectively.  However this observation irrelevant for this lemma, since it
+    restricts to the action of an automorphism group, which is automatically
+    faithful.)
 
     \begin{lem}\label{regular-aut-cayley}
       For a graph $\Gamma$, there exists a subgroup $G \leq \Aut \Gamma$
@@ -1690,7 +1704,8 @@
       set $C_i \subseteq G$ such that $\Gamma_i \cong \Cay(G, C_i)$.
 
       In particular, since the edges of $\Gamma_0$ are the diagonal relation,
-      $C_0 = \set{1}$ generates the graph.
+      the Cayley graph of $G$ with respect to $C_0 = \set{1}$ generates
+      $\Gamma_0$.
 
       Otherwise, it suffices to show that $C_0, C_1, \ldots, C_d$ partition $G$.
       Recall from the proof of (\ref{regular-aut-cayley}) that any vertex may be
@@ -1984,15 +1999,15 @@
       &= \sum_{i=1}^d
         \(\frac{1 - \(\omega^{\psi_i}\)^q}{1 - \omega^{\psi_i}} - 1\)
       \quad\text{using the usual formula for geometric sums} \\
-      &= \sum_{i=1}^d (q-1)\delta_{0, \psi_i} - d \\
-      &= (q-1)\(\text{the number of $i$ with $\psi_i = 0$}\) - d \\
+      &= \sum_{i=1}^d q\delta_{0, \psi_i} - d \\
+      &= q\(\text{the number of $i$ with $\psi_i = 0$}\) - d \\
     \end{alignat*}
 
     Since the number $k$ of indices $i$ for which $\psi_i = 0$
     can vary from $0, 1, \ldots, d$,
     and there are $\binom{d}{k}$ places $i$ at which $\psi_i = 0$
     and $(q - 1)^{d - k}$ choices for the other $\psi_j$,
-    the eigenvalues of the Hamming graph are given
+    the eigenvalues of the Hamming graph are given by
     \begin{equation}
       \begin{cases}
         qk - d & k = 0, 1, \ldots, d \\
@@ -2014,7 +2029,7 @@
 
     The terminology and results from this section,
     except for the adjective \textit{principal} for
-    constraints, follows from \cite{matousek}.
+    constraints, follows \cite{matousek}.
 
     A \textsc{linear programming problem} (or \textsc{linear program})
     is an optimization problem in which one seeks to maximize or minimize
@@ -2297,13 +2312,12 @@
     this inequality will require some transformation to make it suitable for use
     in linear programming.
 
-    Let $Y$ be an $C$-clique with inner distribution $y$.
-    Then $y_i = 0$ for all $i \not\in C$,
-    so $Q^T y \geq 0 \iff Q^T \diagC y \geq 0$
-    since the action of $\diagC$ acting on the left
-    is to zero out the \textit{rows} of $y$
-    with index not in $C$.
-    Similarly,
+    Let $Y$ be an $C$-clique with inner distribution $y$.  Recall that if $D =
+    \set{0, 1, \ldots, d}$, then for any $C \subseteq D$, that $C^* := C
+    \setminus \set{0}$, and that $Q(0)$ is the first row of $Q$.  Then $y_i = 0$
+    for all $i \not\in C$, so $Q^T y \geq 0 \iff Q^T \diagC y \geq 0$ since the
+    action of $\diagC$ acting on the left is to zero out the \textit{rows} of
+    $y$ with index not in $C$.  Similarly,
     $$
       Q^T \diagC y
       = Q(0)^T y_0 + Q^T \diagCs y
@@ -2422,7 +2436,7 @@
       distribution $B$.  Let $P$ and $Q$ be the eigenmatrices of the association
       scheme.  Then
       $$
-        B^T B = \frac{\abs{Y}}{\abs{V}} P^* \diag{Q^T y} P \ .
+        B^T B = \frac{\abs{Y}}{\abs{V}} P^T \diag{Q^T y} P \ .
       $$
     \end{lem}
 
@@ -2470,29 +2484,29 @@
       Finally, we obtain the desired result by noticing that
       $$
         \sum_{r=0}^d \tilde{y_r} P_i(r) P_j(r)
-        = P^* \diag{Q^T y} P \ .
+        = P^T \diag{Q^T y} P \ .
       $$
     \end{proof}
 
     At first, this result may seem to be unrelated to the theorem which we wish
     to prove.  However, by realizing that $B^T B$ is a positive semi-definite
-    matrix, Theorem (\ref{thm:lp-ineq}) follows as a quick corrolary.
+    matrix, Theorem (\ref{thm:lp-ineq}) follows as a quick corollary.
 
     \begin{proof}[Proof of Theorem (\ref{thm:lp-ineq})]
       From the previous lemma (\ref{lem:BTB}), we know that
       $$
-        B^T B = \frac{\abs{Y}}{\abs{V}} P^* \diag{Q^T y} P \ .
+        B^T B = \frac{\abs{Y}}{\abs{V}} P^T \diag{Q^T y} P \ .
       $$
       Since $PQ = \abs{V} I$ (\ref{tab:prop:inverse}), we can rewrite the above
       equation as
       $$
-        Q^* B^T B Q = \abs{Y}\abs{V} \diag{Q^T y} \ .
+        Q^T B^T B Q = \abs{Y}\abs{V} \diag{Q^T y} \ .
       $$
       Then, the $(k, k)$ entry of this matrix is
       $$
         (Q^T y)_k = Q_k^T (B^T B) Q_k \geq 0
       $$
-      since $B^T B$ is positive semi-definite, and $Q$ is real.  Therefore, 
+      since $B^T B$ is positive semi-definite.  Therefore, 
       $$
         Q^T y \geq 0 \ .
       $$
@@ -2578,7 +2592,7 @@
     \begin{proof}
       Let $y$ and $z$ be the inner distributions of $Y$ and $Z$ respectively,
       let $\mu$ be the vector of multiplicities,
-      and for each $k \in D$ define
+      and for each $k \in D = \set{0, 1, \ldots, d}$ define
       $$
         \zeta_k := \frac{1}{\mu_k  \abs{Z}} \sum_j z_j Q_k(j) \ .
       $$
@@ -2629,10 +2643,10 @@
 
     For a given distance-regular graph, and a minimum distance, Delsarte's LP
     bound is the result of a maximization problem based on the input parameters.
-    There is no general solution to this problem, and so there is no explicit
-    formula for the bound for all distance-regular graphs and minimum distances.
-    While some bounds can be found be specifying a feasible dual solution, as
-    done in Sections \ref{sec:LP-bound:ratio-bound} and
+    There is no knowng general solution to this problem, and so there is no
+    explicit formula for the bound for all distance-regular graphs and minimum
+    distances.  While some bounds can be found be specifying a feasible dual
+    solution, as done in Sections \ref{sec:LP-bound:ratio-bound} and
     \ref{sec:LP-bound:clique-coclique-bound}, these are not guaranteed to be
     optimal.
 
@@ -2698,7 +2712,7 @@
     \begin{thm}[Weak Duality
       {{\cite[Proposition~5.1]{ocw}}}]\label{thm:SDP-weak-duality}
       If feasible and bounded, the maximum value of the primal semi-definite
-      program is at mos the minimum value of the dual program.
+      program is at most the minimum value of the dual program.
     \end{thm}
 
     \begin{proof}
@@ -2800,7 +2814,7 @@
     M_{j', k}^s$ is zero, and when $j = j'$, and $u$ and $w$ are vertices
     satisfying $\wt{u} = i$, $\wt{w} = k$, and $\wt{uw} = r$,
     \begin{alignat*}{2}
-      (\Mijt M_{j', l}^s)_{u, w} &=
+      (\Mijt M_{j', k}^s)_{u, w} &=
         \abs{\buildset{v \in V}{\wt{v} = j,\ \wt{uv} = t,\ \wt{vw} = s}} \\
       &= \sum_{l=0}^r \binom{r}{l} \binom{i-r}{t-l} \binom{k-r}{s-l}
         \binom{d-i-k+r}{j-t-s+l} \ .
@@ -2839,17 +2853,17 @@
     Like the adjacency matrices, the non-zero $\Mijt$ of the Terwilliger algebra
     are linearly independent, since for any pair of vertices $u, v$, and weights
     $i' := \wt{u}$, $j' := \wt{v}$, and $t' := \wt{uv}$, there will be exactly
-    one of the $\Mijt$ which is non-zero.  On the other hand, the number of
-    triples $(i, j, t)$ such that $\Mijt$ is non-zero is equal to the number of
-    triples $(a, b, t)$ such that there exist disjoint subsets $u', v', w'$ of
-    $[d]$ with cardinalities $a$, $b$, and $t$.  This is straightforward to see,
-    as every pair of vertices $u$ and $v$ with $\wt{u} = i$, $\wt{v} = j$, and
-    $\wt{uv} = t$ can be decomposed into three disjoint sets $u \setminus v$, $v
-    \setminus u$, and $uv$, and vice versa.  There exist disjoint subsets $u'$,
-    $v'$ and $w'$ for every $a$, $b$, and $t$ as long as $a + b + t \leq d$, and
-    the number of solutions to this in non-negative integers is
-    $\binom{d+3}{3}$.  Therefore, this is the dimension of the Terwilliger
-    algebra.
+    one of the $\Mijt$ which is non-zero at the $(u, v)$-entry: when $i = i'$,
+    $j = j'$, and $t = t'$..  On the other hand, the number of triples $(i, j,
+    t)$ such that $\Mijt$ is non-zero is equal to the number of triples $(a, b,
+    t)$ such that there exist disjoint subsets $u', v', w'$ of $[d]$ with
+    cardinalities $a$, $b$, and $t$.  This is straightforward to see, as every
+    pair of vertices $u$ and $v$ with $\wt{u} = i$, $\wt{v} = j$, and $\wt{uv} =
+    t$ can be decomposed into three disjoint sets $u \setminus v$, $v \setminus
+    u$, and $uv$, and vice versa.  There exist disjoint subsets $u'$, $v'$ and
+    $w'$ for every $a$, $b$, and $t$ as long as $a + b + t \leq d$, and the
+    number of solutions to this in non-negative integers is $\binom{d+3}{3}$.
+    Therefore, this is the dimension of the Terwilliger algebra.
 
     In fact, there exists an explicit diagonalization of the Terwilliger
     algebra, such that computations in the algebra may be done with objects of
@@ -3188,11 +3202,12 @@
           \frac{1}{\abs{\Pi}} \sum_{\pi \in \Pi} \chipiY \chipiY^T
           = \sum_{i, j, t} \xijt \Mijt \ .
         $$
-        For any vertex $u$, if $\wt{u} = i$, then the diagonal element of $R$ is
-        $x_{i, 0}^0$, since $(\Mijt)_{u, v}$ is non-zero when $\wt{u} = i$,
-        $\wt{v} = j$, and $\wt{u + v} = t$.  Therefore, it will suffice to prove
-        that for each row of $R$, its diagonal element is at least as large as
-        any other.
+
+        For any vertex $u$, if $\wt{u} = i$, then the diagonal element of the
+        $u^\text{th}$ row of $R$ is $x_{i, 0}^0$, since $(\Mijt)_{u, v}$ is
+        non-zero when $\wt{u} = i$, $\wt{v} = j$, and $\wt{u + v} = t$.
+        Therefore, it will suffice to prove that for each row of $R$, its
+        diagonal element is at least as large as any other.
 
         However, the $(u, v)$-entry in $\chipiY \chipiY^T$ is $1$ whenever $u$
         and $v$ both belong to $\pi(Y)$, and is $0$ elsewhere.  However, if $u$
@@ -3430,18 +3445,41 @@
       There are a number of important facts about this decomposition which will
       also be useful.  First, the $F_\theta$ are orthogonal idempotents, in that
       $F_\theta F_{\theta'} = \delta_{\theta \theta'} F_\theta$.  This implies
-      the following fact.  If $f$ is any polynomial, then $f(M) = \sum_\theta
-      f(\theta) F_\theta$.  Since the eigenvalues $\theta$ are distinct, for
-      each eigenvalue $\theta$, there exists a polynomial -- for example,
-      $\prod_{\theta' \neq \theta} (x - \theta')$ -- which is nonzero on exactly
-      $\theta$ and no other eigenvalues.  This allows one to express each
-      $F_\theta$ as a polynomial in $M$.
+      the following facts.
+
+      \begin{prop}\label{prop:spectral-decomp-polynomial}
+        Let $M$, $\theta$, and $F_\theta$ be as above.
+        \begin{enumerate}
+          \item If $f$ is any polynomial, then $f(M) = \sum_\theta f(\theta)
+            F_\theta$.
+          \item Each $F_\theta$ is a polynomial in $M$.
+        \end{enumerate}
+      \end{prop}
+
+      \begin{proof}[Proof (sketch).]
+        If $f$ has degree $1$, then the first fact is clearly true.  If instead
+        $f(M) = M^2$, then
+        $$
+          \( 
+            \sum_\theta \theta F_\theta
+          \) \( 
+            \sum_{\theta'} \theta' F_{\theta'}
+          \)
+          = \sum_\theta \sum_{\theta'} \theta \theta' F_\theta F_\theta'
+          = \sum_\theta \sum_{\theta'} \theta \theta' \delta_{\theta\theta'} F_\theta
+          = \sum_\theta \theta^2 F_\theta
+          = \sum_\theta f(\theta) F_\theta \ .
+        $$
+        These facts extend in the same way to polynomials of any degree.
+
+        Then, since the eigenvalues $\theta$ are distinct, for each eigenvalue
+        $\theta$, there exists a polynomial -- for example, $\prod_{\theta' \neq
+        \theta} (x - \theta')$ -- which is nonzero on exactly $\theta$ and no
+        other eigenvalues.  This allows one to express each $F_\theta$ as a
+        polynomial in $M$.
+      \end{proof}
 
   \section{Positive Semi-Definite Matrices}
-    Depending on which proof of the clique-coclique bound I use, and how much
-    detail I go into Schrijver's SDP bound, I could make some comments about PSD
-    matrices.
-
     In this section, we will restrict the discussion to real, symmetric
     matrices.
 
@@ -3462,7 +3500,8 @@
         \item The matrix $F$ is positive semi-definite.
         \item There exists a (possibly non-square) matrix $B$ such that $F = B^T
           B$.
-        \item All the eigenvalues of $F$ are non-negative.
+        \item All the eigenvalues of $F$ are non-negative and $F$ is real and
+          symmetric (or more generally, complex and hermitian).
       \end{itemize}
     \end{thm}
 
