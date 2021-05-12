@@ -136,7 +136,7 @@
 
   This report is an exploration of some of the topics within \emph{Delsarte
   theory}, which uses ideas from graph theory, algebra, and optimization to
-  address questions in coding theory in particular, and combinatorics more
+  address questions in coding theory and combinatorics more
   broadly.  The centre of study is the \emph{association scheme}, which provides
   a setting in which to view various objects, especially \emph{distance-regular
   graphs}.  While computing the size of the largest clique or coclique in a
@@ -183,6 +183,7 @@
 
 \chapter{Introduction}\label{ch:intro}
   \section{Coding Theory}\label{sec:intro:coding}
+    \FloatBarrier
 
     In most communication, a transmitter in one location must send a message to
     a receiver in another location, possibly by means of a faulty (or
@@ -210,6 +211,36 @@
     will know for sure that the message was corrupted; they will know not to
     misinterpret the message, and may ask that it be re-transmitted.
     \\
+
+    \begin{figure}[h]
+      \centering
+      \begin{tikzpicture}
+        \tikzset{
+          node distance=3cm,
+          box/.style={
+            draw,
+            rectangle,
+          },
+        }
+        \node[box] (M1) at (-6.5, 0) {message};
+        \node[box] (E1) at (-2.8, 0) {encoded};
+        \node[box] (E2) at ( 1.5, 0) {encoded + error};
+        \node[box] (M2) at ( 6, 0) {message};
+        \node[box] (M3) at ( 6,-2) {corrupt};
+        \node    (chan) at (-0.8, 0) {};
+        \node   (noise) at (-0.8,-2) {};
+
+        \draw[->, thick] (M1) edge[above] node{encoding} (E1);
+        \draw[->, thick] (E2) edge[above] node{decoding} (M2);
+        \draw[->, thick] (E2) edge[below left] node{decoding failure} (M3);
+        \draw[->,decorate, decoration=snake]
+          (noise) -- node[left=0.25cm]{noise} (chan);
+        \draw[->,decorate, decoration=snake]
+          (E1) -- node[above=0.25cm]{transmission} (E2);
+      \end{tikzpicture}
+      \caption{The process of encoding messages against transmission errors and
+        decoding the resulting message.}
+    \end{figure}
 
     These are the two fundamental goals of coding theory: to encode data in such
     a way that it can be recovered if some errors are introduced; or if it
@@ -274,6 +305,7 @@
     This introduction was inspired by the introduction to \cite{pless} (though
     it does not use the language of metrics).
 
+    \FloatBarrier
   \section{Linear Codes and Distance-Regular
     Graphs}\label{sec:intro:linear->drg}
 
@@ -321,10 +353,10 @@
       The \textsc{Hamming graph} $H(d, q)$ is defined so that its vertex set $V$
       is the set of all $d$-tuples, each entry of which belongs to a fixed set
       of $q$ elements.  Two vertices are said to be adjacent if they have
-      hamming distance $1$.
+      Hamming distance $1$.
 
       The graph $H_i(d, q)$ is defined on the same vertex set; however, vertices
-      in this graph are adjacent if they have hamming distance $i$.  With this
+      in this graph are adjacent if they have Hamming distance $i$.  With this
       definition, $H(d, q) = H_1(d, q)$.
     \end{defn}
 
@@ -369,6 +401,102 @@
       graph), then $d$ is called the \textsc{diameter}.
     \end{defn}
 
+    \begin{figure}[h]
+      \begin{tikzpicture}
+        \tikzset{
+          every loop/.style={},
+          scale=0.8,
+          label distance = .1pt,
+          node distance = 1.5cm,
+          dot/.style = {circle, fill, minimum size=#1,
+          inner sep=0pt, outer sep=0pt},
+          dot/.default = 6pt % size of the circle diameter
+        }
+
+        \node[dot                        ] (000-0) {};
+        \node[dot, right of = 000-0      ] (001-0) {};
+        \node[dot, above of = 000-0      ] (010-0) {};
+        \node[dot, right of = 010-0      ] (011-0) {};
+        \node[dot, above right of = 000-0] (100-0) {};
+        \node[dot, right of = 100-0      ] (101-0) {};
+        \node[dot, above of = 100-0      ] (110-0) {};
+        \node[dot, right of = 110-0      ] (111-0) {};
+        \draw[-]
+          (000-0) edge[loop] (000-0)
+          (001-0) edge[loop] (001-0)
+          (010-0) edge[loop] (010-0)
+          (011-0) edge[loop] (011-0)
+          (100-0) edge[loop] (100-0)
+          (101-0) edge[loop] (101-0)
+          (110-0) edge[loop] (110-0)
+          (111-0) edge[loop] (111-0)
+        ;
+
+        \node[dot, label=below:{$000$}, below right of = 101-0] (000-1) {};
+        \node[dot, label=below:{$001$}, right of = 000-1      ] (001-1) {};
+        \node[dot, label=below:{$010$}, above of = 000-1      ] (010-1) {};
+        \node[dot, label=below:{$011$}, right of = 010-1      ] (011-1) {};
+        \node[dot, label=below:{$100$}, above right of = 000-1] (100-1) {};
+        \node[dot, label=below:{$101$}, right of = 100-1      ] (101-1) {};
+        \node[dot, label=below:{$110$}, above of = 100-1      ] (110-1) {};
+        \node[dot, label=below:{$111$}, right of = 110-1      ] (111-1) {};
+        \draw[-]
+          (001-1) edge (101-1)
+          (010-1) edge (011-1)
+          (010-1) edge (110-1)
+          (000-1) edge (001-1)
+          (001-1) edge (011-1)
+          (101-1) edge (111-1)
+          (100-1) edge (101-1)
+          (100-1) edge (110-1)
+          (000-1) edge (010-1)
+          (000-1) edge (100-1)
+          (110-1) edge (111-1)
+          (011-1) edge (111-1)
+        ;
+
+        \node[dot, below right of = 101-1] (000-2) {};
+        \node[dot, right of = 000-2      ] (001-2) {};
+        \node[dot, above of = 000-2      ] (010-2) {};
+        \node[dot, right of = 010-2      ] (011-2) {};
+        \node[dot, above right of = 000-2] (100-2) {};
+        \node[dot, right of = 100-2      ] (101-2) {};
+        \node[dot, above of = 100-2      ] (110-2) {};
+        \node[dot, right of = 110-2      ] (111-2) {};
+        \draw[-]
+          (000-2) edge (011-2)
+          (000-2) edge (101-2)
+          (000-2) edge (110-2)
+          (001-2) edge (010-2)
+          (001-2) edge (100-2)
+          (001-2) edge (111-2)
+          (010-2) edge (100-2)
+          (010-2) edge (111-2)
+          (011-2) edge (101-2)
+          (011-2) edge (110-2)
+          (100-2) edge (111-2)
+          (101-2) edge (110-2)
+        ;
+
+        \node[dot, below right of = 101-2] (000-3) {};
+        \node[dot, right of = 000-3      ] (001-3) {};
+        \node[dot, above of = 000-3      ] (010-3) {};
+        \node[dot, right of = 010-3      ] (011-3) {};
+        \node[dot, above right of = 000-3] (100-3) {};
+        \node[dot, right of = 100-3      ] (101-3) {};
+        \node[dot, above of = 100-3      ] (110-3) {};
+        \node[dot, right of = 110-3      ] (111-3) {};
+        \draw[-]
+          (000-3) edge (111-3)
+          (001-3) edge (110-3)
+          (010-3) edge (101-3)
+          (011-3) edge (100-3)
+        ;
+
+      \end{tikzpicture}
+      \caption{The distance graphs of $H(3, 2)$.}
+    \end{figure}
+
     The Hamming graphs are distance-regular, where the graphs $H_i(d, q)$ are
     the distance graphs of $H(d, q)$, and $d$ is the diameter.  Other examples
     of distance-regular graphs include the Johnson graphs and the Grassmann
@@ -398,6 +526,8 @@
     More discussion on the use of finite fields (and vector spaces) in codes can
     be found in \cite{pless}.  The discussion of graphs comes from
     \cite[Chapter~11]{godsil}.
+
+    \FloatBarrier
 
   \section{Hamming Graphs}\label{sec:intro:hamming}
 
@@ -517,6 +647,57 @@
     of all pairs of automorphisms from these two subgroups will generate all
     automorphisms.
 
+    \begin{figure}[h]
+      \centering
+      \begin{tikzpicture}
+        \tikzset{
+          scale=2.0,
+          label distance = .1pt,
+          node distance = 1.5cm,
+          dot/.style = {circle, fill, minimum size=#1,
+          inner sep=0pt, outer sep=0pt},
+          dot/.default = 6pt % size of the circle diameter
+        }
+
+        \node[dot, label=below left:{$00$}] (00) at (0, 0) {};
+        \node[dot, label=below left:{$01$}] (01) at (0, 1) {};
+        \node[dot, label=below left:{$02$}] (02) at (0, 2) {};
+        \node[dot, label=below left:{$10$}] (10) at (1, 0) {};
+        \node[dot, label=below left:{$11$}] (11) at (1, 1) {};
+        \node[dot, label=below left:{$12$}] (12) at (1, 2) {};
+        \node[dot, label=below left:{$20$}] (20) at (2, 0) {};
+        \node[dot, label=below left:{$21$}] (21) at (2, 1) {};
+        \node[dot, label=below left:{$22$}] (22) at (2, 2) {};
+
+        \draw[-]
+          (00) edge (01)
+          (00) edge[bend right] (02)
+          (00) edge (10)
+          (00) edge[bend left] (20)
+          (01) edge (02)
+          (01) edge (11)
+          (01) edge[bend left] (21)
+          (02) edge (12)
+          (02) edge[bend left] (22)
+          (10) edge (11)
+          (10) edge[bend right] (12)
+          (10) edge (20)
+          (11) edge (12)
+          (11) edge (21)
+          (12) edge (22)
+          (20) edge (21)
+          (20) edge[bend right] (22)
+          (21) edge (22)
+        ;
+
+        \draw[->, dashed, thick]
+          (00) edge (12)
+        ;
+      \end{tikzpicture}
+      \caption{An shift-type automorphism of $H(2, 3)$ (see Lemma
+        \ref{lem:hamming-shift-automorphisms}).}
+    \end{figure}
+
     \begin{lem}\label{lem:hamming-shift-automorphisms}
       For any vertex $v$, the map $T_v : u \mapsto u + v$ is an automorphism of
       $H(d, q)$.  On the other hand, every automorphism of $H(d, q)$ is the
@@ -575,6 +756,57 @@
     $\vzero$.  We will then show how all such automorphisms can be constructed
     from the examples we find.
 
+    \begin{figure}[h]
+      \centering
+      \begin{tikzpicture}
+        \tikzset{
+          scale=2.0,
+          label distance = .1pt,
+          node distance = 1.5cm,
+          dot/.style = {circle, fill, minimum size=#1,
+          inner sep=0pt, outer sep=0pt},
+          dot/.default = 6pt % size of the circle diameter
+        }
+
+        \node[dot, label=below left:{$00$}] (00) at (0, 0) {};
+        \node[dot, label=below left:{$01$}] (01) at (0, 1) {};
+        \node[dot, label=below left:{$02$}] (02) at (0, 2) {};
+        \node[dot, label=below left:{$10$}] (10) at (1, 0) {};
+        \node[dot, label=below left:{$11$}] (11) at (1, 1) {};
+        \node[dot, label=below left:{$12$}] (12) at (1, 2) {};
+        \node[dot, label=below left:{$20$}] (20) at (2, 0) {};
+        \node[dot, label=below left:{$21$}] (21) at (2, 1) {};
+        \node[dot, label=below left:{$22$}] (22) at (2, 2) {};
+
+        \draw[-]
+          (00) edge (01)
+          (00) edge[bend right] (02)
+          (00) edge (10)
+          (00) edge[bend left] (20)
+          (01) edge (02)
+          (01) edge (11)
+          (01) edge[bend left] (21)
+          (02) edge (12)
+          (02) edge[bend left] (22)
+          (10) edge (11)
+          (10) edge[bend right] (12)
+          (10) edge (20)
+          (11) edge (12)
+          (11) edge (21)
+          (12) edge (22)
+          (20) edge (21)
+          (20) edge[bend right] (22)
+          (21) edge (22)
+        ;
+
+        \node[below of = 10] (10') {};
+        \node[left of = 01] (01') {};
+        \draw[<->, dashed, thick] (10') edge[bend left, out=130, in=50] (01');
+      \end{tikzpicture}
+      \caption{A component permutation of $H(2, 3)$ (see Lemma
+        \ref{lem:hamming-component-permutation}).}
+    \end{figure}
+
     \begin{lem}\label{lem:hamming-component-permutation}
       Let $\sigma \in \Sym [d]$, and let $\sigma$ act on $H(d, q)$ by mapping
       $(x_1, \ldots, x_d)$ to $(x_{\sigma(1)}, \ldots, x_{\sigma(d)})$.  Then
@@ -588,6 +820,61 @@
       acts on.  Thus, $\vzero \sigma = \vzero$, and since, $v \sigma - u \sigma
       = (v - u) \sigma$, $\sigma$ is an automorphism.
     \end{proof}
+
+    \begin{figure}[h]
+      \centering
+      \begin{tikzpicture}
+        \tikzset{
+          scale=2.0,
+          label distance = .1pt,
+          node distance = 1.5cm,
+          dot/.style = {circle, fill, minimum size=#1,
+          inner sep=0pt, outer sep=0pt},
+          dot/.default = 6pt % size of the circle diameter
+        }
+
+        \node[dot, label=below left:{$00$}] (00) at (0, 0) {};
+        \node[dot, label=below left:{$01$}] (01) at (0, 1) {};
+        \node[dot, label=below left:{$02$}] (02) at (0, 2) {};
+        \node[dot, label=below left:{$10$}] (10) at (1, 0) {};
+        \node[dot, label=below left:{$11$}] (11) at (1, 1) {};
+        \node[dot, label=below left:{$12$}] (12) at (1, 2) {};
+        \node[dot, label=below left:{$20$}] (20) at (2, 0) {};
+        \node[dot, label=below left:{$21$}] (21) at (2, 1) {};
+        \node[dot, label=below left:{$22$}] (22) at (2, 2) {};
+
+        \draw[-]
+          (00) edge (01)
+          (00) edge[bend right] (02)
+          (00) edge (10)
+          (00) edge[bend left] (20)
+          (01) edge (02)
+          (01) edge (11)
+          (01) edge[bend left] (21)
+          (02) edge (12)
+          (02) edge[bend left] (22)
+          (10) edge (11)
+          (10) edge[bend right] (12)
+          (10) edge (20)
+          (11) edge (12)
+          (11) edge (21)
+          (12) edge (22)
+          (20) edge (21)
+          (20) edge[bend right] (22)
+          (21) edge (22)
+        ;
+
+        \node[below of = 10] (10') {};
+        \node[below of = 20] (20') {};
+        \draw[<->, dashed, thick] (10') edge (20');
+
+        \node[left of = 01] (01') {};
+        \node[left of = 02] (02') {};
+        \draw[<->, dashed, thick] (01') edge (02');
+      \end{tikzpicture}
+      \caption{An automorphism permuting the nonzero elements of each component
+        of $H(2, 3)$ (see Lemma \ref{lem:hamming-coefficient-permutation}).}
+    \end{figure}
 
     \begin{lem}\label{lem:hamming-coefficient-permutation}
       Let $\tau \in \Sym\( \Z_q \setminus \set{0} \)$; then $\tau$ extends
@@ -625,7 +912,7 @@
       \ref{lem:hamming-automorphisms-preserve-component} for all $i$ there
       exists a $j$ such that for all nonzero $\alpha$, $g': \alpha e_i \mapsto
       \beta e_j$ for some nonzero $\beta$.  Therefore, let $\sigma^{-1}$ be the
-      permutation mapping each $j$ back to $i$, so that $g'' = g' \sigma^{-1}$
+      permutation mapping each $j$ back to $i$, so that $g'' := g' \sigma^{-1}$
       maps $\alpha e_i$ to $\beta e_i$ (Lemma
       \ref{lem:hamming-component-permutation}).  Finally, for each $i$ and
       nonzero $\alpha$, by Lemma
@@ -654,6 +941,7 @@
     \end{proof}
 
 
+    \FloatBarrier
     \mysep
 
 
@@ -667,7 +955,6 @@
     The following result follows almost directly from the characterization of
     the automorphism group of $H(d, q)$.
 
-    % TODO Ask Newman about this language.
     \begin{lem}
       The stabilizer of $\vzero$ acts transitively on $N_k(\vzero)$.  That is,
       for any two vertices $u, u' \in N_k(\vzero)$, there is an automorphism
@@ -841,7 +1128,7 @@
       \end{enumerate}
     \end{defn}
 
-    It is clear from the first axiom that the $A_i$ are $01$ matrices.
+    It is clear from the first axiom that the $A_i$ are $01$-matrices.
 
     The first three equivalences are straightforward translations.  To see the
     last, observe that
@@ -851,8 +1138,8 @@
     which counts the number of vertices $z \in V$ such that
     $$
       \begin{cases}
-        (A_i){uw} = 1 & \iff (u, w) \in \Gamma_i \\
-        (A_j){wv} = 1 & \iff (w, v) \in \Gamma_j \\
+        (A_i)_{uw} = 1 & \iff (u, w) \in \Gamma_i \\
+        (A_j)_{wv} = 1 & \iff (w, v) \in \Gamma_j \\
       \end{cases}\ .
     $$
     Then, $(A_i A_j)_{uv} = p_{ij}^k$ exactly when $(A_k)_{uv} = 1 \iff (u, v)
@@ -881,9 +1168,9 @@
     others will be $0$.  This association scheme will be commutative if and only
     if the group $G$ is.
 
-    Not every association scheme (commutative or not) arises is this way, but
+    Not every association scheme (commutative or not) arises in this way, but
     many schemes of interest are closely related to a particular group.
-    Nevertheless, much of the utility of association schemes, and the elegance
+    In any case, much of the utility of association schemes, and the elegance
     of their theory, derives from the connection between the combinatorial view
     of schemes as relations or (di)graphs (Definition
     \ref{defn:association-scheme-comb}), and the algebraic view of schemes as
@@ -920,13 +1207,13 @@
       (\ref{ax:aAS-part}), $\BMA$ is also closed under the \textit{Schur product},
       so that $\BMA$ is actually an algebra with respect to two
       \textit{different} products.
-      This \textit{duality} will form an important aspect of the theory of
+      This duality will form an important aspect of the theory of
       association schemes, and will be discussed in detail in this section and
       the next (\ref{sec:AS:AS:duality}).
 
       Since the adjoint $A_i^* = A_i^T$ belongs to $A_0, A_1, \ldots, A_d$ for
       every $i$, and these matrices all commute, each $A_i$ is a normal operator
-      (TODO reference).  From the spectral theorem,
+      (see Theorem \ref{thm:spectral}).  From the spectral theorem,
       we can decompose each matrix
       $$
         A_i = \sum_j \theta_{ij} \tilde{F_{ij}}
@@ -961,7 +1248,7 @@
         &= \sum \theta_{i{k_i}} \prod_{i'} \tilde{F_{i{k_i}}} \ .
       \end{alignat*}
 
-      Therefore, the non-zero products $\prod_i \tilde{F_{ik_i}}$ span $\BMA$
+      Therefore, the nonzero products $\prod_i \tilde{F_{ik_i}}$ span $\BMA$
       and are linearly independent, so there are precisely $d+1 = \dim \BMA$ of
       them: $F_0, F_1, \ldots, F_d$.  They are orthogonal idempotents, and each
       is self-adjoint since the $\tilde{F_{ij}}$ are self-adjoint and commute.
@@ -1015,12 +1302,12 @@
       Letting $\gamma_j := \sum_i P_i(j)$, $J F_j = \gamma_j F_j$ demonstrates
       that $\gamma_j$ is an eigenvalue of $J$, with eigenvectors in the column
       space of $F_j$.  Since $J$ is orthogonally diagonalizable,
-      with eigenvalues $n = \abs{X}$ of multiplicity $1$,
+      with eigenvalues $n = \abs{V}$ of multiplicity $1$
       and $0$ of multiplicity $n - 1$,
       and the $F_j$ are orthogonal idempotents whose columns are eigenvectors of
       $J$, there is exactly one $j$ with $\gamma_j = n$.
       Since $J F_j = n F_j$, each row of $F_j$ is equal;
-      but $F_j$ is self-adjoint the columns are all equal as well.
+      but since $F_j$ is self-adjoint the columns are all equal as well.
       Therefore, $F_j = \alpha J$, and $F_j$ is idempotent,
       so that
       $$
@@ -1066,7 +1353,7 @@
       uniquely, and since the $A_i$ are Schur orthogonal idempotents,
       $F_j \circ A_i = \frac{1}{n} Q_i(j) A_i$.
       These coefficients form the \textsc{matrix of dual eigenvalues} $Q$,
-      defined such that $Q_{ij} = Q_j(i)$.
+      defined such that $Q_{ij} = Q_j(i)$ (note the reversed indices).
 
       By substituting Equation \ref{eqn:A-basis} into Equation \ref{eqn:F-basis}, we obtain
       $$
@@ -1124,12 +1411,12 @@
       \frac{1}{n} \mu_j A_0$, but $A_0$ is the identity matrix, so that the
       diagonal entries of $F_j$ are identically $\mu_j/n$.  Moreover, $F_j$ is
       an $n \times n$ matrix, so $\trace F_j = \mu_j$, and since $F_j$ is
-      idempotent, $\rank F_j = \trace F_j$ (TODO reference).  If we fix $i$ and
-      suppose momentarily that the $P_i(j)$ are all distinct, then the column
-      space of $F_j$ is the $P_i(j)$-eigenspace of $A_i$, in which case $\mu_j =
-      \dim\col F_j$, which is the algebraic multiplicity.  For this reason (even
-      if the $P_i(j)$ are not distinct), $\mu_j$ will be called the
-      \textsc{multiplicity} of $F_j$.
+      idempotent, $\rank F_j = \trace F_j$ (see Proposition
+      \ref{prop:trace-rank}).  If we fix $i$ and suppose momentarily that the
+      $P_i(j)$ are all distinct, then the column space of $F_j$ is the
+      $P_i(j)$-eigenspace of $A_i$, in which case $\mu_j = \dim\col F_j$, which
+      is the algebraic multiplicity.  For this reason (even if the $P_i(j)$ are
+      not distinct), $\mu_j$ will be called the \textsc{multiplicity} of $F_j$.
 
       Consider the different products between matrices in one basis
       and matrices in the other: $A_i F_j$ and $A_i \circ F_j$.
@@ -1211,7 +1498,7 @@
       $f_0, f_1, \ldots, f_d$ in $\C^{d+1}$, the regular product can be defined
       by $f_i f_j := \delta_{ij} f_i$, and extended bilinearly.  Then, the Schur
       product can be defined by rewriting any element of $\C^{d+1}$ in the basis
-      $a_i = \sum_j P_i(j)$ computing $a_i a_j = \delta_{ij} a_i$ and extending
+      $a_i = \sum_j P_i(j) f_j$ computing $a_i \circ a_j = \delta_{ij} a_i$ and extending
       bilinearly.
 
       Because $P$ can be derived from $Q$, the Bose-Mesner algebra of $\AS$ is
@@ -1419,10 +1706,6 @@
 
 
   \section{$P$-Polynomial Schemes}\label{sec:AS:PPS}
-    \begin{itemize}
-      \item Definitions
-      \item ``Equivalence" to DRGs
-    \end{itemize}
 
     Our motivation in this report for the definition of an association scheme
     was the class of distance-regular graphs.  However, the class of association
@@ -1454,8 +1737,8 @@
       $$
         A_i A_j = \sum_{k=0}^d p_{ij}^k A_k
       $$
-      where $p_{ij}^k = \abs{\buildset{w \in V}{d(u, w) = i \And d(w, v) = j}}$
-      for fixed vertices $u$ and $v$ such that $d(u, v) = k$.
+      where $p_{ij}^k = \abs{\buildset{w \in V}{\dist{u}{w} = i \And \dist{w}{v} = j}}$
+      for fixed vertices $u$ and $v$ such that $\dist{u}{v} = k$.
     \end{lem}
 
     \begin{proof}
@@ -1465,7 +1748,7 @@
       Then for vertices $u, v$ at distance $k$,
       \begin{alignat*}{2}
         p_{ij}^k &= \abs{N_i(u) \cap N_j(v)} \\
-        &= \buildset{w \in V}{d(u, w) = i \And d(w, v) = j} \\
+        &= \buildset{w \in V}{\dist{u}{w} = i \And \dist{w}{v} = j} \\
         &= \buildset{w \in V}{(u, w) \in \Gamma_i \And (w, v) \in \Gamma_j}
         \ .
       \end{alignat*}
@@ -1491,17 +1774,17 @@
 
       Let $u, v$ be vertices at distance $i+1$, and consider a shortest path
       between them.  On this path from $u$ to $v$, consider the first vertex $w$
-      after $u$.  Then $d(u, w) = 1$, and since the remaining portion of the
-      path, from $w$ to $v$ is also a shortest path, $d(w, v) = i$.  Therefore,
+      after $u$.  Then $\dist{u}{w} = 1$, and since the remaining portion of the
+      path, from $w$ to $v$ is also a shortest path, $\dist{w}{v} = i$.  Therefore,
       $$
-      \abs{\buildset{w \in V}{d(u, w) = 1 \And d(w, v) = i}}
+      \abs{\buildset{w \in V}{\dist{u}{w} = 1 \And \dist{w}{v} = i}}
       = p_{1i}^{i+1} = p_{i1}^{i+1} > 0 \ .
       $$
 
       Now consider $u, v$ at distance any $k$, and $w \in N_1(u) \cap N_i(v)$.
       By the triangle inequality,
       $$
-        k = d(u, v) \leq d(u, w) + d(w, v)
+        k = \dist{u}{v} \leq \dist{u}{w} + \dist{w}{v}
         = 1 + i
         \ ,
       $$
@@ -1591,8 +1874,8 @@
       consisting of those permutations which preserve the
       (edge) structure of $\Gamma$.
 
-      An automorphism of an association scheme $\AS$ on a vertex set $X$
-      is a map $X \to X$ which is simultaneously an automorphism of
+      An automorphism of an association scheme $\AS$ on a vertex set $V$
+      is a map $V \to V$ which is simultaneously an automorphism of
       every class in the scheme.
       In other words, $\Aut \AS$ is the intersection of the automorphism groups
       of each class.
@@ -1635,8 +1918,7 @@
     Moreover, this action is free, since if $ug = u$, then the group
     cancellation law implies that $g$ is trivial.
     Together, this implies that the action of $G$ is regular,
-    which suggests the following lemma which provides a characterization of
-    Cayley graphs.
+    which suggests the following lemma characterizing Cayley graphs.
 
     (This action is also faithful since if $g$ and $h$ in $G$ are distinct, then
     they map the vertex $1$ to different images -- namely $g$ and $h$
@@ -1690,7 +1972,7 @@
     Then for an eigenvalue $\theta$, finding a $\theta$-eigenvector involves
     computing the kernel of $A - \theta I$, which can be computed in polynomial
     time (though not in linear time), and fast numeric algorithms are typically
-    inexact.  (TODO citation)
+    inexact.
 
     However, given the right information about a group, the following result
     finds the eigenvectors and eigenvalues almost instantaneously.
@@ -1723,8 +2005,8 @@
 
       Furthermore, since the rows of the character table are orthogonal,
       the eigenvectors $\psi$ are linearly independent,
-      and since $G \cong G^*$ (Theorem \ref{thm:character-duality}) implies that the character table is square,
-      the rows form a basis of eigenvectors for $A$.
+      and since $G \cong G^*$ (Theorem \ref{thm:character-duality}), the character table is square,
+      so that the rows form a basis of eigenvectors for $A$.
     \end{proof}
 
 
@@ -1748,8 +2030,8 @@
     \begin{lem}[{{\cite[Section~12.10]{godsil}}}]\label{lem:translation-partition}
       If $\AS$ is a translation scheme,
       and $G$ is a transitive, abelian automorphism group,
-      then there is a partition into inverse-closed sets
-      $C_0, C_1, \ldots, C_d$ of $G$ where $C_0 = \set{1}$,
+      then there is a partition of $G$ into inverse-closed sets
+      $C_0, C_1, \ldots, C_d$ where $C_0 = \set{1}$,
       and each graph $\Gamma_i$ in $\AS$ is isomorphic to $\Cay(G, C_i)$.
     \end{lem}
 
@@ -1766,8 +2048,8 @@
       Otherwise, it suffices to show that $C_0, C_1, \ldots, C_d$ partition $G$.
       Recall from the proof of Lemma \ref{lem:regular-aut-cayley} that any vertex may be
       chosen to identify with $1_G$, so that the same vertex (say, $v$)
-      may be chosen for each graph $\Gamma_i$ without loss of generality,
-      in which case $C_i$ consists of the neighbours of $v$.  By the definition
+      may be chosen for each graph $\Gamma_i$ without loss of generality;
+      in this case $C_i$ consists of the neighbours of $v$.  By the definition
       of an association scheme, for each vertex $u$ there is exactly one
       graph $\Gamma_i$ in which $u \sim v$, so that for each vertex, there is
       exactly one $C_i$ containing it.
@@ -1776,15 +2058,15 @@
     In order to characterize the translation schemes in a similar manner to the
     Cayley graphs, an examination of partitions of matrices and groups will be
     required.  This will lead to a simple criterion that distinguishes those
-    partitions which generate a translation scheme translation scheme from those
+    partitions which generate a translation scheme from those
     which do not.  \cite[Section~12.10]{godsil}
 
     \begin{defn}[Partition Matrix {{\cite[Section~12.7]{godsil}}}]\label{defn:partition-matrix}
-      If $\sigma$ is a partition of a set $X$,
-      then the \textsc{partition matrix} of $\sigma$
+      If $\rho$ is a partition of a set $X$,
+      then the \textsc{partition matrix} of $\rho$
       is the $01$ matrix
       whose rows are indexed by the elements of $X$,
-      and whose columns are indexed by the parts of $\sigma$,
+      and whose columns are indexed by the parts of $\rho$,
       in which each row -- corresponding to $x \in X$ -- has exactly one $1$,
       in the column corresponding to the part that contains $x$.
     \end{defn}
@@ -1796,29 +2078,29 @@
     is induced by the diagonal relation.)
 
     \begin{defn}[Induced Row Partition {{\cite[Section~12.7]{godsil}}}]\label{defn:induced-row-partition}
-      Given a matrix $H$, if $\sigma$ is a partition of the columns with
-      partition matrix $\chi(\sigma)$ then the \textsc{induced row partition}
-      $\sigma^*$ is the partition of the rows of $H$ such that two rows are in the
-      same part if and only if the corresponding rows in $H\chi(\sigma)$ are
+      Given a matrix $H$, if $\rho$ is a partition of the columns with
+      partition matrix $\chi(\rho)$ then the \textsc{induced row partition}
+      $\rho^*$ is the partition of the rows of $H$ such that two rows are in the
+      same part if and only if the corresponding rows in $H\chi(\rho)$ are
       equal.
     \end{defn}
 
     In other words, if $f$ is the function which maps each row index
-    $i$ of $H$ to the row vector $(H\chi(\sigma))_i$, then $\sigma^*$ is the
+    $i$ of $H$ to the row vector $(H\chi(\rho))_i$, then $\rho^*$ is the
     partition given by the fibres of $f$.
     \cite[Section 12.7]{godsil}
 
     \begin{thm}[Bridges and Mena {{\cite[Theorem~12.10.1]{godsil}}}]
       \label{thm:translation-char}
       Let $G$ be a finite abelian group,
-      let $\sigma = \set{C_0, C_1, \ldots, C_d}$ be a partition of $G$
+      let $\rho = \set{C_0, C_1, \ldots, C_d}$ be a partition of $G$
       into inverse-closed parts where $C_0 = \set{1}$, and
-      let $\sigma^*$ be the induced row partition
+      let $\rho^*$ be the induced row partition
       of the character table $H$ of $G$.
 
-      Then $\abs{\sigma^*} \geq \abs{\sigma}$,
+      Then $\abs{\rho^*} \geq \abs{\rho}$,
       and the graphs $\Gamma_i := \Cay(G, C_i)$ form the classes of an
-      association scheme if and only if $\abs{\sigma^*} = \abs{\sigma}$.
+      association scheme if and only if $\abs{\rho^*} = \abs{\rho}$.
     \end{thm}
 
     \begin{proof}
@@ -1835,22 +2117,22 @@
       Define $\BMA := \Span\set{A_0, A_1, \ldots, A_d}$.
       Let $\chi_{C_i}$ be the characteristic vector of $C_i$ in $G$,
       and let
-      \begin{equation}\label{eqn:part-mat-sigma}
-        \chi(\sigma) =
+      \begin{equation}\label{eqn:part-mat-rho}
+        \chi(\rho) =
         \begin{bmatrix}
           \vertbar   & \vertbar   &        & \vertbar   \\
           \chi_{C_0} & \chi_{C_1} & \cdots & \chi_{C_d} \\
           \vertbar   & \vertbar   &        & \vertbar   \\
         \end{bmatrix}
       \end{equation}
-      be the partition matrix of $\sigma$.
+      be the partition matrix of $\rho$.
 
-      Let $D_0, D_1, \ldots, D_e$ be the parts of $\sigma^*$;
+      Let $D_0, D_1, \ldots, D_e$ be the parts of $\rho^*$;
       then $i, k$ (or, their characters $\psi^i, \psi^k$)
       belong to the same part $D_j$ precisely when the rows
-      $\psi^i \chi(\sigma), \psi^k \chi(\sigma)$ in
+      $\psi^i \chi(\rho), \psi^k \chi(\rho)$ in
       \begin{equation}
-        H \chi(\sigma) =
+        H \chi(\rho) =
         \begin{bmatrix}
           \horzbar & \psi^1 & \horzbar \\
                    & \vdots &          \\
@@ -1886,7 +2168,7 @@
       \end{equation}
       This implies that
       $$
-        \abs{\sigma} = d = \dim\BMA \leq \dim\mathbb{F} = e = \abs{\sigma^*}
+        \abs{\rho} = d + 1 = \dim\BMA \leq \dim\mathbb{F} = e + 1 = \abs{\rho^*}
         \ .
       $$
 
@@ -1928,7 +2210,7 @@
 
       Now let $P$ be the $(e+1) \times (d+1)$ matrix such that $P_{ji} =
       P_i(j)$.  Note that the rows of $P$ are precisely the distinct rows of $H
-      \chi(\sigma)$, so that for any two rows $j \neq j'$ of $P$, there exists a
+      \chi(\rho)$, so that for any two rows $j \neq j'$ of $P$, there exists a
       column $i(j, j')$ such that $P_{i(j, j')}(j) \neq P_{i(j, j')}(j')$.
       This allows for the definition of the polynomials
       $$
@@ -1947,7 +2229,7 @@
       By construction, if $j'' = j$, then
       $f_j := g_j\(P_0(j''), P_1(j''),
         \ldots, P_d(j'')\)
-      $ will be non-zero, but if $j'' \neq j$,
+      $ will be nonzero, but if $j'' \neq j$,
       then there will be some $j' = j''$ at which
       $P_{i(j, j')}(j'') - P_{i(j, j')}(j') = 0$ so that
       $g_j\(P_0(j''), P_1(j''),
@@ -1979,11 +2261,11 @@
     \\
 
     With this result, translation schemes are characterized by a finite abelian
-    group $G$ and partition $\sigma$ satisfying the condition given.  Moreover,
+    group $G$ and partition $\rho$ satisfying the condition given.  Moreover,
     a finite abelian group $G$ is isomorphic to its groups of characters, $G^*$
     (Theorem \ref{thm:character-duality}), and the group of characters is completely
     described by the character table $H$.  Likewise, the group partition
-    $\sigma$ is completely described by its partition matrix $\chi(\sigma)$.
+    $\rho$ is completely described by its partition matrix $\chi(\rho)$.
     Since the condition in Theorem \ref{thm:translation-char} depends only on these two
     matrices (both with respect to the same ordering on $G$), if it is
     satisfied, then the matrices completely describe the translation scheme they
@@ -2002,7 +2284,7 @@
     To this end, let $\Zq$ denote the cyclic group of order $q$ (written additively),
     and consider the direct product $\Zqd$ with subsets
     $$
-      C_i := \buildset{x \in \Zqd}{\text{there are exactly $i$ $0$'s in $x$}}
+      C_i := \buildset{x \in \Zqd}{\wt{x} = i}
       \ .
     $$
     In particular, $C_0 = \set{0}$ and
@@ -2046,7 +2328,7 @@
       &= \sum_{c \in C_1} \psi(c) \\
       &= \sum_{i=1}^d \sum_{j=1}^{q-1} \psi(j e_i)
       \quad\text{
-        here, the outer sum picks which entry of $c$ will be non-zero} \\
+        here, the outer sum picks which entry of $c$ will be nonzero} \\
       &\qquad\qquad\qquad\qquad\text{
         \ and the inner sum picks the value
       }\\
@@ -2077,11 +2359,6 @@
 
 \chapter{Delsarte's Linear Programming Bound}\label{ch:LP-bound}
   \section{Linear Programming}\label{sec:LP-bound:LP}
-    \begin{itemize}
-      \item Basics of Linear Programming -- done
-      \item Duality -- done
-      \item Algorithms?
-    \end{itemize}
 
     The terminology and results from this section,
     except for the adjective \textit{principal} for
@@ -2330,10 +2607,10 @@
       for $i = 0, 1, \ldots, d$.  
     \end{defn}
 
-    Note that if $\varphi_Y$ is the characteristic vector of $Y$ in $V$, then
+    Note that if $\chi_Y$ is the characteristic vector of $Y$ in $V$, then
     for all $i$,
     $$
-      y_i = \frac{ \varphi_Y^T A_i \varphi_Y }{ \abs{Y} } \ .
+      y_i = \frac{ \chi_Y^T A_i \chi_Y }{ \abs{Y} } \ .
     $$
     Furthermore, $y_0 = 1$ for all subsets, $Y$, and $\sum_{i = 0}^d y_i =
     \abs{Y}$.  
@@ -2370,7 +2647,8 @@
 
     Let $Y$ be an $C$-clique with inner distribution $y$.  Recall that if $D =
     \set{0, 1, \ldots, d}$, then for any $C \subseteq D$, that $C^* := C
-    \setminus \set{0}$, and that $Q(0)$ is the first row of $Q$.  Then $y_i = 0$
+    \setminus \set{0}$, and that $Q(0)$ is the first row of $Q$.  Let $\chi_C$
+    denote the characteristic vector of $C$ in $D$.  Then $y_i = 0$
     for all $i \not\in C$, so $Q^T y \geq 0 \iff Q^T \diagC y \geq 0$ since the
     action of $\diagC$ acting on the left is to zero out the \textit{rows} of
     $y$ with index not in $C$.  Similarly,
@@ -2468,7 +2746,7 @@
     \mysep
 
     All that remains is to prove Theorem \ref{thm:lp-ineq}.  To do this, we
-    will begin by introduction a different measure of the distribution of
+    will begin by introducing a different measure of the distribution of
     distances in a subset of vertices.
 
     \begin{defn}[Outer Distribution {{\cite[Section~3.1]{delsarte}}}]
@@ -2480,10 +2758,10 @@
       $$
     \end{defn}
 
-    The outer distribution is also given in block-column form:
+    The outer distribution can also be given in block-column form:
     $$
       B = \begin{bmatrix}
-        A_0 \varphi_Y & A_1 \varphi_Y & \cdots & A_d \varphi_Y
+        A_0 \chi_Y & A_1 \chi_Y & \cdots & A_d \chi_Y
       \end{bmatrix} \ .
     $$
 
@@ -2497,16 +2775,16 @@
     \end{lem}
 
     \begin{proof}
-      Note that the $i^\text{th}$ column of $B$ is given by $A_i \varphi_Y$, so
+      Note that the $i^\text{th}$ column of $B$ is given by $A_i \chi_Y$, so
       we can compute the $(i, j)$-entry of $B^T B$ in the following manner:
       \begin{alignat*}{2}
-        (B^T B)_{i, j} &= \(\varphi_Y^T A_j^T\) \(A_i \varphi_Y\) \\
-        &= \varphi_Y^T \(A_j^T A_i\) \varphi_Y \\
-        &= \varphi_Y^T \(\sum_{k=0}^d p_{ij}^k A_k\) \varphi_Y \\
-        &= \sum_{k=0}^d p_{ij}^k \varphi_Y^T A_k \varphi_Y \\
+        (B^T B)_{i, j} &= \(\chi_Y^T A_j^T\) \(A_i \chi_Y\) \\
+        &= \chi_Y^T \(A_j^T A_i\) \chi_Y \\
+        &= \chi_Y^T \(\sum_{k=0}^d p_{ij}^k A_k\) \chi_Y \\
+        &= \sum_{k=0}^d p_{ij}^k \chi_Y^T A_k \chi_Y \\
         &= \abs{Y} \sum_{k=0}^d p_{ij}^k y_k \\
       \end{alignat*}
-      since by definition, $\abs{Y} y_k = \varphi_Y^T A_k \varphi_Y$.
+      since by definition, $\abs{Y} y_k = \chi_Y^T A_k \chi_Y$.
 
       Next, we define $\tilde{y}^T := y^T Q$ so that
       $$
@@ -2576,11 +2854,11 @@
 
     \begin{thm}[Ratio Bound for Cliques
       {{\cite[Section~3.3.2]{delsarte}}}]\label{thm:ratio-clique}
-      Let $Y$ be a clique in a distance-regular graph.  Let $r$ be the greatest
-      and $\tau$ the least eigenvalue of the adjacency matrix of the graph.
+      Let $Y$ be a clique in a distance-regular graph.  Let $\lambda_1$ be the greatest
+      and $\lambda_n$ the least eigenvalue of the adjacency matrix of the graph.
       Then
       $$
-        \abs{Y} \leq 1 - \frac{r}{\tau} \ .
+        \abs{Y} \leq 1 - \frac{\lambda_1}{\lambda_n} \ .
       $$
     \end{thm}
 
@@ -2591,11 +2869,11 @@
       $P_1$ contains the eigenvalues of the adjacency matrix.  We will sort the
       rows of $P$ such that $P_1$ is sorted in descending order.  Note also that
       the valency $\nu_1$ is the largest eigenvalue (Property \ref{tab:prop:modulus}), so
-      $\nu_1 = r$.  Therefore, we can write
+      $\nu_1 = \lambda_1$.  Therefore, we can write
       $$
         P^T = \begin{bmatrix}
           1      & \cdots & 1    \\
-          \nu_1  & \cdots & \tau \\
+          \nu_1  & \cdots & \lambda_n \\
           \vdots & *      &      \\
           \nu_d  &        &      \\
         \end{bmatrix} \ .
@@ -2604,14 +2882,14 @@
       Define the vector
       $$
         z := \begin{bmatrix}
-          1 & 0 & \cdots & \frac{-r}{\mu_d \tau}
+          1 & 0 & \cdots & \frac{-\lambda_1}{\mu_d \lambda_n}
         \end{bmatrix}^T \ .
       $$
       Note that since the trace of an adjacency matrix is zero, and that the
       trace of any diagonalizable matrix is the sum of its eigenvalues, since
-      $r$ is positive, $\tau$ must be negative.  Therefore, $z \geq 0$ and $z_0
+      $\lambda_1$ is positive, $\lambda_n$ must be negative.  Therefore, $z \geq 0$ and $z_0
       = 1$.  So if $z$ satisfies $\diagCs Q z \leq 0$, then it will be a
-      feasible dual solution; furthermore, $\mu^T z = 1 - r / \tau$, which is
+      feasible dual solution; furthermore, $\mu^T z = 1 - \lambda_1 / \lambda_n$, which is
       the desired bound.  Since we are looking for an upper bound on the size of
       a clique, we set $C := \set{0, 1}$.
 
@@ -2619,10 +2897,10 @@
       \begin{alignat*}{2}
         \diagCs Q z &= \diagCs \diagnu^{-1} P^T \diagmu z \\
         &= \begin{bmatrix}
-          \frac{\nu_1}{\nu_1} & \cdots & \frac{\tau}{r}
+          \frac{\nu_1}{\nu_1} & \cdots & \frac{\lambda_n}{\lambda_1}
         \end{bmatrix}
         \begin{bmatrix}
-          1 \\ \vdots \\ \frac{-r}{\mu_d \tau}
+          1 \\ \vdots \\ \frac{-\lambda_1}{\mu_d \lambda_n}
         \end{bmatrix} \\
         &= 1 - 1 = 0 \leq 0
       \end{alignat*}
@@ -2631,7 +2909,7 @@
 
   \section{The Clique-Coclique Bound}\label{sec:LP-bound:clique-coclique-bound}
 
-    Similar to the bound found in the previous section, by finding a feasible
+    Similar to the bound in the previous section, by finding a feasible
     solution to the dual linear program, we will obtain an upper bound on the
     size of a $C$-clique.
 
@@ -2657,7 +2935,7 @@
 
       Then $\zeta = \frac{1}{\abs{Z}} \diagmu^{-1} Q^T z$, and $Q^T z \geq 0$ so
       $\zeta \geq 0$ as well.  At $k = 0$, $\mu_0 = 1$ and $Q_0 = \vone$, so
-      $\zeta_0 = \frac{1}{\abs{Z}} \vone z = 1$.
+      $\zeta_0 = \frac{1}{\abs{Z}} \vone^T z = 1$.
 
       To prove that $\zeta$ is a feasible dual solution, it remains to show that
       $\diagCs Q \zeta \leq 0$.  However,
@@ -2818,6 +3096,7 @@
     Scheme}\label{sec:SDP-bound:terwilliger}
 
     This section follows \cite[Subsection I. A]{schrijver} closely.
+    \\
 
     Where Delsarte's LP bound used properties of the Bose-Mesner algebra of an
     association scheme, Schrijver's SDP bound will use a \textit{Terwilliger
@@ -2909,12 +3188,12 @@
       }
     \end{figure}
 
-    Like the adjacency matrices, the non-zero $\Mijt$ of the Terwilliger algebra
+    Like the adjacency matrices, the nonzero $\Mijt$ of the Terwilliger algebra
     are linearly independent, since for any pair of vertices $u, v$, and weights
     $i' := \wt{u}$, $j' := \wt{v}$, and $t' := \wt{uv}$, there will be exactly
-    one of the $\Mijt$ which is non-zero at the $(u, v)$-entry: when $i = i'$,
-    $j = j'$, and $t = t'$..  On the other hand, the number of triples $(i, j,
-    t)$ such that $\Mijt$ is non-zero is equal to the number of triples $(a, b,
+    one of the $\Mijt$ which is nonzero at the $(u, v)$-entry: when $i = i'$,
+    $j = j'$, and $t = t'$.  On the other hand, the number of triples $(i, j,
+    t)$ such that $\Mijt$ is nonzero is equal to the number of triples $(a, b,
     t)$ such that there exist disjoint subsets $u', v', w'$ of $[d]$ with
     cardinalities $a$, $b$, and $t$.  This is straightforward to see, as every
     pair of vertices $u$ and $v$ with $\wt{u} = i$, $\wt{v} = j$, and $\wt{uv} =
@@ -2949,7 +3228,7 @@
     \begin{equation}
       \xijt := \frac{\lijt}{\abs{Y} \binom{d}{i - t, j - t, t}}
     \end{equation}
-    when $\binom{d}{i-t, j-t, t}$ is non-zero, and $\xijt := 0$ when it is zero.
+    when $\binom{d}{i-t, j-t, t}$ is nonzero, and $\xijt := 0$ when it is zero.
     (Here, $i, j, t$ run over $D = \set{0, 1, \ldots, d}$, where $i + j - t \leq
     d$.)
 
@@ -3050,7 +3329,7 @@
       which is demonstrated in the following Lemma \ref{lem:R-u}.
 
       Now, note that $\Pi$ is the disjoint union of $\Pi_u$, as $u$ runs over
-      $Y$, while $\Pi'$ is the disjoint union of $\Pi_u$ where $u$ is in the
+      $Y$, while $\Pi'$ is the disjoint union of $\Pi_u$ where $u$ runs over the
       complement of $Y$.  Since there are $2^d$ total vertices, and $\abs{\Pi} =
       \abs{Y} d! = \abs{Y} \abs{\Pi_u}$ for any $u$, $\abs{\Pi'} = (2^d -
       \abs{Y}) \abs{\Pi_u}$.  Therefore,
@@ -3076,7 +3355,7 @@
           \binom{d}{i-t, j-t, t}^{-1}\binom{i+j-2t}{i-t}\binom{d-i-j+2t}{t} \\
       \end{alignat}
       The first fact above follows directly from the definition of $\lijt$,
-      while the third fact can be show by expanding each binomial and
+      while the third fact can be shown by expanding each binomial and
       multinomial coefficient, and cancelling the appropriate terms.  The second
       fact above is shown in Lemma \ref{lem:lijt-outside-Y}.
 
@@ -3123,17 +3402,18 @@
       permutations $\sigma$ mapping $v$ to $u + v'$, and $w$ to $u + w'$.  To
       see this, note that each such permutation $\sigma$ can be decomposed into
       a permutation fixing the sets $v \setminus w$, $w \setminus v$, $vw$, and
-      $v \cup w$, followed by a permutation mapping
+      $\bar{v \cup w}$, followed by a permutation mapping
       $$
       \begin{cases}
         v \setminus w &\mapsto (u+v') \setminus (u+w') \\
         w \setminus v &\mapsto (u+w') \setminus (u+v') \\
         vw            &\mapsto (u+v')(u+w') \\
-        v \cup w      &\mapsto (u+v') \cup (u+w') \\
+        \bar{v \cup w}      &\mapsto \bar{(u+v') \cup (u+w')} \\
       \end{cases} \ .
       $$
-      (This is possible since each of the sets above is the same size as its
-      image, and together the sets partition the powerset of $[d]$.)
+      This is possible since each of the sets above is the same size as its
+      image, and together the sets partition the powerset of $[d]$.  (Here,
+      $\bar{u}$ denotes the complement of $u$ as a subset of $[d]$.)
 
     \end{proof}
 
@@ -3230,7 +3510,7 @@
         \item $x_{0, 0}^0 = 1$.
         \item For all $i, j, t$,
           $$
-            0 \leq \xijt \leq x_{i, 0}^0 \leq 1 % TODO Ask Newman if the `\leq 1` part is valid.
+            0 \leq \xijt \leq x_{i, 0}^0 \leq 1
             \quad\And\quad
             x_{i, 0}^0 + x_{j, 0}^0 \leq 1 + \xijt \ .
           $$
@@ -3255,8 +3535,8 @@
         $Y$, and $\binom{d}{0, 0, 0} = 1$, we see that $x_{0, 0}^0 = \abs{Y} /
         \abs{Y} = 1$.
 
-      \item Consider the two equivalent definitions of $R$ (Equation
-        \ref{eqn:defn-R} and Equation \ref{eqn:alt-defn-R}):
+      \item Consider the two equivalent definitions of $R$ (Equations
+        \ref{eqn:defn-R} and \ref{eqn:alt-defn-R}):
         $$
           \frac{1}{\abs{\Pi}} \sum_{\pi \in \Pi} \chipiY \chipiY^T
           = \sum_{i, j, t} \xijt \Mijt \ .
@@ -3264,13 +3544,13 @@
 
         For any vertex $u$, if $\wt{u} = i$, then the diagonal element of the
         $u^\text{th}$ row of $R$ is $x_{i, 0}^0$, since $(\Mijt)_{u, v}$ is
-        non-zero when $\wt{u} = i$, $\wt{v} = j$, and $\wt{u + v} = t$.
+        nonzero when $\wt{u} = i$, $\wt{v} = j$, and $\wt{u + v} = t$.
         Therefore, it will suffice to prove that for each row of $R$, its
         diagonal element is at least as large as any other.
 
         However, the $(u, v)$-entry in $\chipiY \chipiY^T$ is $1$ whenever $u$
         and $v$ both belong to $\pi(Y)$, and is $0$ elsewhere.  However, if $u$
-        is in $\pi(Y)$, then the $(u, u)$ entry will certainly be non-zero,
+        is in $\pi(Y)$, then the $(u, u)$ entry will certainly be nonzero,
         whereas the $(u, v)$-entry may or may not be zero.  Therefore, when
         summing over $\pi \in \Pi$, the diagonal entry is counted at least as
         many times as any other entry in its row.  Therefore, $\xijt \leq x_{i,
@@ -3407,7 +3687,7 @@
     \label{fig:results}
   \end{figure}
 
-  In the process of computing these bounds, we learned much about the
+  In the process of deriving these bounds, much is learned about the
   automorphisms and eigenvalues of the Hamming scheme, as well as about
   association schemes in general.  This topic uses a unique blend of ideas from
   graph theory, group theory, linear algebra, and optimization.  There are also
@@ -3422,7 +3702,8 @@
 \chapter{Linear Algebra}
 
   The material in this chapter may be drawn from most standard texts on linear
-  algebra; for example, see \cite{fis}.
+  algebra; for example, see \cite{fis}.  Most of the material mentioned here is
+  also mentioned in \cite[Sections 2.5, 2.6; and the Appendix]{godsil}.
   \\
 
   The reader of this report is expected to be familiar with the standard notions
@@ -3440,10 +3721,10 @@
     \subsection{Orthogonal Projection}
 
       Let $X$ be an inner product space, let $W$ be a subspace of $X$, and let
-      the columns of a matrix $U$ be a basis for $W$.  Then the matrix $UU^*$,
+      the columns of a matrix $B$ be a basis for $W$.  Then the matrix $BB^*$,
       which maps all vectors into $W$, is the \textit{orthogonal projection}
-      onto $W$.  It is a \textit{projection} in that it is idempotent ($(UU^*)^2
-      = UU^*$), and it is \textit{orthogonal} because it maps vectors $x$ to the
+      onto $W$.  It is a \textit{projection} in that it is idempotent ($(BB^*)^2
+      = BB^*$), and it is \textit{orthogonal} because it maps vectors $x$ to the
       closest vector $w$ in $W$ to $x$ (then $x - w$ is orthogonal to $W$).
 
       Recall that the \textit{trace} of a matrix is the sum of its diagonal
@@ -3465,7 +3746,7 @@
         Since $v$ cannot be zero, this implies that $\lambda(\lambda - 1) = 0$.
       \end{proof}
 
-      \begin{prop}
+      \begin{prop}\label{prop:trace-rank}
         The trace of diagonalizable idempotent matrix is its rank.
       \end{prop}
 
@@ -3486,10 +3767,10 @@
       The following result regarding normal operators of a finite-dimensional
       inner product space is central to this report.
 
-      \begin{thm}
+      \begin{thm}\label{thm:spectral}
         If $M$ is a normal operator, then $M$ is unitarily diagonalizable.  That
         is, there exists a unitary matrix $U$ and a diagonal matrix $\Delta$
-        such that $M = UDU^*$.
+        such that $M = U\Delta U^*$.
       \end{thm}
 
       While this is the way that the spectral theorem is normally presented, it
@@ -3578,7 +3859,7 @@
     \alpha_d F_d$ is also positive semi-definite.
 
     Furthermore, it is important to note that if $U$ is any invertible operator,
-    then $F$ is positive semi-definite, if and only if $U^TFU$ is also positive
+    then $F$ is positive semi-definite if and only if $U^TFU$ is also positive
     semi-definite.  This is because for any vector $x$, there exists a unique
     pre-image $y$ of $x$, such that $x^T F x = (Uy)^T F (Uy) \geq 0$.
 
@@ -3620,7 +3901,7 @@
     perspective.)
 
     \begin{defn}[Types of Group Actions]\label{defn:group-action-types}
-      If if a homomorphism $G \to \Sym X$ is injective,
+      If a homomorphism $G \to \Sym X$ is injective,
       then the action is called \textsc{faithful}.
       Note that a group homomorphism is injective
       if and only if it has a trivial kernel.
@@ -3645,7 +3926,7 @@
     and $G$ acts in the natural way on $X$ (i.e. $xg = g(x)$),
     then this action is faithful.
     That is, $\Aut X \leq \Sym X$,
-    so that this action is induced by the identity $G \into \Sym X$,
+    so that this action is induced by the inclusion $G \into \Sym X$,
     which is clearly injective.
 
     \begin{lem}\label{lem:faithful-transitive-abelian}
@@ -3722,16 +4003,13 @@
     \begin{defn}[Characters]\label{defn:character}
       Given a group $G$, a \textsc{character} of the group $G$
       is a homomorphism $G \to \C^\times$,
-      the group of non-zero complex numbers under multiplication.
+      the group of nonzero complex numbers under multiplication.
       Then $G^*$ will denote the set of characters of $G$.
       \cite[Chapter 8]{godsil}
 
       (For abelian groups, this corresponds to irreducible degree $1$ characters
       over $\C$ in \cite[Section 18.3]{dummit-foote}.)
     \end{defn}
-
-    TODO Maybe use $\circ$ for this product to mimic the usage for the Schur
-    product?
 
     On $G^*$ a product of characters can be defined by setting
     $$
@@ -3969,19 +4247,119 @@
     \end{proof}
 
 \chapter{Notation}
-  I've included these sections mostly as an excuse to add the citations to the
-  bibliography, though it may be somewhat useful to have a sort of guide to the
-  similarities and differences in notation in this report, as well as in the
-  references.  (At least, I would find such a thing useful.)
 
-  \section{Godsil}
-    See \cite{godsil} Ch. 10.
+  \begin{table}[H]
+  \centering
+  \begin{tabular}{Cl}
 
-  \section{Delsarte}
-    See \cite{delsarte} Ch. 3.
+    \abs{\cdot} & the Hamming weight of a vector; \\
+      & the modulus of a complex number; \\
+      & the cardinality of a set \\
+    \bar{\cdot} & the conjugate of a complex number; \\
+      & the complement of a set; \\
+      & in the context of $C$-cliques, where $C$ is a subset of $D$ containing
+      $0$, $\bar{C} = D \setminus C^*$ \\
+    \innerprod{\cdot}{\cdot} & an inner product \\
+    \circ & the Schur (entrywise) product of matrices; the composition of
+      functions \\
 
-  \section{Schrijver}
-    See \cite{schrijver}.
+    \vzero, \vone & the vector (or tuple) of all $0$s, or $1$s \\
+    \mathbbm{1} & the indicator function \\
+
+    \mathcal{A} & an association scheme \\
+    A^* & the adjoint of $A$ \\
+    A_i & the adjacency matrices (Schur idempotents) of an association scheme \\
+    A^T & the transpose of a matrix \\
+    \BMA & the Bose-Mesner algebra of an association scheme \\
+    \Aut\Gamma & the automorphism group of $\Gamma$ \\
+
+    C & a subset of $D$ containing $0$; \\
+      & an inverse-closed subset of a group \\
+    C^* & in the context of $C$-cliques, where $C$ is a subset of $D$ containing
+      $0$, $C^* = C \setminus \set{0}$ \\
+    \Cay(G, C) & the Cayley graph of the group $G$ with inverse-closed subset
+      $C$ \\
+    \chi & a characteristic vector or matrix \\
+
+    D & the set $\set{0, 1, \ldots, d}$ \\
+    D_v(u) & in a Hamming graph, the distances from $u$ to the neighbourhood of
+      $v$ (including $v$) \\
+    d & the diameter of a graph or association scheme \\
+    \[d\] & the set $\set{1, \ldots, d}$ \\
+    \delta & the minimum distance of a code \\
+    \delta_{ij} & the Kronecker delta: $1$ if $i = j$, $0$ if $i \neq j$ \\
+
+  \end{tabular}
+  \end{table}
+
+  \begin{table}[H]
+  \centering
+  \begin{tabular}{Cl}
+
+    \diag{x} & the diagonal matrix with diagonal $x$ \\
+    \dim(\cdot) & the dimension of a vector space \\
+    \dist{u}{v} & the distance between vertices $u$ and $v$ in a graph \\
+
+    e_i & the $i^\text{th}$ standard basis element; a tuple of all $0$s, and a
+      $1$ in the $i^\text{th}$ position \\
+
+    F_j & the principal idempotents of an association scheme \\
+
+    G, G^* & a group, its group of characters \\
+    \Gamma & a graph \\
+    \GF(q) & the finite field with $q$ elements \\
+
+    H(d, q) & the Hamming graph of $d$-tuples over a $q$-set \\
+    H & a character table \\
+
+    I & the identity matrix \\
+
+    J & the all-ones matrix \\
+
+    \Mijt & the generators of a Terwilliger algebra \\
+    \mu & the multiplicities of an association scheme \\
+
+    N_i(u) & the set of vertices at distance $i$ from $u$ \\
+    n & the size of a vertex set \\
+    \nu & the valencies of an association scheme \\
+
+    \omega & a complex root of unity \\
+
+    P & the matrix of eigenvalues of an association scheme with $P_i(j)$ in
+      row $j$, column $i$ \\
+    p_{ij}^k & the intersection numbers of an association scheme \\
+    \psi & a character of a group \\
+
+    Q & the matrix of dual eigenvalues of an association scheme with $Q_j(i)$ in
+      row $i$, column $j$ \\
+    q_{ij}^k & the Krein parameters of an association scheme \\
+
+    \rho, \rho* & a partition, its induced row partition \\
+
+    S \succeq T & the matrix $S - T$ is positive semi-definite \\
+    \sigma & a permutation; an automorphism of $H(d, q)$ permuting the
+      coordinates of vertices \\
+    \Sum A & the sum of all entries in the matrix $A$ \\
+    \Sym X & the symmetric group on $X$ (the set of permutations $X \to X$) \\
+
+    T_v & the automorphism of $H(d, q)$ obtained by adding $v$ to each vertex \\
+    \tau & a permutation of $\Sym(\Z_q \setminus \set{0})$; \\
+      & an automorphism of $H(d, q)$ induced by this permutation \\
+    \trace A & the trace of a matrix $A$: the sum of its diagonal entries \\
+
+    u, v, w & vertices \\
+
+    V, V(\Gamma) & a vertex set (of $\Gamma$) \\
+
+    \xijt & parameters in the SDP bound \\
+
+    Y & a code; a subset of $V$ \\
+    y, z & the inner distributions of $C$-cliques $Y, Z$ \\
+
+    \Z_q & the integers modulo $q$ \\
+
+  \end{tabular}
+  \end{table}
 
 \printbibliography[heading=bibintoc]
 
