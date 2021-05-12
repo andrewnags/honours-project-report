@@ -154,10 +154,10 @@
   some important properties of the Hamming graphs is also given.
 
   Motivated by the distance-regularity property of the Hamming graphs, the
-  second chapter introduces the \emph{association scheme} its \emph{Bose-Mesner
-  algebra}.  This chapter also discusses the $P$-polynomial and translation
-  schemes, and uses the results obtained to calculate the eigenvalues of the
-  Hamming graphs.
+  second chapter introduces the \emph{association scheme} and its
+  \emph{Bose-Mesner algebra}.  This chapter also discusses the $P$-polynomial
+  and translation schemes, and uses the results obtained to calculate the
+  eigenvalues of the Hamming graphs.
 
   The third chapter introduces the problem of linear programming.  Using many
   of the properties of association schemes from the second chapter, a linear
@@ -169,7 +169,7 @@
   also introduces the Terwilliger algebra of the binary Hamming scheme, as well
   as a semi-definite program in this algebra whose maximum is an upper bound on
   the size of codes.  The relatively low dimension of this algebra makes this
-  computation feasible.
+  computationlly feasible.
   \\
 
   This report aims to be mostly self-contained, though background knowledge of
@@ -183,6 +183,7 @@
 
 \chapter{Introduction}\label{ch:intro}
   \section{Coding Theory}\label{sec:intro:coding}
+
     In most communication, a transmitter in one location must send a message to
     a receiver in another location, possibly by means of a faulty (or
     \textit{noisy}) channel which may introduce errors into the message.
@@ -268,6 +269,10 @@
     many codewords can there be?  The approach to this question is ultimately
     due to Delsarte \cite{delsarte}, and has been expanded upon by Schrijver
     \cite{schrijver}.
+    \\
+
+    This introduction was inspired by the introduction to \cite{pless} (though
+    it does not use the language of metrics).
 
   \section{Linear Codes and Distance-Regular
     Graphs}\label{sec:intro:linear->drg}
@@ -285,7 +290,7 @@
     $i$, and changing the value of $v_i$.  In order to count such errors, we
     define the following distance function on $V$.
 
-    \begin{defn}\label{hamming-distance}
+    \begin{defn}\label{defn:hamming-distance}
       If $V$ is the vector space of $d$-tuples over a finite field, then the
       \textsc{(Hamming) weight} of a vector $v = (v_1, \ldots, v_d)$ is the number of
       nonzero components $v_i$; this is denoted $\wt{v}$.
@@ -312,7 +317,7 @@
     we can define a corresponding graph and investigate codes in this graph
     instead.
 
-    \begin{defn}\label{hamming-graph}
+    \begin{defn}\label{defn:hamming-graph}
       The \textsc{Hamming graph} $H(d, q)$ is defined so that its vertex set $V$
       is the set of all $d$-tuples, each entry of which belongs to a fixed set
       of $q$ elements.  Two vertices are said to be adjacent if they have
@@ -388,6 +393,11 @@
     an independent set in the graph whose edge set is the union of edge sets
     from $\Gamma_1, \ldots, \Gamma_\delta$ is a code of minimum distance
     $\delta$.
+    \\
+
+    More discussion on the use of finite fields (and vector spaces) in codes can
+    be found in \cite{pless}.  The discussion of graphs comes from
+    \cite[Chapter~11]{godsil}.
 
   \section{Hamming Graphs}\label{sec:intro:hamming}
 
@@ -396,7 +406,7 @@
     without comment throughout the remainder of the report.  The automorphism
     group of a Hamming graph is helpful in demonstrating this fact.  The
     automorphism group also plays an important role in Schrijver's SDP bound
-    (\ref{sec:SDP-bound:SDP-bound}).  Readers who are familiar with the
+    (Section \ref{sec:SDP-bound:SDP-bound}).  Readers who are familiar with the
     automorphism groups of the Hamming graphs, or are willing to accept that
     these graphs are distance-regular, may omit this section.  
 
@@ -610,24 +620,24 @@
 
     \begin{proof}
       Let $g$ be any automorphism of $H(d, q)$, and suppose $\vzero g = v$.
-      Then by Lemma (\ref{lem:hamming-shift-automorphisms}) $g' := g T_{-v}$ is
+      Then by Lemma \ref{lem:hamming-shift-automorphisms} $g' := g T_{-v}$ is
       an automorphism which fixes $\vzero$.  Then by Lemma
-      (\ref{lem:hamming-automorphisms-preserve-component}) for all $i$ there
+      \ref{lem:hamming-automorphisms-preserve-component} for all $i$ there
       exists a $j$ such that for all nonzero $\alpha$, $g': \alpha e_i \mapsto
       \beta e_j$ for some nonzero $\beta$.  Therefore, let $\sigma^{-1}$ be the
       permutation mapping each $j$ back to $i$, so that $g'' = g' \sigma^{-1}$
       maps $\alpha e_i$ to $\beta e_i$ (Lemma
       \ref{lem:hamming-component-permutation}).  Finally, for each $i$ and
       nonzero $\alpha$, by Lemma
-      (\ref{lem:hamming-automorphisms-preserve-component}) $\beta$ is nonzero,
+      \ref{lem:hamming-automorphisms-preserve-component} $\beta$ is nonzero,
       so define $\tau_i$ to be the permutation on $\Z_q$ mapping $\alpha$ to
       $\beta$, and fixing $0$ (Lemma \ref{lem:hamming-coefficient-permutation}).
       Setting $\tau := \tau_1 \cdots \tau_d$, we see that $g'' \tau^{-1}: \alpha
       e_i \mapsto \alpha e_i$ for all $i$ and all $\alpha$.  Since automorphisms
       of $H(d, q)$ preserve distances in the graph and are completely
       determined by their action on $\buildset{\alpha e_i}{\alpha \in \Z_q,\ i
-      \in [d]}$, $g T_v^{-1} \sigma^{-1} \tau^{-1}$ is the identity on $H(d,
-      q)$.
+      \in [d]}$ (see Corollary \ref{cor:hamming-aut-characterized-nbhd}), $g
+      T_v^{-1} \sigma^{-1} \tau^{-1}$ is the identity on $H(d, q)$.
     \end{proof}
 
     \begin{cor}\label{cor:hamming-aut-group-size}
@@ -647,7 +657,7 @@
     \mysep
 
 
-    \begin{defn}\label{defn:distance-transitive}
+    \begin{defn}[{{\cite[Section~11.1]{godsil}}}]\label{defn:distance-transitive}
       A graph $\Gamma$ is \textsc{distance-transitive} if for all pairs of
       vertices $u, v$ and $u', v'$ such that $\dist{u}{v} = \dist{u'}{v'}$,
       there is an automorphism of $\Gamma$ mapping $u$ to $u'$ and $v$ to $v'$.
@@ -735,13 +745,20 @@
     ``nice'' automorphism groups.  In particular, the automorphism group of the
     Hamming graph will help us answer our original question with greater
     accuracy.
+    \\
+
+    To the best of the author's knowledge, the proofs given here are unique.
+    The fact that the Hamming graphs are distance-transitive (and thus
+    distance-regular) is a well-known fact (seen in \cite[Section~11.1]{godsil}
+    for example).  The automorphism group of the Hamming graphs is also given 
+    in \cite{mirafzal}.
 
 \chapter{Association Schemes}\label{ch:AS}
   \section{Association Schemes}\label{sec:AS:AS}
 
     \begin{defn}[Commutative Association Scheme -- Combinatorial
       {{\cite[Section 2.1]{delsarte}}}]
-      \label{association-scheme-comb}
+      \label{defn:association-scheme-comb}
       Let $D = \set{0, 1, \ldots, d}$ for some $d \geq 1$.
       A \textsc{commutative association scheme} $\AS$ is a set $V$, called the
       \textsc{vertex set}, together with a set of relations $\set{\Gamma_i}_{i=0}^d$
@@ -749,19 +766,19 @@
       \begin{enumerate}
         \item The set of relations $\set{\Gamma_i}_{i=0}^d$ partitions $V \times
           V$;
-          \label{cAS-part}
+          \label{ax:cAS-part}
         \item $\Gamma_0$ is the diagonal relation $\buildset{(u, u)}{u \in V}$;
-          \label{cAS-diag}
+          \label{ax:cAS-diag}
         \item For each $i \in D$, there is an $i' \in D$ such that $\Gamma_{i'}$ is
           the \textit{opposite relation} $\buildset{(v, u)}{(u, v) \in \Gamma_i}$ of
           $\Gamma_i$;
-          \label{cAS-sym}
+          \label{ax:cAS-sym}
         \item For every triple $i, j, k \in D$, there exists a constant $p_{i,
           j}^k$ such that for all $(u, v) \in \Gamma_k$, there are exactly $p_{i,
           j}^k$ vertices $w$ such that $(u, w) \in \Gamma_i$ and $(w, v) \in
           \Gamma_j$;
           furthermore, $p_{i, j}^k = p_{j, i}^k$.
-          \label{cAS-reg}
+          \label{ax:cAS-reg}
       \end{enumerate}
 
       As used above, the elements of $V$ are called \textsc{vertices},
@@ -776,7 +793,7 @@
 
     To every relation $\Gamma \subseteq V \times V$ there exists a $V \times V$
     $01$-matrix $A$, where
-    \begin{equation}\label{adjacency-matrix}
+    \begin{equation}\label{eqn:adjacency-matrix}
       A_{uv} = \begin{cases}
         1 & \If (u, v) \in \Gamma \\
         0 & \If (u, v) \not\in \Gamma \\
@@ -795,9 +812,9 @@
 
     \begin{defn}[Commutative Association Scheme -- Algebraic
       {{\cite[Chapter 12]{godsil}}}]
-      \label{association-scheme-alg}
+      \label{defn:association-scheme-alg}
       Let $\circ$ denote the \textsc{Schur} product of matrices of the same shape:
-      \begin{equation}\label{schur-prod}
+      \begin{equation}\label{eqn:schur-prod}
         (A \circ B)_{uv} = A_{uv} B_{uv}
         \ .
       \end{equation}
@@ -808,19 +825,19 @@
       \begin{enumerate}
         \item $\displaystyle \sum_{i=0}^d A_i = J$, the all-ones matrix,
           and $A_i \circ A_j = \delta_{i, j} A_i$;
-          \label{aAS-part}
+          \label{ax:aAS-part}
         \item $A_0 = I$, the identity matrix;
-          \label{aAS-diag}
+          \label{ax:aAS-diag}
         \item For every $i \in D$ there is an $i' \in D$ such that $A_i^T =
           A_{i'}$;
-          \label{aAS-sym}
+          \label{ax:aAS-sym}
         \item For every $i, j, k$, there exists a constant $p_{i, j}^k$ such
           that
           $$
             A_i A_j = A_j A_i = \sum_{k = 0}^d p_{i, j}^k A_k
             \ .
           $$
-          \label{aAS-reg}
+          \label{ax:aAS-reg}
       \end{enumerate}
     \end{defn}
 
@@ -843,9 +860,9 @@
     \\
 
 
-    The requirement in (\hyperref[cAS-reg]{Combinatorial 4}) that $p_{i, j}^k =
+    The requirement in (\hyperref[ax:cAS-reg]{Combinatorial 4}) that $p_{i, j}^k =
     p_{j, i}^k$ corresponds to the requirement that $A_i A_j = A_j A_i$
-    (\hyperref[aAS-reg]{Algebraic 4}), which is why such association schemes are
+    (\hyperref[ax:aAS-reg]{Algebraic 4}), which is why such association schemes are
     called \textit{commutative}.
 
     If the requirement of \textit{commutativity} is dropped, then every finite
@@ -858,7 +875,7 @@
     as the classes.  Since the identity element of $G$ will map to the identity
     matrix, the product of two such permutations is another such permutation,
     and the transpose of a permutation matrix is its inverse, axioms
-    (\ref{aAS-diag}, \ref{aAS-sym}, \ref{aAS-reg}) are satisfied.  Since for
+    \ref{ax:aAS-diag}, \ref{ax:aAS-sym}, \ref{ax:aAS-reg} are satisfied.  Since for
     every $g, h \in G$, only the element $hg^{-1}$ maps $g$ to $h$, exactly one
     of the permutation matrices will have a $1$ in the $(g, h)$-entry; all the
     others will be $0$.  This association scheme will be commutative if and only
@@ -868,14 +885,15 @@
     many schemes of interest are closely related to a particular group.
     Nevertheless, much of the utility of association schemes, and the elegance
     of their theory, derives from the connection between the combinatorial view
-    of schemes as relations or (di)graphs (\ref{association-scheme-comb}), and
-    the algebraic view of schemes as matrices (\ref{association-scheme-alg}).
+    of schemes as relations or (di)graphs (Definition
+    \ref{defn:association-scheme-comb}), and the algebraic view of schemes as
+    matrices (Definition \ref{defn:association-scheme-alg}).
     \\
 
     A particularly important class of association scheme, called
     \textsc{symmetric}, is one in which every relation is symmetric (i.e. $i =
-    i'$ in \hyperref[cAS-sym]{Combinatorial 3}), or equivalently, each adjacency
-    matrix is symmetric ($A_i^T = A_i$ in \hyperref[aAS-sym]{Algebraic 3}).
+    i'$ in \hyperref[ax:cAS-sym]{Combinatorial 3}), or equivalently, each adjacency
+    matrix is symmetric ($A_i^T = A_i$ in \hyperref[ax:aAS-sym]{Algebraic 3}).
     In this case, the relations $\Gamma_i$ form \textit{undirected} graphs $\Gamma_i$
     with vertex set $V$, and edge set given by
     $$
@@ -884,22 +902,22 @@
     $$
     The most important class of symmetric association scheme (for the purposes
     of this report) arise as the distance graphs of a distance-regular graph
-    (\ref{sec:AS:PPS}).
+    (see Section \ref{sec:AS:PPS}).
 
     \subsection{The Bose-Mesner Algebra}\label{sec:AS:AS:BMA}
       For any association scheme $\AS$,
       there are the adjacency matrices
-      $A_0, A_1, \ldots, A_d$ (\ref{association-scheme-alg}).
-      Since any product of these matrices belongs to their span (\ref{aAS-reg}),
+      $A_0, A_1, \ldots, A_d$ (Definition \ref{defn:association-scheme-alg}).
+      Since any product of these matrices belongs to their span (axiom \ref{ax:aAS-reg}),
       their span
-      \begin{equation}\label{BMA}
+      \begin{equation}\label{eqn:BMA}
         \BMA := \Span\set{A_0, A_1, \ldots, A_d}
       \end{equation}
       is closed under matrix multiplication.  This structure is called the
       \textsc{Bose-Mesner algebra} of $\AS$.
 
       Note also that from the first axiom of an association scheme
-      (\ref{aAS-part}), $\BMA$ is also closed under the \textit{Schur product},
+      (\ref{ax:aAS-part}), $\BMA$ is also closed under the \textit{Schur product},
       so that $\BMA$ is actually an algebra with respect to two
       \textit{different} products.
       This \textit{duality} will form an important aspect of the theory of
@@ -964,6 +982,9 @@
       operator, so its eigenvalues $\theta_{ij}$ are real, as are its
       idempotents $\tilde{F_{ij}}$.  Therefore, the idempotents $F_j$ are real,
       as is the matrix of eigenvalues $P$.
+      \\
+
+      This subsection follows \cite[Section~12.2]{godsil} closely.
 
     \subsection{Duality and Characterization}\label{sec:AS:AS:duality}
       Already a comparison between the two bases $A_0, A_1, \ldots, A_d$
@@ -983,7 +1004,7 @@
       characterize the scheme!
       \\
 
-      First, the axioms of an association scheme (\ref{association-scheme-alg})
+      First, the axioms of an association scheme (Definition \ref{defn:association-scheme-alg})
       require that $A_0 = I$, the identity of the usual product.  As already
       illustrated, $J$ the all-ones matrix acts as the ``dual'' of $I$, so let
       us examine:
@@ -1012,7 +1033,7 @@
 
       Since the $F_j$ are orthogonal, $\gamma_j = 0$ for all $j > 0$,
       so that the row sums of $P$ are known:
-      \begin{equation}\label{P-row-sum}
+      \begin{equation}\label{eqn:P-row-sum}
         \sum_{i = 0}^d P_i(j) =
         \begin{cases}
           n & \If j = 0 \\
@@ -1033,13 +1054,13 @@
 
       Next, since $F_0, F_1, \ldots, F_d$ is a basis for $\BMA$,
       we can write
-      \begin{equation}\label{F-basis}
+      \begin{equation}\label{eqn:F-basis}
         A_i = \sum_j P_i(j) F_j
       \end{equation}
       uniquely, and since the $F_j$ are orthogonal idempotents,
       $A_i F_j = P_i(j) F_j$.
       Dually, $A_0, A_1, \ldots, A_d$ is a basis for $\BMA$, so we can write
-      \begin{equation}\label{A-basis}
+      \begin{equation}\label{eqn:A-basis}
         F_j = \frac{1}{n} \sum_i Q_j(i) A_i
       \end{equation}
       uniquely, and since the $A_i$ are Schur orthogonal idempotents,
@@ -1047,7 +1068,7 @@
       These coefficients form the \textsc{matrix of dual eigenvalues} $Q$,
       defined such that $Q_{ij} = Q_j(i)$.
 
-      By substituting (\ref{A-basis}) into (\ref{F-basis}), we obtain
+      By substituting Equation \ref{eqn:A-basis} into Equation \ref{eqn:F-basis}, we obtain
       $$
         n A_i = \sum_j P_i(j) \sum_{i'} Q_j(i') A_{i'}
         = \sum_{i'} \( \sum_j P_i(j) Q_j(i') \) A_{i'}
@@ -1061,7 +1082,7 @@
         \implies PQ = nI
         \ .
       $$
-      Since the first row sum of $P$ is $n$ (\ref{P-row-sum}),
+      Since the first row sum of $P$ is $n$ (by Equation \ref{eqn:P-row-sum}),
       if we are given $P$ and \textit{no other information},
       then by computing its inverse we can derive $Q$.
 
@@ -1081,7 +1102,7 @@
       $$
       But $\sum_j F_j = I = A_0$ and $A_0 A_i = \delta_{0 i} A_i$
       so
-      \begin{equation}\label{Q-row-sum}
+      \begin{equation}\label{eqn:Q-row-sum}
         \sum_{j = 0}^d Q_j(i) =
         \begin{cases}
           n & \If i = 0 \\
@@ -1137,7 +1158,7 @@
       so letting $\nu$ denote the vector of valencies,
       and $\mu$ the vector of multiplicities,
       we see that
-      \begin{equation}\label{P-Q-reln}
+      \begin{equation}\label{eqn:P-Q-reln}
         P^T \diag{\mu} = \diag{\nu} Q
         \ .
       \end{equation}
@@ -1310,6 +1331,9 @@
       This completes the list of standard properties of the Bose-Mesner algebra
       and its duality.  The results are summarized in the table on the next
       page.
+      \\
+
+      This subsection follows \cite[Section~12.2]{godsil} closely.
 
       \newpage
 
@@ -1409,7 +1433,7 @@
     Note that in this section, and for the remainder of this report, all
     association schemes will be symmetric unless otherwise specified.
 
-    \begin{defn}\label{p-polynomial}
+    \begin{defn}[{{\cite[Section~12.3]{godsil}}}]\label{defn:p-polynomial}
       An association scheme of adjacency matrices $A_0, A_1, \ldots, A_d$ is
       \textsc{$P$-polynomial} if they can be ordered such that $A_i$ is a
       polynomial in $A_1$ of degree $i$.
@@ -1447,10 +1471,10 @@
       \end{alignat*}
       Then $A_i A_j = \sum_k p_{ij}^k A_k$ as shown in the equivalence between
       the two definitions of an association scheme
-      (\ref{association-scheme-alg}, \ref{association-scheme-comb}).
+      (Definitions \ref{defn:association-scheme-alg} and \ref{defn:association-scheme-comb}).
     \end{proof}
 
-    \begin{lem}\label{drg-mult-restricted}
+    \begin{lem}\label{lem:drg-mult-restricted}
       Let $\Gamma$ be a distance-regular graph with diameter $d$ and
       adjacency matrices $A_0, A_1, \ldots, A_d$.  Then for all $i$,
       $$
@@ -1494,7 +1518,7 @@
       Let $\Gamma$ be a distance-regular graph with diameter $d$,
       distance graphs $\Gamma_0, \Gamma_1, \ldots, \Gamma_d$,
       and distance matrices $A_0, A_1, \ldots, A_d$.
-      From lemma (\ref{lem:drg-mult-closed}), the product of distance matrices
+      From Lemma \ref{lem:drg-mult-closed}, the product of distance matrices
       of a distance-regular graph belongs to the span of distance
       matrices.  Since the distance matrices are symmetric, the rest of the
       axioms follow.  Therefore, $\Gamma$ is an association scheme.
@@ -1502,7 +1526,7 @@
       Note that $A_0 = I$ is a polynomial of degree $0$ in $A_1$, and $A_1$ is a
       polynomial of degree $1$ in itself.  Then, supposing $A_i$ is a polynomial
       of degree $i$ in $A_1$, we have that $A_i A_1$ is a polynomial of degree
-      $i+1$.  Then by lemma (\ref{drg-mult-restricted}),
+      $i+1$.  Then by Lemma \ref{lem:drg-mult-restricted},
       $$
         A_i A_1 = \sum_{k = 0}^{i+1} p_{i1}^k A_k
         \implies A_{i+1} = \frac{1}{p_{i1}^{i+1}} \(
@@ -1530,12 +1554,13 @@
     theory of duality with $P$- and $Q$-polynomial translation schemes (see
     Section \ref{sec:AS:translation}), but these will not be discussed in this
     report.
+    \\
+
+    Most of this section comes from \cite[Section~11.2]{godsil}.  See
+    \cite[Section~12.3]{godsil} for more.
 
 
   \section{Automorphisms and Cayley Graphs}
-
-    The material in this section follows mostly from \cite[Chapter~9]{godsil}.
-    \\
 
     This section and the next describes a special class of symmetric graphs
     (respectively, association schemes).  As with many other mathematical
@@ -1549,7 +1574,7 @@
     significantly more efficiently than otherwise would be the case, as outlined
     in the previous sections.
 
-    \begin{defn}[Automorphism]\label{auts}
+    \begin{defn}[Automorphism]\label{defn:auts}
       For graphs $\Gamma, \Gamma'$,
       a map $\phi: V\(\Gamma\) \to V\(\Gamma'\)$ is a \textsc{homomorphism}
       if
@@ -1573,7 +1598,7 @@
       of each class.
     \end{defn}
 
-    \begin{defn}[Cayley Graphs]\label{cayley-graph}
+    \begin{defn}[Cayley Graphs]\label{defn:cayley-graph}
       Given any group $G$ and a subset $C \subseteq G$,
       then $C$ is \textsc{inverse-closed} if for each $g \in C$,
       $g^{-1} \in C$ as well.
@@ -1597,7 +1622,7 @@
     structure, it is intuitive that these graphs should be highly symmetric.
     For example, every Cayley graph is \textsc{vertex transitive}: for every
     pair $u, v$ in the vertex set, there is a automorphism taking $u \mapsto v$.
-    To see this, note that $G$ acts (\ref{group-action}) on $\Cay(G, C)$ through
+    To see this, note that $G$ acts (see Definition \ref{defn:group-action}) on $\Cay(G, C)$ through
     the group operation, since the vertex set is also the group.
     To verify that this is a homomorphism, if $u \sim v$ in $\Cay(G, C)$, then
     $$
@@ -1619,7 +1644,7 @@
     restricts to the action of an automorphism group, which is automatically
     faithful.)
 
-    \begin{lem}\label{regular-aut-cayley}
+    \begin{lem}\label{lem:regular-aut-cayley}
       For a graph $\Gamma$, there exists a subgroup $G \leq \Aut \Gamma$
       which acts regularly on $\Gamma$
       if and only if $\Gamma \cong \Cay(G, C)$
@@ -1636,7 +1661,7 @@
       Choose a vertex $v \in V(\Gamma)$ to identify with $1_G$.  (This choice
       will not matter in the end, as Cayley graphs are vertex transitive.)
       Since the action is regular, for each $u \in V(\Gamma)$ there exists a
-      unique $g_u \in G$ such that $vg_u = u$ (\ref{regular-unique}).
+      unique $g_u \in G$ such that $vg_u = u$ (Lemma \ref{lem:regular-unique}).
 
       Then define
       $$
@@ -1670,7 +1695,7 @@
     However, given the right information about a group, the following result
     finds the eigenvectors and eigenvalues almost instantaneously.
 
-    \begin{lem}\label{cayley-eigen}
+    \begin{lem}\label{lem:cayley-eigen}
       Let $G$ be a finite abelian group,
       let $C \subseteq G \setminus \set{1}$ be inverse-closed,
       and define $\Gamma := \Cay(G, C)$.
@@ -1685,7 +1710,7 @@
       precisely the set $\buildset{cg}{c \in C} = Cg$ since $h \sim g \iff
       hg^{-1} \in C$, and multiplication by $g$ is invertible.
 
-      As in (\ref{character-vector}), characters are identified with row vectors
+      As in Equation \ref{eqn:character-vector}, characters are identified with row vectors
       such that $\psi(g) \rightsquigarrow \psi_g$.
 
       Then
@@ -1698,11 +1723,12 @@
 
       Furthermore, since the rows of the character table are orthogonal,
       the eigenvectors $\psi$ are linearly independent,
-      and since $G \cong G^*$ (\ref{character-duality}) implies that the character table is square,
+      and since $G \cong G^*$ (Theorem \ref{thm:character-duality}) implies that the character table is square,
       the rows form a basis of eigenvectors for $A$.
     \end{proof}
 
-    TODO How to get real eigenvectors out of this?
+
+    The material in this section follows mostly from \cite[Chapter~9]{godsil}.
 
   \section{Partitions and Translation Schemes}\label{sec:AS:translation}
 
@@ -1710,16 +1736,16 @@
     from the previous section to the setting of association schemes.
     Throughout this section, a transitive, abelian group of automorphisms will
     replace the regular automorphism group which corresponds to a Cayley graph.
-    As per (\ref{faithful-transitive-abelian}) the transitive, abelian group
-    will act regularly, so that (\ref{regular-aut-cayley}) still applies.
+    As per Lemma \ref{lem:faithful-transitive-abelian} the transitive, abelian group
+    will act regularly, so that Lemma \ref{lem:regular-aut-cayley} still applies.
     This motivates the following definition.
 
-    \begin{defn}[Translation Schemes]\label{translation-scheme}
+    \begin{defn}[Translation Schemes {{\cite[Section~12.10]{godsil}}}]\label{defn:translation-scheme}
       A \textsc{translation scheme} is an association scheme whose
       automorphism group contains a transitive, abelian subgroup.
     \end{defn}
 
-    \begin{lem}\label{translation-partition}
+    \begin{lem}[{{\cite[Section~12.10]{godsil}}}]\label{lem:translation-partition}
       If $\AS$ is a translation scheme,
       and $G$ is a transitive, abelian automorphism group,
       then there is a partition into inverse-closed sets
@@ -1730,7 +1756,7 @@
     \begin{proof}
       Since $G$ is abelian and is a transitive subgroup of $\Aut \Gamma_i$ for
       each $i = 0, 1, \ldots, d$, $G$ acts regularly on $\Gamma_i$.
-      Therefore, by (\ref{regular-aut-cayley}), there exists an inverse-closed
+      Therefore, by Lemma \ref{lem:regular-aut-cayley}, there exists an inverse-closed
       set $C_i \subseteq G$ such that $\Gamma_i \cong \Cay(G, C_i)$.
 
       In particular, since the edges of $\Gamma_0$ are the diagonal relation,
@@ -1738,7 +1764,7 @@
       $\Gamma_0$.
 
       Otherwise, it suffices to show that $C_0, C_1, \ldots, C_d$ partition $G$.
-      Recall from the proof of (\ref{regular-aut-cayley}) that any vertex may be
+      Recall from the proof of Lemma \ref{lem:regular-aut-cayley} that any vertex may be
       chosen to identify with $1_G$, so that the same vertex (say, $v$)
       may be chosen for each graph $\Gamma_i$ without loss of generality,
       in which case $C_i$ consists of the neighbours of $v$.  By the definition
@@ -1753,7 +1779,7 @@
     partitions which generate a translation scheme translation scheme from those
     which do not.  \cite[Section~12.10]{godsil}
 
-    \begin{defn}[Partition Matrix]\label{partition-matrix}
+    \begin{defn}[Partition Matrix {{\cite[Section~12.7]{godsil}}}]\label{defn:partition-matrix}
       If $\sigma$ is a partition of a set $X$,
       then the \textsc{partition matrix} of $\sigma$
       is the $01$ matrix
@@ -1769,7 +1795,7 @@
     (The rows will \textbf{not} be linearly independent unless the partition
     is induced by the diagonal relation.)
 
-    \begin{defn}[Induced Row Partition]\label{induced-row-partition}
+    \begin{defn}[Induced Row Partition {{\cite[Section~12.7]{godsil}}}]\label{defn:induced-row-partition}
       Given a matrix $H$, if $\sigma$ is a partition of the columns with
       partition matrix $\chi(\sigma)$ then the \textsc{induced row partition}
       $\sigma^*$ is the partition of the rows of $H$ such that two rows are in the
@@ -1783,7 +1809,7 @@
     \cite[Section 12.7]{godsil}
 
     \begin{thm}[Bridges and Mena {{\cite[Theorem~12.10.1]{godsil}}}]
-      \label{translation-char}
+      \label{thm:translation-char}
       Let $G$ be a finite abelian group,
       let $\sigma = \set{C_0, C_1, \ldots, C_d}$ be a partition of $G$
       into inverse-closed parts where $C_0 = \set{1}$, and
@@ -1803,13 +1829,13 @@
       The fact that the $C_i$ partition $G$ also implies that $\sum_i A_i = J$,
       and since $C_0 = \set{1}$, $A_0 = I$.
 
-      By (\ref{cayley-eigen}), each character $\psi$ of $G$ (i.e. row of $H$)
+      By Lemma \ref{lem:cayley-eigen}, each character $\psi$ of $G$ (i.e. row of $H$)
       is a common eigenvector of $A_0, A_1, \ldots, A_d$,
       with eigenvalue $\psi(C_i)$ at $A_i$.
       Define $\BMA := \Span\set{A_0, A_1, \ldots, A_d}$.
       Let $\chi_{C_i}$ be the characteristic vector of $C_i$ in $G$,
       and let
-      \begin{equation}\label{part-mat-sigma}
+      \begin{equation}\label{eqn:part-mat-sigma}
         \chi(\sigma) =
         \begin{bmatrix}
           \vertbar   & \vertbar   &        & \vertbar   \\
@@ -1852,7 +1878,7 @@
       Furthermore, since $\col F_j$ is a common eigenspace for the $A_i$,
       for $i = 0, 1, \ldots, d$ and $j = 0, 1, \ldots, e$ there exist constants
       $P_i(j)$ such that
-      \begin{equation}\label{ts-P-defn}
+      \begin{equation}\label{eqn:ts-P-defn}
         A_i F_j = P_i(j) F_j
         \implies A_i = \sum_{j = 0}^e P_i(j) F_j
         \implies \BMA \leq \mathbb{F}
@@ -1878,7 +1904,7 @@
       only if $A_0, A_1, \ldots, A_d$ forms an association scheme.
       \\
 
-      From (TODO reference) and (\ref{ts-P-defn}),
+      From  Equation \ref{eqn:ts-P-defn},
       if $g(x)$ is any polynomial, then $g(A_i) = \sum_j g(P_i(j)) F_j$.
       In particular, if $x_0^{s_0} x_1^{s_1} \cdots x_d^{s_d}$ is any monomial,
       $A_i^{s_i} = \sum_j P_i(j)^{s_i} F_j$ as above,
@@ -1955,10 +1981,10 @@
     With this result, translation schemes are characterized by a finite abelian
     group $G$ and partition $\sigma$ satisfying the condition given.  Moreover,
     a finite abelian group $G$ is isomorphic to its groups of characters, $G^*$
-    (\ref{character-duality}), and the group of characters is completely
+    (Theorem \ref{thm:character-duality}), and the group of characters is completely
     described by the character table $H$.  Likewise, the group partition
     $\sigma$ is completely described by its partition matrix $\chi(\sigma)$.
-    Since the condition in (\ref{translation-char}) depends only on these two
+    Since the condition in Theorem \ref{thm:translation-char} depends only on these two
     matrices (both with respect to the same ordering on $G$), if it is
     satisfied, then the matrices completely describe the translation scheme they
     generate.
@@ -1993,7 +2019,7 @@
     so that this partition yields the Hamming scheme.
     In particular, $H(d, q) \cong \Cay(\Zqd, C_1)$.
 
-    From the proof that $\Z_q^d \cong \(\Z_q^d\)^*$ (\ref{character-duality}), if
+    From the proof that $\Z_q^d \cong \(\Z_q^d\)^*$ (Theorem \ref{thm:character-duality}), if
     $\omega$ is a $q^\text{th}$ complex root of unity, we see that we can
     identify characters $\psi$ with row vectors of the form
     $$
@@ -2006,14 +2032,14 @@
     $$
       \psi(x) = \prod_{i=1}^d \omega^{\psi_i x_i} \ .
     $$
-    (Note that this notation deviates from (\ref{character-vector}),
+    (Note that this notation deviates from Equation \ref{eqn:character-vector},
     but will be more convenient for this purpose.)
-    As in the proof of (\ref{character-duality}), let $e_i$ denote the tuple of
+    As in the proof of Theorem \ref{thm:character-duality}, let $e_i$ denote the tuple of
     all zeroes, with a $1$ in the $i^\text{th}$ position, so that each group
     element $x = (x_1, \ldots, x_d)$ can be expressed as $\sum_{i=1}^d x_i e_i$.
 
     Then, in the $i^\text{th}$-distance Hamming graph,
-    $\psi$ is a $\psi(C_i)$-eigenvalue (\ref{cayley-eigen}),
+    $\psi$ is a $\psi(C_i)$-eigenvalue (Lemma \ref{lem:cayley-eigen}),
     and for the Hamming graph, it can be computed directly.
     \begin{alignat*}{3}
       \psi(C_1)
@@ -2177,7 +2203,7 @@
       This demonstrates that $\(\mathcal{P}^*\)^* = \mathcal{P}$,
       so that linear programs come in dual pairs.
 
-      \begin{thm}[Weak Duality]\label{weak-duality}
+      \begin{thm}[Weak Duality]\label{thm:weak-duality}
         If $x$ is a feasible solution to a linear program
         $$
           \max\buildset{
@@ -2398,7 +2424,7 @@
       }{
         - \diagCs Q \diagDs z \geq \chiCs,\
         z \geq 0
-      } + 1 \label{dlp-dual-std} \\
+      } + 1 \label{eqn:dlp-dual-std} \\
       =& \min\buildset{
         \mu^T z
       }{
@@ -2434,14 +2460,14 @@
     Therefore, given an association scheme with dual matrix of eigenvalues $Q$,
     if we wish to find an upper bound on the size of a code with minimum
     distance $\delta$, then we set $C := \set{0, \delta, \ldots, d}$, and solve
-    the linear program in Equation (\ref{eqn:dlp-primal}).  Alternatively, any
-    feasible solution to the dual problem (\ref{eqn:dlp-dual}) will provide a
+    the linear program in Equation \ref{eqn:dlp-primal}.  Alternatively, any
+    feasible solution to the dual problem (Equation \ref{eqn:dlp-dual}) will provide a
     (possibly worse) upper bound.
 
 
     \mysep
 
-    All that remains is to prove Theorem (\ref{thm:lp-ineq}).  To do this, we
+    All that remains is to prove Theorem \ref{thm:lp-ineq}.  To do this, we
     will begin by introduction a different measure of the distribution of
     distances in a subset of vertices.
 
@@ -2496,8 +2522,8 @@
           \sum_{r=0}^d \tilde{y_r} \sum_{k=0}^d p_{ij}^k P_k(r) \ .
       $$
 
-      Then, by noticing that combining Equations (\ref{tab:prop:product}) and
-      (\ref{tab:prop:eigen}) yields the inner sum above:
+      Then, by noticing that combining Equations \ref{tab:prop:product} and
+      \ref{tab:prop:eigen} yields the inner sum above:
       $$
         \begin{rcases*}
           A_i F_j = P_i(j) F_j \\
@@ -2520,14 +2546,14 @@
 
     At first, this result may seem to be unrelated to the theorem which we wish
     to prove.  However, by realizing that $B^T B$ is a positive semi-definite
-    matrix, Theorem (\ref{thm:lp-ineq}) follows as a quick corollary.
+    matrix, Theorem \ref{thm:lp-ineq} follows as a quick corollary.
 
-    \begin{proof}[Proof of Theorem (\ref{thm:lp-ineq})]
-      From the previous lemma (\ref{lem:BTB}), we know that
+    \begin{proof}[Proof of Theorem \ref{thm:lp-ineq}]
+      From the previous Lemma \ref{lem:BTB}, we know that
       $$
         B^T B = \frac{\abs{Y}}{\abs{V}} P^T \diag{Q^T y} P \ .
       $$
-      Since $PQ = \abs{V} I$ (\ref{tab:prop:inverse}), we can rewrite the above
+      Since $PQ = \abs{V} I$ (Property \ref{tab:prop:inverse}), we can rewrite the above
       equation as
       $$
         Q^T B^T B Q = \abs{Y}\abs{V} \diag{Q^T y} \ .
@@ -2546,7 +2572,7 @@
     
     From the LP bound, we can quickly derive an eigenvalue bound on the size of
     a clique in a distance-regular graph.  We do this by finding a feasible
-    solution to the dual problem (\ref{eqn:dlp-dual}).
+    solution to the dual problem (Equation \ref{eqn:dlp-dual}).
 
     \begin{thm}[Ratio Bound for Cliques
       {{\cite[Section~3.3.2]{delsarte}}}]\label{thm:ratio-clique}
@@ -2564,7 +2590,7 @@
       multiplicities respectively.  Note that the $1^\text{th}$ column of $P$,
       $P_1$ contains the eigenvalues of the adjacency matrix.  We will sort the
       rows of $P$ such that $P_1$ is sorted in descending order.  Note also that
-      the valency $\nu_1$ is the largest eigenvalue (\ref{tab:prop:modulus}), so
+      the valency $\nu_1$ is the largest eigenvalue (Property \ref{tab:prop:modulus}), so
       $\nu_1 = r$.  Therefore, we can write
       $$
         P^T = \begin{bmatrix}
@@ -2589,7 +2615,7 @@
       the desired bound.  Since we are looking for an upper bound on the size of
       a clique, we set $C := \set{0, 1}$.
 
-      Using Equation (\ref{tab:prop:similar}), we compute
+      Using Equation \ref{tab:prop:similar}, we compute
       \begin{alignat*}{2}
         \diagCs Q z &= \diagCs \diagnu^{-1} P^T \diagmu z \\
         &= \begin{bmatrix}
@@ -2639,7 +2665,7 @@
         Q \zeta = \frac{1}{\abs{Z}} Q \diagmu^{-1} Q^T z
         = \frac{\abs{V}}{\abs{Z}} \diagnu^{-1} z
       $$
-      using Equation (\ref{tab:prop:valency-multiplicity}).  Since $z_i = 0$ for
+      using Equation \ref{tab:prop:valency-multiplicity}.  Since $z_i = 0$ for
       all $i \in C$ (since $Z$ is a $C$-coclique), it follows that $\diagCs Q
       \zeta = 0 \leq 0$ as desired.
 
@@ -2670,6 +2696,9 @@
   function of the objects in question.
 
   \section{Semi-Definite Programming}\label{sec:SDP-bound:SDP}
+
+    The material in this section comes from \cite{ocw}.
+    \\
 
     For a given distance-regular graph, and a minimum distance, Delsarte's LP
     bound is the result of a maximization problem based on the input parameters.
@@ -2983,7 +3012,7 @@
 
     \begin{proof}
 
-      Recall from Section (\ref{sec:intro:hamming}) the automorphism group of
+      Recall from Section \ref{sec:intro:hamming} the automorphism group of
       the binary Hamming graph, $H(d, 2)$.  Let $\Pi$ be the set of
       automorphisms $\pi$ such that $\vzero \in \pi(Y)$; let $\Pi'$ be the set of
       automorphisms $\pi$ such that $\vzero \not\in \pi(Y)$.  For each
@@ -2994,13 +3023,13 @@
         R' &:= \frac{1}{\abs{\Pi'}} \sum_{\pi \in \Pi'} \chipiY \chipiY^T \ .
       \end{aligned} \end{equation}
       It suffices to show that these definitions equal those given in Equation
-      (\ref{eqn:defn-R}) since every matrix of the form $BB^T$ is positive
+      \ref{eqn:defn-R} since every matrix of the form $BB^T$ is positive
       semi-definite, and a non-negative linear combination of positive
       semi-definite matrices is also positive semi-definite.
 
       Fix a vertex $u$, and let $\Pi_u$ be the set of automorphisms such that
       $\pi(u) = \vzero$.  Then as seen in Corollary
-      (\ref{cor:hamming-aut-group-size}), there are $d! (2-1)!^d = d!$
+      \ref{cor:hamming-aut-group-size}, there are $d! (2-1)!^d = d!$
       automorphisms in $\Pi_u$.  Let $\lijtu$ denote the number of pairs $(v, w)
       \in Y^2$ such that $\wt{u + v} = i$, $\wt{u + w} = j$, $\wt{(u+v)(u+w)} =
       t$, define
@@ -3018,7 +3047,7 @@
         \sum_{\pi \in \Pi_u} \chipiY \chipiY^T =
         \sum_{i, j, t} (i-t)!\ (j-t)!\ t!\ (n-i-j+t)!\ \lijtu \Mijt \ ,
       $$
-      which is demonstrated in the following lemma (\ref{lem:R-u}).
+      which is demonstrated in the following Lemma \ref{lem:R-u}.
 
       Now, note that $\Pi$ is the disjoint union of $\Pi_u$, as $u$ runs over
       $Y$, while $\Pi'$ is the disjoint union of $\Pi_u$ where $u$ is in the
@@ -3076,7 +3105,7 @@
       \pi(Y)$.  By taking the inverse of each such automorphism, we see this is
       equal to the number of automorphisms $\pi$ such that $\pi(\vzero) = u$,
       and $\pi(v), \pi(w) \in Y$.  Using the automorphism decomposition from
-      Theorem (\ref{thm:hamming-automorphisms}), we see that such an
+      Theorem \ref{thm:hamming-automorphisms}, we see that such an
       automorphism $\pi = \sigma T_u$ (since $\tau = \id$ for all automorphisms
       of $H(d, 2)$).  Therefore, the number of automorphisms $\pi$ satisfying
       the required property is precisely the number of permutations $\sigma \in
@@ -3280,7 +3309,7 @@
         definition, a permutation of the values $i$, $j$, and $i + j - 2t$ must
         leave $\lijt$ unchanged.
 
-      \item Recall from Definition (\ref{defn:AS-clique}) that $Y$ is a
+      \item Recall from Definition \ref{defn:AS-clique} that $Y$ is a
         $C$-clique if the distance between any pair of vertices is in $C$.  By
         this definition, $Y$ is a code of minimum distance $\delta$ if and only
         if it is a $C$-clique with $C = \set{0, \delta, \ldots, d}$.  Following
@@ -3392,7 +3421,11 @@
 
 \chapter{Linear Algebra}
 
-  The reader of this report is expected to be familier with the standard notions
+  The material in this chapter may be drawn from most standard texts on linear
+  algebra; for example, see \cite{fis}.
+  \\
+
+  The reader of this report is expected to be familiar with the standard notions
   of finite-dimensional vector spaces over $\R$ or $\C$.  Some topics which are
   more important to this report, and less commonly emphasized elsewhere, are
   included here for reference.
@@ -3554,7 +3587,7 @@
     The material of this section comes primarily from \cite[Section~1.7;
     Chapter~4]{dummit-foote}.
 
-    \begin{defn}[Group Action]\label{group-action}
+    \begin{defn}[Group Action]\label{defn:group-action}
       Given a group $G$ and a set $X$,
       \textsc{group action} is a homomorphism $G \to \Sym X$,
       where $\Sym X$ is the symmetric group on $X$.
@@ -3586,7 +3619,7 @@
     representation}.  It will be occasionally convenient to adopt each
     perspective.)
 
-    \begin{defn}[Types of Group Actions]\label{group-action-types}
+    \begin{defn}[Types of Group Actions]\label{defn:group-action-types}
       If if a homomorphism $G \to \Sym X$ is injective,
       then the action is called \textsc{faithful}.
       Note that a group homomorphism is injective
@@ -3615,7 +3648,7 @@
     so that this action is induced by the identity $G \into \Sym X$,
     which is clearly injective.
 
-    \begin{lem}\label{faithful-transitive-abelian}
+    \begin{lem}\label{lem:faithful-transitive-abelian}
       If an abelian group $G$ acts faithfully and transitively on a set $X$,
       then the action is free, and thus also regular. \cite[Section 4.1,
       Exercise 3]{dummit-foote}
@@ -3656,16 +3689,13 @@
     = x$, $1$ is the unique group element fixing any point, so the action must
     be free.
 
-    \begin{lem}\label{regular-unique}
+    \begin{lem}\label{lem:regular-unique}
       A group action $G$ on $X$ is regular if and only if
       for all $x, y \in X$, there exists a unique $g \in G$
       such that $xg = y$.
     \end{lem}
 
   \section{The Structure of Finite Abelian Groups}
-    TODO I need a citation for this.
-    I'm also not sure if this section shouldn't go before the section on
-    Character Theory, as it will be used in (\ref{character-duality}).
 
     \begin{thm}[Structure Theorem]\label{thm:abelian-structure}
       If $G$ is a finitely generated abelian group,
@@ -3680,12 +3710,16 @@
       Moreover, this decomposition is unique up to the ordering of its factors.
     \end{thm}
 
-    This is a well-known and well-used result.  It comes as a direct result of
-    the Structure Theorem for Finitely Generated Modules over PIDs, using the
+    This is a well-known and well-used result (see for example
+    \cite[Section~5.2]{dummit-foote}).  It comes as a direct result of the
+    Structure Theorem for Finitely Generated Modules over PIDs, using the
     language of rings and modules, but this is out of the scope of this report.
 
   \section{Character Theory}
-    \begin{defn}[Characters]\label{character}
+    Most of the material in this section comes from \cite[Section~12.8]{godsil}.
+    \\
+
+    \begin{defn}[Characters]\label{defn:character}
       Given a group $G$, a \textsc{character} of the group $G$
       is a homomorphism $G \to \C^\times$,
       the group of non-zero complex numbers under multiplication.
@@ -3747,7 +3781,7 @@
     so that the inverse of $\psi \in G^*$ is $\bar{\psi}: g \mapsto
     \bar{\psi(g)}$.
 
-    \begin{thm}\label{character-duality}
+    \begin{thm}\label{thm:character-duality}
       For all finite abelian groups $G$,
       $$
         G \cong G^*
@@ -3760,7 +3794,7 @@
       $$
         G = \Z_{q_1} \times \cdots \times \Z_{q_d}
       $$
-      for $q_i \in \N_{>0}$ (\ref{thm:abelian-structure}).  Since all finite
+      for $q_i \in \N_{>0}$ (Theorem \ref{thm:abelian-structure}).  Since all finite
       abelian groups are isomorphic to a group of this form, it suffices to
       prove that each group of this form is isomorphic to its group of
       characters.
@@ -3836,7 +3870,7 @@
 
     Given an ordering $G = \set{g_1, \ldots, g_n}$,
     the character $\psi \in G^*$ can be identified with the row vector
-    \begin{equation}\label{character-vector}
+    \begin{equation}\label{eqn:character-vector}
       \psi \rightsquigarrow
       \begin{bmatrix}
         \psi(g_1) & \cdots & \psi(g_n) \\
@@ -3851,7 +3885,7 @@
     Furthermore, given an ordering $G^* = \set{\psi^1, \ldots, \psi^n}$,
     the matrix whose rows consist of the characters of $G^*$ is called the
     \textsc{character table} of $G$:
-    \begin{equation}\label{character-table}
+    \begin{equation}\label{eqn:character-table}
       H =
       \begin{bmatrix}
         \horzbar & \psi^1 & \horzbar \\
@@ -3881,7 +3915,7 @@
     (Note here that $\phi^*$ denotes the conjugate transpose of $\phi$,
     and $\chi_G$ is also the all-ones column vector $\vone$.)
 
-    \begin{lem}\label{characters-orthogonal}
+    \begin{lem}\label{lem:characters-orthogonal}
       For any $\psi \in G^*$
       $$
         \psi(G) =
@@ -3919,7 +3953,7 @@
       $$
     \end{proof}
 
-    \begin{cor}\label{character-table-unitary}
+    \begin{cor}\label{lem:character-table-unitary}
       If $H$ is the character table of a finite abelian group $G$ of order $n$,
       then $H H^* = nI$, where $H^*$ is the conjugate transpose of $H$.
     \end{cor}
